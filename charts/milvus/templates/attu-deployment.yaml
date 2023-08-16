@@ -17,6 +17,9 @@ spec:
       labels:
 {{ include "milvus.matchLabels" . | indent 8 }}
         component: "attu"
+{{- if .Values.attu.podLabels }}
+{{ toYaml .Values.attu.podLabels | indent 8 }}
+{{- end }}
     spec:
       {{- if .Values.attu.image.pullSecrets }}
       imagePullSecrets:

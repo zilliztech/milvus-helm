@@ -408,6 +408,7 @@ attu:
     port: 3000
     # loadBalancerIP: ""
   resources: {}
+  podLabels: {}
   ingress:
     enabled: false
     annotations: {}
