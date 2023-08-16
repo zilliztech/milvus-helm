@@ -3,7 +3,7 @@ dependencies:
   repository: https://raw.githubusercontent.com/bitnami/charts/pre-2022/bitnami
   version: 6.3.3
 - name: minio
-  repository: https://milvus-io.github.io/milvus-helm
+  repository: https://zilliztech.github.io/milvus-helm
   version: 8.0.17
 - name: pulsar
   repository: https://pulsar.apache.org/charts

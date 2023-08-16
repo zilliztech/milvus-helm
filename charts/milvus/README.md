@@ -12,13 +12,13 @@ This chart bootstraps Milvus deployment on a Kubernetes cluster using the Helm p
 - Kubernetes 1.14+ (Attu requires 1.18+)
 - Helm >= 3.2.0
 
-> **IMPORTANT** The master branch is for the development of Milvus v2.x. On March 9th, 2021, we released Milvus v1.0, the first stable version of Milvus with long-term support. To use Milvus v1.x, switch to [branch 1.1](https://github.com/milvus-io/milvus-helm/tree/1.1).
+> **IMPORTANT** The master branch is for the development of Milvus v2.x. On March 9th, 2021, we released Milvus v1.0, the first stable version of Milvus with long-term support. To use Milvus v1.x, switch to [branch 1.1](https://github.com/zilliztech/milvus-helm/tree/1.1).
 
 ## Install the Chart
 
 1. Add the stable repository
 ```bash
-$ helm repo add milvus https://milvus-io.github.io/milvus-helm/
+$ helm repo add zilliztech https://zilliztech.github.io/milvus-helm/
 ```
 
 2. Update charts repositories
@@ -32,20 +32,20 @@ Assume the release name is `my-release`:
 
 ```bash
 # Helm v3.x
-$ helm upgrade --install my-release --set cluster.enabled=false --set etcd.replicaCount=1 --set pulsar.enabled=false --set minio.mode=standalone milvus/milvus
+$ helm upgrade --install my-release --set cluster.enabled=false --set etcd.replicaCount=1 --set pulsar.enabled=false --set minio.mode=standalone zilliztech/milvus
 ```
 By default, milvus standalone uses `rocksmq` as message queue. You can also use `pulsar` or `kafka` as message queue:
 
 ```bash
 # Helm v3.x
 # Milvus Standalone with pulsar as message queue
-$ helm upgrade --install my-release --set cluster.enabled=false --set standalone.messageQueue=pulsar --set etcd.replicaCount=1 --set pulsar.enabled=true --set minio.mode=standalone milvus/milvus
+$ helm upgrade --install my-release --set cluster.enabled=false --set standalone.messageQueue=pulsar --set etcd.replicaCount=1 --set pulsar.enabled=true --set minio.mode=standalone zilliztech/milvus
 ```
 
 ```bash
 # Helm v3.x
 # Milvus Standalone with kafka as message queue
-$ helm upgrade --install my-release --set cluster.enabled=false --set standalone.messageQueue=kafka --set etcd.replicaCount=1 --set pulsar.enabled=false --set kafka.enabled=true --set minio.mode=standalone milvus/milvus
+$ helm upgrade --install my-release --set cluster.enabled=false --set standalone.messageQueue=kafka --set etcd.replicaCount=1 --set pulsar.enabled=false --set kafka.enabled=true --set minio.mode=standalone zilliztech/milvus
 ```
 > **Tip**: To list all releases, using `helm list`.
 
@@ -55,13 +55,13 @@ Assume the release name is `my-release`:
 
 ```bash
 # Helm v3.x
-$ helm upgrade --install my-release milvus/milvus
+$ helm upgrade --install my-release zilliztech/milvus
 ```
 By default, milvus cluster uses `pulsar` as message queue. You can also use `kafka` instead of `pulsar` for milvus cluster:
 
 ```bash
 # Helm v3.x
-$ helm upgrade --install my-release milvus/milvus --set pulsar.enabled=false --set kafka.enabled=true
+$ helm upgrade --install my-release zilliztech/milvus --set pulsar.enabled=false --set kafka.enabled=true
 ```
 
 By default, milvus cluster uses several separate coordinators. You can also use mixCoordinator instead which contains all coordinators.
@@ -80,7 +80,7 @@ queryCoordinator:
 dataCoordinator:
   enabled: false
 EOF
-$ helm upgrade --install my-release milvus/milvus -f values-custom.yaml
+$ helm upgrade --install my-release zilliztech/milvus -f values-custom.yaml
 ```
 
 ### Upgrade an existing Milvus cluster
@@ -91,14 +91,14 @@ E.g. to scale out query node from 1(default) to 2:
 
 ```bash
 # Helm v3.x
-$ helm upgrade --install --set queryNode.replicas=2 my-release milvus/milvus
+$ helm upgrade --install --set queryNode.replicas=2 my-release zilliztech/milvus
 ```
 
 ### Milvus Coordinator Active Standby
 > **IMPORTANT** Milvus helm chart 4.0.7 (Milvus 2.2.3) support deploying multiple coordinators. For example, you run a Milvus cluster with two rootcoord pods:
 
 ```bash
-helm upgrade --install my-release milvus/milvus --set rootCoordinator.activeStandby.enabled=true --set rootCoordinator.replicas=2
+helm upgrade --install my-release zilliztech/milvus --set rootCoordinator.activeStandby.enabled=true --set rootCoordinator.replicas=2
 ```
 
 ### Breaking Changes
@@ -120,7 +120,7 @@ By default, all the logs of milvus components will output stdout. If you wanna l
 
 ```bash
 # Install a milvus cluster with file log output
-helm install my-release milvus/milvus --set log.persistence.enabled=true --set log.persistence.persistentVolumeClaim.storageClass=<read-write-many-storageclass>
+helm install my-release zilliztech/milvus --set log.persistence.enabled=true --set log.persistence.persistentVolumeClaim.storageClass=<read-write-many-storageclass>
 ```
 
 It will output log to `/milvus/logs/` directory.
