@@ -29,7 +29,7 @@ jobs:
         run: |
           helm repo add apache https://pulsar.apache.org/charts
           helm repo add bitnami https://charts.bitnami.com/bitnami
-          helm repo add milvus https://milvus-io.github.io/milvus-helm
+          helm repo add milvus https://zilliztech.github.io/milvus-helm
           helm repo add bitnami-pre-2022 https://raw.githubusercontent.com/bitnami/charts/pre-2022/bitnami
 
       - name: Set up chart-testing

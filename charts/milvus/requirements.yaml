@@ -7,7 +7,7 @@ dependencies:
     - etcd
 - name: minio
   version: 8.0.17
-  repository: https://milvus-io.github.io/milvus-helm
+  repository: https://zilliztech.github.io/milvus-helm
   condition: minio.enabled
   tags:
     - minio
