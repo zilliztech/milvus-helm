@@ -13,7 +13,7 @@ keywords:
 home: https://milvus.io/
 icon: https://raw.githubusercontent.com/milvus-io/docs/master/v1.0.0/assets/milvus_logo.png
 sources:
-  - https://github.com/milvus-io/milvus
+  - https://github.com/zilliztech/milvus
 maintainers:
   - email: contact@milvus.io
     name: contact
