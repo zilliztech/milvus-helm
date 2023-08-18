@@ -100,6 +100,9 @@ minio:
 
 {{- if .Values.externalPulsar.enabled }}
 
+mq:
+  type: pulsar
+
 messageQueue: pulsar
 
 pulsar:
@@ -112,6 +115,9 @@ pulsar:
   authParams: {{ .Values.externalPulsar.authParams }}
 
 {{- else if .Values.pulsar.enabled }}
+
+mq:
+  type: pulsar
 
 messageQueue: pulsar
 
@@ -127,6 +133,9 @@ pulsar:
 
 {{- if .Values.externalKafka.enabled }}
 
+mq:
+  type: kafka
+
 messageQueue: kafka
 
 kafka:
@@ -141,6 +150,9 @@ kafka:
 {{- end }}
 {{- else if .Values.kafka.enabled }}
 
+mq:
+  type: kafka
+
 messageQueue: kafka
 
 kafka:
@@ -151,10 +163,14 @@ kafka:
 {{- end }}
 {{- end }}
 
-{{- if and (not .Values.cluster.enabled) (eq .Values.standalone.messageQueue "rocksmq") }}
+{{- if not .Values.cluster.enabled }}
+{{- if or (eq .Values.standalone.messageQueue "rocksmq") (eq .Values.standalone.messageQueue "natsmq") }}
 
-messageQueue: rocksmq
+mq:
+  type: {{ .Values.standalone.messageQueue }}
 
+messageQueue: {{ .Values.standalone.messageQueue }}
+{{- end }}
 {{- end }}
 
 rootCoord:
