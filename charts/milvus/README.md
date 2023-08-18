@@ -244,7 +244,7 @@ The following table lists the configurable parameters of the Milvus Standalone c
 | `standalone.disk.enabled`                 | Whether to enable disk                             | `true`                                          |
 | `standalone.profiling.enabled`            | Whether to enable live profiling                   | `false`                                          |
 | `standalone.extraEnv`                     | Additional Milvus Standalone container environment variables | `[]`                                     |
-| `standalone.messageQueue`                     | Message queue for Milvus Standalone: rocksmq, pulsar, kafka | `rocksmq`                                     |
+| `standalone.messageQueue`                 | Message queue for Milvus Standalone: rocksmq, natsmq, pulsar, kafka | `rocksmq`                                     |
 | `standalone.persistence.enabled`          | Use persistent volume to store Milvus standalone data | `true`                                          |
 | `standalone.persistence.mountPath` | Milvus standalone data persistence volume mount path | `/var/lib/milvus`                                       |
 | `standalone.persistence.annotations`      | PersistentVolumeClaim annotations             | `{}`                                                    |

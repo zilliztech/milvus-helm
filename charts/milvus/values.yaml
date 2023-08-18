@@ -190,7 +190,7 @@ standalone:
     enabled: false  # Enable live profiling
 
   ## Default message queue for milvus standalone
-  ## Supported value: rocksmq, pulsar and kafka
+  ## Supported value: rocksmq, natsmq, pulsar and kafka
   messageQueue: rocksmq
   persistence:
     mountPath: "/var/lib/milvus"
@@ -545,7 +545,7 @@ pulsar:
   fullnameOverride: ""
   persistence: true
 
-  maxMessageSize: 5242880  # 5 * 1024 * 1024 Bytes, Maximum size of each message in pulsar.
+  maxMessageSize: "5242880"  # 5 * 1024 * 1024 Bytes, Maximum size of each message in pulsar.
 
   rbac:
     enabled: false
@@ -896,7 +896,7 @@ externalPulsar:
   enabled: false
   host: localhost
   port: 6650
-  maxMessageSize: 5242880  # 5 * 1024 * 1024 Bytes, Maximum size of each message in pulsar.
+  maxMessageSize: "5242880"  # 5 * 1024 * 1024 Bytes, Maximum size of each message in pulsar.
   tenant: public
   namespace: default
   authPlugin: ""
