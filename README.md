@@ -6,7 +6,7 @@ This GitHub repository is the official source for Milvus's Helm charts.
 [![](https://github.com/zilliztech/milvus-helm/workflows/Release%20Charts/badge.svg?branch=master)](https://github.com/zilliztech/milvus-helm/actions)
 
 For instructions about how to install charts from this repository, visit the public website at:
-[Milvus Helm Charts](https://artifacthub.io/packages/helm/milvus/milvus)
+[Milvus Helm Charts](https://artifacthub.io/packages/helm/milvus-helm/milvus)
 
 ## Make changes to an existing chart without publishing
 
@@ -43,4 +43,4 @@ You can find more information at:
 
 ---
 
-![Milvus logo](https://raw.githubusercontent.com/milvus-io/docs/master/v1.0.0/assets/milvus_logo.png)
+![Milvus logo](https://raw.githubusercontent.com/milvus-io/milvus-docs/master/assets/milvus_logo.png)
