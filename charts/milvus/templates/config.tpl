@@ -180,7 +180,7 @@ rootCoord:
   address: localhost
 {{- end }}
   port: {{ .Values.rootCoordinator.service.port }}
-  enableActiveStandby: {{ .Values.rootCoordinator.activeStandby.enabled }}  # Enable active-standby
+  enableActiveStandby: {{ template "milvus.rootcoord.activeStandby" . }}  # Enable rootcoord active-standby
 
 proxy:
   port: 19530
@@ -194,7 +194,7 @@ queryCoord:
 {{- end }}
   port: {{ .Values.queryCoordinator.service.port }}
 
-  enableActiveStandby: {{ .Values.queryCoordinator.activeStandby.enabled }}  # Enable active-standby
+  enableActiveStandby: {{ template "milvus.querycoord.activeStandby" . }}  # Enable querycoord active-standby
 
 queryNode:
   port: 21123
@@ -211,7 +211,7 @@ indexCoord:
   address: localhost
 {{- end }}
   port: {{ .Values.indexCoordinator.service.port }}
-  enableActiveStandby: {{ .Values.indexCoordinator.activeStandby.enabled }}  # Enable active-standby
+  enableActiveStandby: {{ template "milvus.indexcoord.activeStandby" . }}  # Enable indexcoord active-standby
 
 indexNode:
   port: 21121
@@ -229,7 +229,7 @@ dataCoord:
   address: localhost
 {{- end }}
   port: {{ .Values.dataCoordinator.service.port }}
-  enableActiveStandby: {{ .Values.dataCoordinator.activeStandby.enabled }}  # Enable active-standby
+  enableActiveStandby: {{ template "milvus.datacoord.activeStandby" . }}  # Enable datacoord active-standby
 
 dataNode:
   port: 21124
