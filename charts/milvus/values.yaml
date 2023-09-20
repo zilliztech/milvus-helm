@@ -215,6 +215,7 @@ standalone:
 
 proxy:
   enabled: true
+  # You can set the number of replicas to -1 to remove the replicas field in case you want to use HPA
   replicas: 1
   resources: {}
   nodeSelector: {}
@@ -276,6 +277,7 @@ queryCoordinator:
 
 queryNode:
   enabled: true
+  # You can set the number of replicas to -1 to remove the replicas field in case you want to use HPA
   replicas: 1
   resources: {}
   # Set local storage size in resources
@@ -318,6 +320,7 @@ indexCoordinator:
 
 indexNode:
   enabled: true
+  # You can set the number of replicas to -1 to remove the replicas field in case you want to use HPA
   replicas: 1
   resources: {}
   # Set local storage size in resources
@@ -360,6 +363,7 @@ dataCoordinator:
 
 dataNode:
   enabled: true
+  # You can set the number of replicas to -1 to remove the replicas field in case you want to use HPA
   replicas: 1
   resources: {}
   nodeSelector: {}

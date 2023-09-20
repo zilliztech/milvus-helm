@@ -11,7 +11,9 @@ metadata:
 {{ include "milvus.ud.annotations" . | indent 4 }}
 
 spec:
+  {{- if ge (int .Values.indexNode.replicas) 0 }}
   replicas: {{ .Values.indexNode.replicas }}
+  {{- end }}
   selector:
     matchLabels:
 {{ include "milvus.matchLabels" . | indent 6 }}
