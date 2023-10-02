@@ -6,6 +6,7 @@ metadata:
   labels:
 {{ include "milvus.labels" . | indent 4 }}
     component: "attu"
+{{ include "milvus.ud.labels" . | indent 4 }}
 spec:
   replicas: 1
   selector:
@@ -17,6 +18,7 @@ spec:
       labels:
 {{ include "milvus.matchLabels" . | indent 8 }}
         component: "attu"
+{{ include "milvus.ud.labels" . | indent 8 }}
 {{- if .Values.attu.podLabels }}
 {{ toYaml .Values.attu.podLabels | indent 8 }}
 {{- end }}
