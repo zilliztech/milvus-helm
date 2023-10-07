@@ -441,6 +441,8 @@ minio:
   rootPath: file
   useIAM: false
   iamEndpoint: ""
+  region: ""
+  useVirtualHost: false
   podDisruptionBudget:
     enabled: false
   resources:
@@ -869,6 +871,8 @@ externalS3:
   useIAM: false
   cloudProvider: "aws"
   iamEndpoint: ""
+  region: ""
+  useVirtualHost: false
 
 ###################################
 # GCS Gateway

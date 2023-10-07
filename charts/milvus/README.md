@@ -205,6 +205,8 @@ The following table lists the configurable parameters of the Milvus Service and 
 | `externalS3.useIAM`                       | If true, use iam to connect to the external S3 | `false`                                                |
 | `externalS3.cloudProvider`                | When `useIAM` enabled, only "aws" & "gcp" is supported for now | `aws`                                  |
 | `externalS3.iamEndpoint`                  | The IAM endpoint of  the external S3 | ``                                                |
+| `externalS3.region`                  | The region of  the external S3 | ``                                                |
+| `externalS3.useVirtualHost`                  | If true, the external S3 whether use virtual host bucket mode | ``                                                |
 | `externalGcs.bucketName`                  | The Bucket Name of the external GCS. Requires GCS gateway to be enabled in the minIO configuration | `unset`                                                |
 | `externalEtcd.enabled`                    | Enable or disable external Etcd               | `false`                                                 |
 | `externalEtcd.endpoints`                  | The endpoints of the external etcd            | `{}`                                                    |
