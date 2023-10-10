@@ -78,6 +78,8 @@ minio:
   useIAM: {{ .Values.externalS3.useIAM }}
   cloudProvider: {{ .Values.externalS3.cloudProvider }}
   iamEndpoint: {{ .Values.externalS3.iamEndpoint }}
+  region: {{ .Values.externalS3.region }}
+  useVirtualHost: {{ .Values.externalS3.useVirtualHost }}
 {{- else }}
 {{- if contains .Values.minio.name .Release.Name }}
   address: {{ .Release.Name }}
@@ -96,6 +98,8 @@ minio:
   rootPath: {{ .Values.minio.rootPath }}
   useIAM: {{ .Values.minio.useIAM }}
   iamEndpoint: {{ .Values.minio.iamEndpoint }}
+  region: {{ .Values.minio.region }}
+  useVirtualHost: {{ .Values.minio.useVirtualHost }}
 {{- end }}
 
 {{- if .Values.externalPulsar.enabled }}
