@@ -2,7 +2,7 @@
 cluster:
   enabled: true
 
-image:
+imasge:
   all:
     repository: milvusdb/milvus
     tag: v2.3.1
