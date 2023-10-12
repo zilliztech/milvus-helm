@@ -351,7 +351,7 @@ dataCoordinator:
   heaptrack:
     enabled: false
   profiling:
-    enabled: true  # Enable live profiling
+    enabled: false  # Enable live profiling
   activeStandby:
     enabled: false  # Enable active-standby when you set multiple replicas for data coordinator
 
@@ -523,6 +523,16 @@ etcd:
     storageClass:
     accessMode: ReadWriteOnce
     size: 10Gi
+
+  ## Change default timeout periods to mitigate zoobie probe process
+  livenessProbe:
+    enabled: true
+    timeoutSeconds: 10
+
+  readinessProbe:
+    enabled: true
+    periodSeconds: 20
+    timeoutSeconds: 10
 
   ## Enable auto compaction
   ## compaction by every 1000 revision
