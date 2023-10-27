@@ -5,7 +5,7 @@ cluster:
 image:
   all:
     repository: milvusdb/milvus
-    tag: v2.3.1
+    tag: v2.3.2
     pullPolicy: IfNotPresent
     ## Optionally specify an array of imagePullSecrets.
     ## Secrets must be manually created in the namespace.
@@ -374,7 +374,7 @@ dataCoordinator:
   heaptrack:
     enabled: false
   profiling:
-    enabled: true  # Enable live profiling
+    enabled: false  # Enable live profiling
   activeStandby:
     enabled: false  # Enable active-standby when you set multiple replicas for data coordinator
 
@@ -546,6 +546,16 @@ etcd:
     storageClass:
     accessMode: ReadWriteOnce
     size: 10Gi
+
+  ## Change default timeout periods to mitigate zoobie probe process
+  livenessProbe:
+    enabled: true
+    timeoutSeconds: 10
+
+  readinessProbe:
+    enabled: true
+    periodSeconds: 20
+    timeoutSeconds: 10
 
   ## Enable auto compaction
   ## compaction by every 1000 revision
