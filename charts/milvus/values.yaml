@@ -824,51 +824,6 @@ kafka:
     enabled: true
     replicaCount: 3
 
-## Configuration values for the mysql dependency
-## ref: https://artifacthub.io/packages/helm/bitnami/mysql
-##
-## MySQL used for meta store is testing internally
-
-mysql:
-  enabled: false
-  name: mysql
-  image:
-    repository: bitnami/mysql
-    tag: 8.0.23-debian-10-r84
-
-  architecture: replication
-  auth:
-    rootPassword: "ChangeMe"
-    createDatabase: true
-    database: "milvus_meta"
-
-  maxOpenConns: 20
-  maxIdleConns: 5
-  primary:
-    name: primary
-    resources:
-      limits: {}
-      requests: {}
-    persistence:
-      enabled: true
-      storageClass: ""
-      accessModes:
-        - ReadWriteOnce
-      size: 100Gi
-
-  secondary:
-    name: secondary
-    replicaCount: 1
-    resources:
-      limits: {}
-      requests: {}
-    persistence:
-      enabled: true
-      storageClass: ""
-      accessModes:
-        - ReadWriteOnce
-      size: 100Gi
-
 ###################################
 # External S3
 # - these configs are only used when `externalS3.enabled` is true
@@ -932,17 +887,3 @@ externalKafka:
     mechanisms: PLAIN
     username: ""
     password: ""
-
-###################################
-# External mysql
-# - these configs are only used when `externalMysql.enabled` is true
-###################################
-externalMysql:
-  enabled: false
-  username: ""
-  password: ""
-  address: localhost
-  port: 3306
-  dbName: milvus_meta
-  maxOpenConns: 20
-  maxIdleConns: 5
