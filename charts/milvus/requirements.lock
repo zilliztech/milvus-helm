@@ -11,8 +11,5 @@ dependencies:
 - name: kafka
   repository: https://raw.githubusercontent.com/bitnami/charts/pre-2022/bitnami
   version: 15.5.1
-- name: mysql
-  repository: https://raw.githubusercontent.com/bitnami/charts/pre-2022/bitnami
-  version: 8.5.3
-digest: sha256:7810d86cff203549e8b9dbd8d4776cac1267a62087c80cdb5104dc475e952e9f
-generated: "2023-08-17T18:00:58.85315+08:00"
+digest: sha256:22f3e5901ec8363dcc764d95376a6190e96ae40bb5dbe2bfb7c93a113c1e294f
+generated: "2023-10-30T14:45:53.542457+08:00"

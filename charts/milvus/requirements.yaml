@@ -23,9 +23,3 @@ dependencies:
   condition: kafka.enabled
   tags:
     - kafka
-- name: mysql
-  version: 8.5.3
-  repository: https://raw.githubusercontent.com/bitnami/charts/pre-2022/bitnami
-  condition: mysql.enabled
-  tags:
-    - mysql

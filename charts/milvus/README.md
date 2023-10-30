@@ -114,6 +114,8 @@ extraConfigFiles:
 
 So if you had deployed a cluster with helm chart version below 4.0.0 and also specified extra config, you need set the configs under `extraConfigFiles` when running `helm upgrade`.
 
+> **IMPORTANT** Milvus has removed mysql as meta store support from v2.3.1. And milvus helm chart has also removed mysql as dependency from chart version 4.1.8.
+
 ### Enable log to file
 
 By default, all the logs of milvus components will output stdout. If you wanna log to file, you'd install milvus with `--set log.persistence.enabled=true`. Note that you should have a storageclass with `ReadWriteMany` access modes.
@@ -223,14 +225,6 @@ The following table lists the configurable parameters of the Milvus Service and 
 | `externalKafka.sasl.mechanisms`           | SASL mechanism to use for kafka authentication                        | `PLAIN`                                                      |
 | `externalKafka.sasl.username`             | username for PLAIN or SASL/PLAIN authentication                       | ``                                                           |
 | `externalKafka.sasl.password`             | password for PLAIN or SASL/PLAIN authentication                       | ``                                                           |
-| `externalMysql.enabled`                   | Enable or disable external MySQL             | `false`                                                 |
-| `externalMysql.username`                  | MySQL username                               |                                        ``                                                      |
-| `externalMysql.password`                  | MySQL password                               | ``                                                      |
-| `externalMysql.address`                   | MySQL address                                | `localhost`                                             |
-| `externalMysql.port`                      | MySQL port                                   | `3306`                                                  |
-| `externalMysql.dbName`                    | MySQL meta database                          | `milvus_meta`                                           |
-| `externalMysql.maxOpenConns`              | MySQL client maxOpenConns                    | `20`                                                    |
-| `externalMysql.maxIdleConns`              | MySQL client maxIdleConns                    | `5`                                                     |
 
 ### Milvus Standalone Deployment Configuration
 
@@ -470,13 +464,6 @@ This version of the chart includes the dependent Kafka chart in the charts/ dire
 
 You can find more information at:
 * [https://artifacthub.io/packages/helm/bitnami/kafka](https://artifacthub.io/packages/helm/bitnami/kafka)
-
-### MySQL Configuration
-
-This version of the chart includes the dependent MySQL chart in the charts/ directory.
-
-You can find more information at:
-* [https://artifacthub.io/packages/helm/bitnami/mysql](https://artifacthub.io/packages/helm/bitnami/mysql)
 
 ### Milvus Live Profiling
 Profiling is an effective way of understanding which parts of your application are consuming the most resources.

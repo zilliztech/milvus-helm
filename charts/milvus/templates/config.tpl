@@ -26,45 +26,7 @@ etcd:
 {{- end }}
 
 metastore:
-{{- if or .Values.mysql.enabled .Values.externalMysql.enabled }}
-  type: mysql
-{{- else }}
   type: etcd
-{{- end }}
-
-{{- if .Values.externalMysql.enabled }}
-mysql:
-  username: {{ .Values.externalMysql.username }}
-  password: {{ .Values.externalMysql.password }}
-  address: {{ .Values.externalMysql.address }}
-  port: {{ .Values.externalMysql.port }}
-  dbName: {{ .Values.externalMysql.dbName }}
-  driverName: mysql
-  maxOpenConns: {{ .Values.externalMysql.maxOpenConns }}
-  maxIdleConns: {{ .Values.externalMysql.maxIdleConns }}
-{{- else if .Values.mysql.enabled }}
-mysql:
-  username: root
-  password: {{ .Values.mysql.auth.rootPassword }}
-  {{- if contains .Values.mysql.name .Release.Name }}
-    {{- if eq .Values.mysql.architecture "replication" }}
-  address: {{ .Release.Name }}-primary
-    {{- else }}
-  address: {{ .Release.Name }}
-    {{- end }}
-  {{- else }}
-    {{- if eq .Values.mysql.architecture "replication" }}
-  address: {{ .Release.Name }}-{{ .Values.mysql.name }}-primary
-    {{- else }}
-  address: {{ .Release.Name }}-{{ .Values.mysql.name }}
-    {{- end }}
-  {{- end }}
-  port: 3306
-  dbName: {{ .Values.mysql.auth.database }}
-  driverName: mysql
-  maxOpenConns: {{ .Values.mysql.maxOpenConns }}
-  maxIdleConns: {{ .Values.mysql.maxIdleConns }}
-{{- end }}
 
 minio:
 {{- if .Values.externalS3.enabled }}
