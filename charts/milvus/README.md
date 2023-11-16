@@ -127,6 +127,52 @@ helm install my-release milvus/milvus --set log.persistence.enabled=true --set l
 
 It will output log to `/milvus/logs/` directory.
 
+### Enable proxy tls connection
+By default the TLS connection to proxy service is false, to enable TLS with users' own certificate and privatge key, it can be specified in `extraConfigFiles` like this:
+
+```bash
+extraConfigFiles:
+  user.yaml: |+
+    #  Enable tlsMode and set the tls cert and key
+       tls:
+        serverPemPath: /etc/milvus/certs/tls.crt
+        serverKeyPath: /etc/milvus/certs/tls.key
+       common:
+         security:
+           tlsMode: 1
+
+```
+The path specified above are TLS secret data  mounted inside the proxy pod as files. To create a TLS secret, set `proxy.tls.enabled` to `true` then provide base64-encoded values for your certificate and private key files in values.yaml:
+
+```bash
+proxy:
+  enabled: true
+  tls:
+    enabled: true
+    secretName: milvus-tls
+  #expecting base64 encoded values here: i.e. $(cat tls.crt | base64 -w 0) and $(cat tls.key | base64 -w 0)
+    key: LS0tLS1C....
+    crt: LS0tLS1CR...
+```
+or in cli using --set:
+
+```bash
+  --set proxy.tls.enabled=true \
+  --set prox.tls.key=$(cat /path/to/private_key_file | base64 -w 0) \
+  --set prox.tls.crt=$(cat /path/to/certificate_file | base64 -w 0)
+```
+In case you want to use a different `secretName` or mount path inside pod, modify `prox.tls.secretName` above, and `serverPemPath` and `serverPemPath` in `extraConfigFles `accordingly, then in the `volume` and `volumeMounts` sections in values.yaml
+
+```bash
+  volumes:
+  - secret:
+      secretName: Your-tls-secret-name
+    name: milvus-tls
+  volumeMounts:
+  - mountPath: /Your/tls/files/path/
+    name: milvus-tls
+```
+
 ## Uninstall the Chart
 
 ```bash
@@ -265,8 +311,9 @@ The following table lists the configurable parameters of the Milvus Proxy compon
 | `proxy.heaptrack.enabled`                 | Whether to enable heaptrack                             | `false`                                          |
 | `proxy.profiling.enabled`                 | Whether to enable live profiling                   | `false`                                          |
 | `proxy.extraEnv`                          | Additional Milvus Proxy container environment variables | `[]`                                          |
-| `proxy.http.enabled`                          | Enable rest api for Milvus Proxy | `true`                                          |
-| `proxy.http.debugMode.enabled`                          | Enable debug mode for rest api | `false`                                          |
+| `proxy.http.enabled`                      | Enable rest api for Milvus Proxy | `true`                                          |
+| `proxy.http.debugMode.enabled`            | Enable debug mode for rest api | `false`                                          |
+| `proxy.tls.enabled`                       | Enable porxy tls connection | `false`                                          |
 
 ### Milvus Root Coordinator Deployment Configuration
 

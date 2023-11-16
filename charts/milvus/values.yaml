@@ -50,6 +50,13 @@ extraConfigFiles:
     #    proxy:
     #      http:
     #        enabled: true
+    ##  Enable tlsMode and set the tls cert and key
+    #  tls:
+    #    serverPemPath: /etc/milvus/certs/tls.crt
+    #    serverKeyPath: /etc/milvus/certs/tls.key
+    #   common:
+    #     security:
+    #       tlsMode: 1
 
 ## Expose the Milvus service to be accessed from outside the cluster (LoadBalancer service).
 ## or access it from within the cluster (ClusterIP service). Set the service type and the port to serve it.
@@ -230,6 +237,22 @@ proxy:
     enabled: true  # whether to enable http rest server
     debugMode:
       enabled: false
+  # Mount a TLS secret into proxy pod
+  tls:
+    enabled: false
+## when enabling proxy.tls, all items below should be uncommented and the key and crt values should be populated.
+#    enabled: true
+#    secretName: milvus-tls
+## expecting base64 encoded values here: i.e. $(cat tls.crt | base64 -w 0) and $(cat tls.key | base64 -w 0)
+#    key: LS0tLS1CRUdJTiBQU--REDUCT
+#    crt: LS0tLS1CRUdJTiBDR--REDUCT
+#  volumes:
+#  - secret:
+#      secretName: milvus-tls
+#    name: milvus-tls
+#  volumeMounts:
+#  - mountPath: /etc/milvus/certs/
+#    name: milvus-tls
 
 rootCoordinator:
   enabled: true
