@@ -28,6 +28,11 @@ etcd:
 metastore:
   type: etcd
 
+{{- if and (.Values.externalS3.enabled) (eq .Values.externalS3.cloudProvider "azure") }}
+common:
+  storageType: remote
+{{- end }}
+
 minio:
 {{- if .Values.externalS3.enabled }}
   address: {{ .Values.externalS3.host }}
