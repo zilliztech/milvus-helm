@@ -47,6 +47,45 @@ $ helm upgrade --install my-release --set cluster.enabled=false --set standalone
 # Milvus Standalone with kafka as message queue
 $ helm upgrade --install my-release --set cluster.enabled=false --set standalone.messageQueue=kafka --set etcd.replicaCount=1 --set pulsar.enabled=false --set kafka.enabled=true --set minio.mode=standalone milvus/milvus
 ```
+If you need to use standalone mode with embedded ETCD and local storage (without starting MinIO and additional ETCD), you can use the following steps:
+
+1. Prepare a values file
+```
+cat > values.yaml <<EOF
+---
+cluster:
+  enabled: false
+
+etcd:
+  enabled: false
+
+pulsar:
+  enabled: false
+
+minio:
+  enabled: false
+  tls:
+    enabled: false
+
+extraConfigFiles:
+  user.yaml: |+
+    etcd:
+      use:
+        embed: true
+      data:
+        dir: /var/lib/milvus/etcd
+    common:
+      storageType: local
+EOF
+
+```
+
+2. Helm install with this values file
+```
+helm upgrade --install -f values.yaml my-release milvus/milvus
+
+```
+
 > **Tip**: To list all releases, using `helm list`.
 
 ### Deploy Milvus with cluster mode
