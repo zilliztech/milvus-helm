@@ -451,7 +451,7 @@ attu:
 
 
 ## Configuration values for the minio dependency
-## ref: https://github.com/minio/charts/blob/master/README.md
+## ref: https://github.com/zilliztech/milvus-helm/blob/master/charts/minio/README.md
 ##
 
 minio:
