@@ -50,6 +50,8 @@ spec:
         - "cp -r /opt/heaptrack /milvus/tools"
         image: "{{ .Values.heaptrack.image.repository }}:{{ .Values.heaptrack.image.tag }}"
         imagePullPolicy: {{ .Values.heaptrack.image.pullPolicy }}
+        resources:
+          {{- toYaml .Values.dataNode.init.heaptrack.resources | nindent 10 }}
         volumeMounts:
         - mountPath: /milvus/tools
           name: tools
@@ -61,6 +63,8 @@ spec:
         - /milvus/tools/run-helm.sh,/milvus/tools/merge
         image: "{{ .Values.image.tools.repository }}:{{ .Values.image.tools.tag }}"
         imagePullPolicy: {{ .Values.image.tools.pullPolicy}}
+        resources:
+          {{- toYaml .Values.dataNode.init.config.resources | nindent 10 }}
         volumeMounts:
         - mountPath: /milvus/tools
           name: tools
