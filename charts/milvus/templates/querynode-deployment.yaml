@@ -14,6 +14,10 @@ spec:
   {{- if ge (int .Values.queryNode.replicas) 0 }}
   replicas: {{ .Values.queryNode.replicas }}
   {{- end }}
+  {{- with .Values.queryNode.strategy }}
+  strategy:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   selector:
     matchLabels:
 {{ include "milvus.matchLabels" . | indent 6 }}
