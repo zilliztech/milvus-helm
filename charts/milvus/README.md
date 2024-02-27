@@ -378,7 +378,7 @@ The following table lists the configurable parameters of the Milvus Root Coordin
 | `rootCoordinator.service.loadBalancerIP`             | IP address to assign to load balancer (if supported) | `unset`                               |
 | `rootCoordinator.service.loadBalancerSourceRanges`   | List of IP CIDRs allowed access to lb (if supported) | `[]`                                  |
 | `rootCoordinator.service.externalIPs`                | Service external IP addresses                 | `[]`                                         |
-
+| `rootCoordinator.strategy`       | Deployment strategy configuration               | `RollingUpdate`                                         |
 ### Milvus Query Coordinator Deployment Configuration
 
 The following table lists the configurable parameters of the Milvus Query Coordinator component and their default values.
@@ -402,6 +402,7 @@ The following table lists the configurable parameters of the Milvus Query Coordi
 | `queryCoordinator.service.loadBalancerIP`             | IP address to assign to load balancer (if supported) | `unset`                              |
 | `queryCoordinator.service.loadBalancerSourceRanges`   | List of IP CIDRs allowed access to lb (if supported) | `[]`                                 |
 | `queryCoordinator.service.externalIPs`                | Service external IP addresses                 | `[]`                                        |
+| `queryCoordinator.strategy`       | Deployment strategy configuration               | `RollingUpdate`                                         |
 
 ### Milvus Query Node Deployment Configuration
 
@@ -444,7 +445,7 @@ The following table lists the configurable parameters of the Milvus Index Coordi
 | `indexCoordinator.service.loadBalancerIP`             | IP address to assign to load balancer (if supported) | `unset`                              |
 | `indexCoordinator.service.loadBalancerSourceRanges`   | List of IP CIDRs allowed access to lb (if supported) | `[]`                                 |
 | `indexCoordinator.service.externalIPs`                | Service external IP addresses                 | `[]`                                        |
-
+| `indexCoordinator.strategy`       | Deployment strategy configuration               | `RollingUpdate`                                         |
 ### Milvus Index Node Deployment Configuration
 
 The following table lists the configurable parameters of the Milvus Index Node component and their default values.
@@ -486,7 +487,7 @@ The following table lists the configurable parameters of the Milvus Data Coordin
 | `dataCoordinator.service.loadBalancerIP`              | IP address to assign to load balancer (if supported) | `unset`                              |
 | `dataCoordinator.service.loadBalancerSourceRanges`    | List of IP CIDRs allowed access to lb (if supported) | `[]`                                 |
 | `dataCoordinator.service.externalIPs`                 | Service external IP addresses                 | `[]`                                        |
-
+| `dataCoordinator.strategy`       | Deployment strategy configuration               | `RollingUpdate`                                         |
 ### Milvus Data Node Deployment Configuration
 
 The following table lists the configurable parameters of the Milvus Data Node component and their default values.
