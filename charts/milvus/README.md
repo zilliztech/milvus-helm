@@ -353,6 +353,7 @@ The following table lists the configurable parameters of the Milvus Proxy compon
 | `proxy.http.enabled`                      | Enable rest api for Milvus Proxy | `true`                                          |
 | `proxy.http.debugMode.enabled`            | Enable debug mode for rest api | `false`                                          |
 | `proxy.tls.enabled`                       | Enable porxy tls connection | `false`                                          |
+| `proxy.strategy`                          | Deployment strategy configuration |  RollingUpdate                                         |
 
 ### Milvus Root Coordinator Deployment Configuration
 
@@ -418,6 +419,7 @@ The following table lists the configurable parameters of the Milvus Query Node c
 | `queryNode.disk.enabled`                  | Whether to enable disk for query                             | `true`                                          |
 | `queryNode.profiling.enabled`             | Whether to enable live profiling                   | `false`                                          |
 | `queryNode.extraEnv`                      | Additional Milvus Query Node container environment variables | `[]`                                     |
+| `queryNode.strategy`                      | Deployment strategy configuration |  RollingUpdate                                         |
 
 ### Milvus Index Coordinator Deployment Configuration
 
@@ -459,6 +461,7 @@ The following table lists the configurable parameters of the Milvus Index Node c
 | `indexNode.disk.enabled`                  | Whether to enable disk for index node                             | `true`                                          |
 | `indexNode.profiling.enabled`             | Whether to enable live profiling                   | `false`                                          |
 | `indexNode.extraEnv`                      | Additional Milvus Index Node container environment variables | `[]`                                     |
+| `indexNode.strategy`                      | Deployment strategy configuration |  RollingUpdate                                         |
 
 ### Milvus Data Coordinator Deployment Configuration
 
@@ -499,6 +502,7 @@ The following table lists the configurable parameters of the Milvus Data Node co
 | `dataNode.heaptrack.enabled`              | Whether to enable heaptrack                             | `false`                                          |
 | `dataNode.profiling.enabled`              | Whether to enable live profiling                   | `false`                                          |
 | `dataNode.extraEnv`                       | Additional Milvus Data Node container environment variables | `[]`                                      |
+| `dataNode.strategy`                       | Deployment strategy configuration |  RollingUpdate                                         |
 
 ### Milvus Mixture Coordinator Deployment Configuration
 
