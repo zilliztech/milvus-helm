@@ -254,6 +254,9 @@ proxy:
 #  volumeMounts:
 #  - mountPath: /etc/milvus/certs/
 #    name: milvus-tls
+  # Deployment strategy, default is RollingUpdate
+  # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
+  strategy: {}
 
 rootCoordinator:
   enabled: true
@@ -319,6 +322,9 @@ queryNode:
       enabled: false  # Enable local storage size limit
   profiling:
     enabled: false  # Enable live profiling
+  # Deployment strategy, default is RollingUpdate
+  # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
+  strategy: {}
 
 indexCoordinator:
   enabled: true
@@ -362,6 +368,9 @@ indexNode:
     enabled: true  # Enable index node build disk vector index
     size:
       enabled: false  # Enable local storage size limit
+  # Deployment strategy, default is RollingUpdate
+  # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
+  strategy: {}
 
 dataCoordinator:
   enabled: true
@@ -398,6 +407,9 @@ dataNode:
     enabled: false
   profiling:
     enabled: false  # Enable live profiling
+  # Deployment strategy, default is RollingUpdate
+  # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
+  strategy: {}
 
 ## mixCoordinator contains all coord
 ## If you want to use mixcoord, enable this and disable all of other coords 
