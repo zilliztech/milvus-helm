@@ -923,3 +923,9 @@ externalKafka:
     mechanisms: PLAIN
     username: ""
     password: ""
+
+## Update strategy for Deployments
+DeploymentUpdate:
+  type: RollingUpdate
+  maxUnavailable: 25%
+  maxSurge: 25%
