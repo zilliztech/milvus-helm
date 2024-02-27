@@ -11,9 +11,13 @@ metadata:
 {{ include "milvus.ud.annotations" . | indent 4 }}
 
 spec:
+  {{- if ge (int .Values.queryCoordinator.replicas) 0 }}
   replicas: {{ .Values.queryCoordinator.replicas }}
+  {{- end }}
+  {{- with .Values.queryCoordinator.strategy }}
   strategy:
-    type: Recreate
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   selector:
     matchLabels:
 {{ include "milvus.matchLabels" . | indent 6 }}

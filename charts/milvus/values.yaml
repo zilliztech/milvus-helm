@@ -273,6 +273,9 @@ rootCoordinator:
     enabled: false  # Enable live profiling
   activeStandby:
     enabled: false  # Enable active-standby when you set multiple replicas for root coordinator
+  # Deployment strategy, default is RollingUpdate
+  # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
+  strategy: {}
 
   service:
     port: 53100
@@ -295,6 +298,9 @@ queryCoordinator:
     enabled: false  # Enable live profiling
   activeStandby:
     enabled: false  # Enable active-standby when you set multiple replicas for query coordinator
+  # Deployment strategy, default is RollingUpdate
+  # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
+  strategy: {}
 
   service:
     port: 19531
@@ -341,6 +347,9 @@ indexCoordinator:
     enabled: false  # Enable live profiling
   activeStandby:
     enabled: false  # Enable active-standby when you set multiple replicas for index coordinator
+  # Deployment strategy, default is RollingUpdate
+  # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
+  strategy: {}
 
   service:
     port: 31000
@@ -387,6 +396,9 @@ dataCoordinator:
     enabled: false  # Enable live profiling
   activeStandby:
     enabled: false  # Enable active-standby when you set multiple replicas for data coordinator
+  # Deployment strategy, default is RollingUpdate
+  # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
+  strategy: {}
 
   service:
     port: 13333
@@ -428,6 +440,9 @@ mixCoordinator:
     enabled: false  # Enable live profiling
   activeStandby:
     enabled: false  # Enable active-standby when you set multiple replicas for Mixture coordinator
+  # Deployment strategy, default is RollingUpdate
+  # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
+  strategy: {}
 
   service:
     annotations: {}
