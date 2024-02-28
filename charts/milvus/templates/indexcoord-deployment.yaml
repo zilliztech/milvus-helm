@@ -14,9 +14,14 @@ spec:
   {{- if ge (int .Values.indexCoordinator.replicas) 0 }}
   replicas: {{ .Values.indexCoordinator.replicas }}
   {{- end }}
+  {{- if .Values.indexCoordinator.activeStandby.enabled}}
   {{- with .Values.indexCoordinator.strategy }}
   strategy:
     {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- else }}
+  strategy:
+    type: Recreate
   {{- end }}
   selector:
     matchLabels:
