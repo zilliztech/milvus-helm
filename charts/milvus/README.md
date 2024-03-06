@@ -339,21 +339,23 @@ The following table lists the configurable parameters of the Milvus Standalone c
 
 The following table lists the configurable parameters of the Milvus Proxy component and their default values.
 
-| Parameter                                 | Description                                   | Default                                                 |
-|-------------------------------------------|-----------------------------------------------|---------------------------------------------------------|
-| `proxy.enabled`                           | Enable or disable Milvus Proxy Deployment     | `true`                                                  |
-| `proxy.replicas`                          | Desired number of Milvus Proxy pods            | `1`                                                    |
-| `proxy.resources`                         | Resource requests/limits for the Milvus Proxy pods | `{}`                                               |
-| `proxy.nodeSelector`                      | Node labels for Milvus Proxy pods assignment | `{}`                                                     |
-| `proxy.affinity`                          | Affinity settings for Milvus Proxy pods assignment | `{}`                                               |
-| `proxy.tolerations`                       | Toleration labels for Milvus Proxy pods assignment | `[]`                                               |
-| `proxy.heaptrack.enabled`                 | Whether to enable heaptrack                             | `false`                                          |
-| `proxy.profiling.enabled`                 | Whether to enable live profiling                   | `false`                                          |
-| `proxy.extraEnv`                          | Additional Milvus Proxy container environment variables | `[]`                                          |
-| `proxy.http.enabled`                      | Enable rest api for Milvus Proxy | `true`                                          |
-| `proxy.http.debugMode.enabled`            | Enable debug mode for rest api | `false`                                          |
-| `proxy.tls.enabled`                       | Enable porxy tls connection | `false`                                          |
-| `proxy.strategy`                          | Deployment strategy configuration |  RollingUpdate                                         |
+| Parameter                                 | Description                                             | Default       |
+|-------------------------------------------|---------------------------------------------------------|---------------|
+| `proxy.enabled`                           | Enable or disable Milvus Proxy Deployment               | `true`        |
+| `proxy.replicas`                          | Desired number of Milvus Proxy pods                     | `1`           |
+| `proxy.resources`                         | Resource requests/limits for the Milvus Proxy pods      | `{}`          |
+| `proxy.nodeSelector`                      | Node labels for Milvus Proxy pods assignment            | `{}`          |
+| `proxy.affinity`                          | Affinity settings for Milvus Proxy pods assignment      | `{}`          |
+| `proxy.tolerations`                       | Toleration labels for Milvus Proxy pods assignment      | `[]`          |
+| `proxy.heaptrack.enabled`                 | Whether to enable heaptrack                             | `false`       |
+| `proxy.profiling.enabled`                 | Whether to enable live profiling                        | `false`       |
+| `proxy.extraEnv`                          | Additional Milvus Proxy container environment variables | `[]`          |
+| `proxy.http.enabled`                      | Enable rest api for Milvus Proxy                        | `true`        |
+| `proxy.maxUserNum`                       | Modify the Milvus maximum user limit                    | `100`         |
+| `proxy.maxRoleNum`                       | Modify the Milvus maximum role limit                    | `10`          |
+| `proxy.http.debugMode.enabled`            | Enable debug mode for rest api                          | `false`       |
+| `proxy.tls.enabled`                       | Enable porxy tls connection                             | `false`       |
+| `proxy.strategy`                          | Deployment strategy configuration                       | RollingUpdate |
 
 ### Milvus Root Coordinator Deployment Configuration
 

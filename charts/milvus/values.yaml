@@ -51,6 +51,7 @@ extraConfigFiles:
     #      http:
     #        enabled: true
     #      maxUserNum: 100
+    #      maxRoleNum: 10
     ##  Enable tlsMode and set the tls cert and key
     #  tls:
     #    serverPemPath: /etc/milvus/certs/tls.crt
