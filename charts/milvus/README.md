@@ -370,15 +370,15 @@ The following table lists the configurable parameters of the Milvus Root Coordin
 | `rootCoordinator.profiling.enabled`       | Whether to enable live profiling                   | `false`                                          |
 | `rootCoordinator.activeStandby.enabled`   | Whether to enable active-standby                   | `false`                                          |
 | `rootCoordinator.extraEnv`                | Additional Milvus Root Coordinator container environment variables | `[]`                               |
-| `rootCoordinator.service.type`                       | Service type                                  | `ClusterIP`                                  |
-| `rootCoordinator.service.port`                       | Port where service is exposed                 | `19530`                                      |
-| `rootCoordinator.service.annotations`                | Service annotations                           | `{}`                                         |
-| `rootCoordinator.service.labels`                     | Service custom labels                         | `{}`                                         |
-| `rootCoordinator.service.clusterIP`                  | Internal cluster service IP                   | `unset`                                      |
-| `rootCoordinator.service.loadBalancerIP`             | IP address to assign to load balancer (if supported) | `unset`                               |
-| `rootCoordinator.service.loadBalancerSourceRanges`   | List of IP CIDRs allowed access to lb (if supported) | `[]`                                  |
-| `rootCoordinator.service.externalIPs`                | Service external IP addresses                 | `[]`                                         |
-
+| `rootCoordinator.service.type`                    | Service type                                  | `ClusterIP`                                  |
+| `rootCoordinator.service.port`                    | Port where service is exposed                 | `19530`                                      |
+| `rootCoordinator.service.annotations`             | Service annotations                           | `{}`                                         |
+| `rootCoordinator.service.labels`                  | Service custom labels                         | `{}`                                         |
+| `rootCoordinator.service.clusterIP`               | Internal cluster service IP                   | `unset`                                      |
+| `rootCoordinator.service.loadBalancerIP`          | IP address to assign to load balancer (if supported) | `unset`                               |
+| `rootCoordinator.service.loadBalancerSourceRanges` | List of IP CIDRs allowed access to lb (if supported) | `[]`                                  |
+| `rootCoordinator.service.externalIPs`             | Service external IP addresses                 | `[]`                                         |
+| `rootCoordinator.strategy`                       | Deployment strategy configuration |  RollingUpdate                                         |
 ### Milvus Query Coordinator Deployment Configuration
 
 The following table lists the configurable parameters of the Milvus Query Coordinator component and their default values.
@@ -402,7 +402,7 @@ The following table lists the configurable parameters of the Milvus Query Coordi
 | `queryCoordinator.service.loadBalancerIP`             | IP address to assign to load balancer (if supported) | `unset`                              |
 | `queryCoordinator.service.loadBalancerSourceRanges`   | List of IP CIDRs allowed access to lb (if supported) | `[]`                                 |
 | `queryCoordinator.service.externalIPs`                | Service external IP addresses                 | `[]`                                        |
-
+| `queryCoordinator.strategy`                       | Deployment strategy configuration |  RollingUpdate                                         |
 ### Milvus Query Node Deployment Configuration
 
 The following table lists the configurable parameters of the Milvus Query Node component and their default values.
@@ -444,7 +444,7 @@ The following table lists the configurable parameters of the Milvus Index Coordi
 | `indexCoordinator.service.loadBalancerIP`             | IP address to assign to load balancer (if supported) | `unset`                              |
 | `indexCoordinator.service.loadBalancerSourceRanges`   | List of IP CIDRs allowed access to lb (if supported) | `[]`                                 |
 | `indexCoordinator.service.externalIPs`                | Service external IP addresses                 | `[]`                                        |
-
+| `indexCoordinator.strategy`                       | Deployment strategy configuration |  RollingUpdate                                         |
 ### Milvus Index Node Deployment Configuration
 
 The following table lists the configurable parameters of the Milvus Index Node component and their default values.
@@ -486,7 +486,7 @@ The following table lists the configurable parameters of the Milvus Data Coordin
 | `dataCoordinator.service.loadBalancerIP`              | IP address to assign to load balancer (if supported) | `unset`                              |
 | `dataCoordinator.service.loadBalancerSourceRanges`    | List of IP CIDRs allowed access to lb (if supported) | `[]`                                 |
 | `dataCoordinator.service.externalIPs`                 | Service external IP addresses                 | `[]`                                        |
-
+| `dataCoordinator.strategy`                       | Deployment strategy configuration |  RollingUpdate                                         |
 ### Milvus Data Node Deployment Configuration
 
 The following table lists the configurable parameters of the Milvus Data Node component and their default values.
@@ -526,7 +526,7 @@ The following table lists the configurable parameters of the Milvus Mixture Coor
 | `mixCoordinator.service.loadBalancerIP`              | IP address to assign to load balancer (if supported) | `unset`                              |
 | `mixCoordinator.service.loadBalancerSourceRanges`    | List of IP CIDRs allowed access to lb (if supported) | `[]`                                 |
 | `mixCoordinator.service.externalIPs`                 | Service external IP addresses                 | `[]`                                        |
-
+| `mixCoordinator.strategy`                       | Deployment strategy configuration |  RollingUpdate                                         |
 ### Pulsar Configuration
 
 This version of the chart includes the dependent Pulsar chart in the charts/ directory.
