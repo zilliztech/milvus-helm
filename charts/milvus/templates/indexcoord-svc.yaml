@@ -3,6 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ template "milvus.indexcoord.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
   labels:
 {{ include "milvus.labels" . | indent 4 }}
 {{- if .Values.indexCoordinator.service.labels }}

@@ -2,6 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ template "milvus.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
 data:
   default.yaml: |+
     {{- include "milvus.config" . | nindent 4 }}
