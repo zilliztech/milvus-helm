@@ -5,7 +5,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
 metadata:
   name: {{ template "milvus.pulsar.fullname" . }}-broker
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ .Release.Namespace }}
   labels:
     app: pulsar
     cluster: {{ template "milvus.pulsar.fullname" .}}
@@ -32,7 +32,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
 metadata:
   name: {{ template "milvus.pulsar.fullname" . }}-proxy
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ .Release.Namespace }}
   labels:
     app: pulsar
     cluster: {{ template "milvus.pulsar.fullname" .}}

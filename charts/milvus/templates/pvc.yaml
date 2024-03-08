@@ -5,7 +5,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: {{ printf "%s" (include "milvus.fullname" . | trunc 58)}}
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ .Release.Namespace }}
 {{- with .Values.standalone.persistence.annotations  }}
   annotations:
 {{ toYaml . | indent 4 }}
@@ -37,7 +37,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: {{ printf "%s-logs" (include "milvus.fullname" . | trunc 58)}}
-  namespace: {{ .Release.Namespace | quote }}
+  namespace: {{ .Release.Namespace }}
 {{- with .Values.log.persistence.annotations  }}
   annotations:
 {{ toYaml . | indent 4 }}
