@@ -5,7 +5,7 @@ cluster:
 image:
   all:
     repository: milvusdb/milvus
-    tag: v2.3.9
+    tag: v2.3.11
     pullPolicy: IfNotPresent
     ## Optionally specify an array of imagePullSecrets.
     ## Secrets must be manually created in the namespace.
@@ -50,6 +50,8 @@ extraConfigFiles:
     #    proxy:
     #      http:
     #        enabled: true
+    #      maxUserNum: 100
+    #      maxRoleNum: 10
     ##  Enable tlsMode and set the tls cert and key
     #  tls:
     #    serverPemPath: /etc/milvus/certs/tls.crt
@@ -253,6 +255,9 @@ proxy:
 #  volumeMounts:
 #  - mountPath: /etc/milvus/certs/
 #    name: milvus-tls
+  # Deployment strategy, default is RollingUpdate
+  # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
+  strategy: {}
 
 rootCoordinator:
   enabled: true
@@ -269,6 +274,9 @@ rootCoordinator:
     enabled: false  # Enable live profiling
   activeStandby:
     enabled: false  # Enable active-standby when you set multiple replicas for root coordinator
+  # Deployment strategy, default is RollingUpdate
+  # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
+  strategy: {}
 
   service:
     port: 53100
@@ -291,6 +299,9 @@ queryCoordinator:
     enabled: false  # Enable live profiling
   activeStandby:
     enabled: false  # Enable active-standby when you set multiple replicas for query coordinator
+  # Deployment strategy, default is RollingUpdate
+  # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
+  strategy: {}
 
   service:
     port: 19531
@@ -318,6 +329,9 @@ queryNode:
       enabled: false  # Enable local storage size limit
   profiling:
     enabled: false  # Enable live profiling
+  # Deployment strategy, default is RollingUpdate
+  # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
+  strategy: {}
 
 indexCoordinator:
   enabled: true
@@ -334,6 +348,9 @@ indexCoordinator:
     enabled: false  # Enable live profiling
   activeStandby:
     enabled: false  # Enable active-standby when you set multiple replicas for index coordinator
+  # Deployment strategy, default is RollingUpdate
+  # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
+  strategy: {}
 
   service:
     port: 31000
@@ -361,6 +378,9 @@ indexNode:
     enabled: true  # Enable index node build disk vector index
     size:
       enabled: false  # Enable local storage size limit
+  # Deployment strategy, default is RollingUpdate
+  # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
+  strategy: {}
 
 dataCoordinator:
   enabled: true
@@ -377,6 +397,9 @@ dataCoordinator:
     enabled: false  # Enable live profiling
   activeStandby:
     enabled: false  # Enable active-standby when you set multiple replicas for data coordinator
+  # Deployment strategy, default is RollingUpdate
+  # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
+  strategy: {}
 
   service:
     port: 13333
@@ -397,6 +420,9 @@ dataNode:
     enabled: false
   profiling:
     enabled: false  # Enable live profiling
+  # Deployment strategy, default is RollingUpdate
+  # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
+  strategy: {}
 
 ## mixCoordinator contains all coord
 ## If you want to use mixcoord, enable this and disable all of other coords 
@@ -415,6 +441,9 @@ mixCoordinator:
     enabled: false  # Enable live profiling
   activeStandby:
     enabled: false  # Enable active-standby when you set multiple replicas for Mixture coordinator
+  # Deployment strategy, default is RollingUpdate
+  # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
+  strategy: {}
 
   service:
     annotations: {}

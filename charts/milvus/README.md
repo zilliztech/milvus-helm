@@ -239,7 +239,7 @@ The following table lists the configurable parameters of the Milvus Service and 
 |-------------------------------------------|-----------------------------------------------|---------------------------------------------------------|
 | `cluster.enabled`                         | Enable or disable Milvus Cluster mode         | `true`                                                 |
 | `image.all.repository`                    | Image repository                              | `milvusdb/milvus`                                       |
-| `image.all.tag`                           | Image tag                                     | `v2.3.9`                           |
+| `image.all.tag`                           | Image tag                                     | `v2.3.11`                           |
 | `image.all.pullPolicy`                    | Image pull policy                             | `IfNotPresent`                                          |
 | `image.all.pullSecrets`                   | Image pull secrets                            | `{}`                                                    |
 | `image.tools.repository`                  | Config image repository                       | `milvusdb/milvus-config-tool`                                       |
@@ -339,20 +339,23 @@ The following table lists the configurable parameters of the Milvus Standalone c
 
 The following table lists the configurable parameters of the Milvus Proxy component and their default values.
 
-| Parameter                                 | Description                                   | Default                                                 |
-|-------------------------------------------|-----------------------------------------------|---------------------------------------------------------|
-| `proxy.enabled`                           | Enable or disable Milvus Proxy Deployment     | `true`                                                  |
-| `proxy.replicas`                          | Desired number of Milvus Proxy pods            | `1`                                                    |
-| `proxy.resources`                         | Resource requests/limits for the Milvus Proxy pods | `{}`                                               |
-| `proxy.nodeSelector`                      | Node labels for Milvus Proxy pods assignment | `{}`                                                     |
-| `proxy.affinity`                          | Affinity settings for Milvus Proxy pods assignment | `{}`                                               |
-| `proxy.tolerations`                       | Toleration labels for Milvus Proxy pods assignment | `[]`                                               |
-| `proxy.heaptrack.enabled`                 | Whether to enable heaptrack                             | `false`                                          |
-| `proxy.profiling.enabled`                 | Whether to enable live profiling                   | `false`                                          |
-| `proxy.extraEnv`                          | Additional Milvus Proxy container environment variables | `[]`                                          |
-| `proxy.http.enabled`                      | Enable rest api for Milvus Proxy | `true`                                          |
-| `proxy.http.debugMode.enabled`            | Enable debug mode for rest api | `false`                                          |
-| `proxy.tls.enabled`                       | Enable porxy tls connection | `false`                                          |
+| Parameter                                 | Description                                             | Default       |
+|-------------------------------------------|---------------------------------------------------------|---------------|
+| `proxy.enabled`                           | Enable or disable Milvus Proxy Deployment               | `true`        |
+| `proxy.replicas`                          | Desired number of Milvus Proxy pods                     | `1`           |
+| `proxy.resources`                         | Resource requests/limits for the Milvus Proxy pods      | `{}`          |
+| `proxy.nodeSelector`                      | Node labels for Milvus Proxy pods assignment            | `{}`          |
+| `proxy.affinity`                          | Affinity settings for Milvus Proxy pods assignment      | `{}`          |
+| `proxy.tolerations`                       | Toleration labels for Milvus Proxy pods assignment      | `[]`          |
+| `proxy.heaptrack.enabled`                 | Whether to enable heaptrack                             | `false`       |
+| `proxy.profiling.enabled`                 | Whether to enable live profiling                        | `false`       |
+| `proxy.extraEnv`                          | Additional Milvus Proxy container environment variables | `[]`          |
+| `proxy.http.enabled`                      | Enable rest api for Milvus Proxy                        | `true`        |
+| `proxy.maxUserNum`                       | Modify the Milvus maximum user limit                    | `100`         |
+| `proxy.maxRoleNum`                       | Modify the Milvus maximum role limit                    | `10`          |
+| `proxy.http.debugMode.enabled`            | Enable debug mode for rest api                          | `false`       |
+| `proxy.tls.enabled`                       | Enable porxy tls connection                             | `false`       |
+| `proxy.strategy`                          | Deployment strategy configuration                       | RollingUpdate |
 
 ### Milvus Root Coordinator Deployment Configuration
 
@@ -369,15 +372,15 @@ The following table lists the configurable parameters of the Milvus Root Coordin
 | `rootCoordinator.profiling.enabled`       | Whether to enable live profiling                   | `false`                                          |
 | `rootCoordinator.activeStandby.enabled`   | Whether to enable active-standby                   | `false`                                          |
 | `rootCoordinator.extraEnv`                | Additional Milvus Root Coordinator container environment variables | `[]`                               |
-| `rootCoordinator.service.type`                       | Service type                                  | `ClusterIP`                                  |
-| `rootCoordinator.service.port`                       | Port where service is exposed                 | `19530`                                      |
-| `rootCoordinator.service.annotations`                | Service annotations                           | `{}`                                         |
-| `rootCoordinator.service.labels`                     | Service custom labels                         | `{}`                                         |
-| `rootCoordinator.service.clusterIP`                  | Internal cluster service IP                   | `unset`                                      |
-| `rootCoordinator.service.loadBalancerIP`             | IP address to assign to load balancer (if supported) | `unset`                               |
-| `rootCoordinator.service.loadBalancerSourceRanges`   | List of IP CIDRs allowed access to lb (if supported) | `[]`                                  |
-| `rootCoordinator.service.externalIPs`                | Service external IP addresses                 | `[]`                                         |
-
+| `rootCoordinator.service.type`                    | Service type                                  | `ClusterIP`                                  |
+| `rootCoordinator.service.port`                    | Port where service is exposed                 | `19530`                                      |
+| `rootCoordinator.service.annotations`             | Service annotations                           | `{}`                                         |
+| `rootCoordinator.service.labels`                  | Service custom labels                         | `{}`                                         |
+| `rootCoordinator.service.clusterIP`               | Internal cluster service IP                   | `unset`                                      |
+| `rootCoordinator.service.loadBalancerIP`          | IP address to assign to load balancer (if supported) | `unset`                               |
+| `rootCoordinator.service.loadBalancerSourceRanges` | List of IP CIDRs allowed access to lb (if supported) | `[]`                                  |
+| `rootCoordinator.service.externalIPs`             | Service external IP addresses                 | `[]`                                         |
+| `rootCoordinator.strategy`                       | Deployment strategy configuration |  RollingUpdate                                         |
 ### Milvus Query Coordinator Deployment Configuration
 
 The following table lists the configurable parameters of the Milvus Query Coordinator component and their default values.
@@ -401,7 +404,7 @@ The following table lists the configurable parameters of the Milvus Query Coordi
 | `queryCoordinator.service.loadBalancerIP`             | IP address to assign to load balancer (if supported) | `unset`                              |
 | `queryCoordinator.service.loadBalancerSourceRanges`   | List of IP CIDRs allowed access to lb (if supported) | `[]`                                 |
 | `queryCoordinator.service.externalIPs`                | Service external IP addresses                 | `[]`                                        |
-
+| `queryCoordinator.strategy`                       | Deployment strategy configuration |  RollingUpdate                                         |
 ### Milvus Query Node Deployment Configuration
 
 The following table lists the configurable parameters of the Milvus Query Node component and their default values.
@@ -418,6 +421,7 @@ The following table lists the configurable parameters of the Milvus Query Node c
 | `queryNode.disk.enabled`                  | Whether to enable disk for query                             | `true`                                          |
 | `queryNode.profiling.enabled`             | Whether to enable live profiling                   | `false`                                          |
 | `queryNode.extraEnv`                      | Additional Milvus Query Node container environment variables | `[]`                                     |
+| `queryNode.strategy`                      | Deployment strategy configuration |  RollingUpdate                                         |
 
 ### Milvus Index Coordinator Deployment Configuration
 
@@ -442,7 +446,7 @@ The following table lists the configurable parameters of the Milvus Index Coordi
 | `indexCoordinator.service.loadBalancerIP`             | IP address to assign to load balancer (if supported) | `unset`                              |
 | `indexCoordinator.service.loadBalancerSourceRanges`   | List of IP CIDRs allowed access to lb (if supported) | `[]`                                 |
 | `indexCoordinator.service.externalIPs`                | Service external IP addresses                 | `[]`                                        |
-
+| `indexCoordinator.strategy`                       | Deployment strategy configuration |  RollingUpdate                                         |
 ### Milvus Index Node Deployment Configuration
 
 The following table lists the configurable parameters of the Milvus Index Node component and their default values.
@@ -459,6 +463,7 @@ The following table lists the configurable parameters of the Milvus Index Node c
 | `indexNode.disk.enabled`                  | Whether to enable disk for index node                             | `true`                                          |
 | `indexNode.profiling.enabled`             | Whether to enable live profiling                   | `false`                                          |
 | `indexNode.extraEnv`                      | Additional Milvus Index Node container environment variables | `[]`                                     |
+| `indexNode.strategy`                      | Deployment strategy configuration |  RollingUpdate                                         |
 
 ### Milvus Data Coordinator Deployment Configuration
 
@@ -483,7 +488,7 @@ The following table lists the configurable parameters of the Milvus Data Coordin
 | `dataCoordinator.service.loadBalancerIP`              | IP address to assign to load balancer (if supported) | `unset`                              |
 | `dataCoordinator.service.loadBalancerSourceRanges`    | List of IP CIDRs allowed access to lb (if supported) | `[]`                                 |
 | `dataCoordinator.service.externalIPs`                 | Service external IP addresses                 | `[]`                                        |
-
+| `dataCoordinator.strategy`                       | Deployment strategy configuration |  RollingUpdate                                         |
 ### Milvus Data Node Deployment Configuration
 
 The following table lists the configurable parameters of the Milvus Data Node component and their default values.
@@ -499,6 +504,7 @@ The following table lists the configurable parameters of the Milvus Data Node co
 | `dataNode.heaptrack.enabled`              | Whether to enable heaptrack                             | `false`                                          |
 | `dataNode.profiling.enabled`              | Whether to enable live profiling                   | `false`                                          |
 | `dataNode.extraEnv`                       | Additional Milvus Data Node container environment variables | `[]`                                      |
+| `dataNode.strategy`                       | Deployment strategy configuration |  RollingUpdate                                         |
 
 ### Milvus Mixture Coordinator Deployment Configuration
 
@@ -522,7 +528,7 @@ The following table lists the configurable parameters of the Milvus Mixture Coor
 | `mixCoordinator.service.loadBalancerIP`              | IP address to assign to load balancer (if supported) | `unset`                              |
 | `mixCoordinator.service.loadBalancerSourceRanges`    | List of IP CIDRs allowed access to lb (if supported) | `[]`                                 |
 | `mixCoordinator.service.externalIPs`                 | Service external IP addresses                 | `[]`                                        |
-
+| `mixCoordinator.strategy`                       | Deployment strategy configuration |  RollingUpdate                                         |
 ### Pulsar Configuration
 
 This version of the chart includes the dependent Pulsar chart in the charts/ directory.

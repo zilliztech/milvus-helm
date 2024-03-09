@@ -15,6 +15,10 @@ spec:
   {{- if ge (int .Values.proxy.replicas) 0 }}
   replicas: {{ .Values.proxy.replicas }}
   {{- end }}
+  {{- with .Values.proxy.strategy }}
+  strategy:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   selector:
     matchLabels:
 {{ include "milvus.matchLabels" . | indent 6 }}
