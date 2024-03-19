@@ -212,6 +212,27 @@ In case you want to use a different `secretName` or mount path inside pod, modif
     name: milvus-tls
 ```
 
+## Milvus with External Object Storage
+
+As of https://github.com/minio/minio/releases/tag/RELEASE.2022-10-29T06-21-33Z, the MinIO Gateway and the related filesystem mode code have been removed. It is now recommended to utilize the `externalS3` configuration for integrating with various object storage services. Notably, Milvus now provides support for popular object storage platforms such as AWS S3, GCP GCS, Azure Blob, Aliyun OSS and Tencent COS. 
+
+The recommended configuration option for `externalS3.cloudProvider` includes the following choices: `aws`, `gcp`, `azure`, `aliyun`, and `tencent`. Here's an example to use AWS S3 for Milvus object storage:
+
+```
+minio:
+  enabled: false
+externalS3:
+  enabled: true
+  cloudProvider: aws
+  host: s3.aws.com
+  port: 443
+  useSSL: true
+  bucketName: <bucket-name>
+  accessKey: <s3-access-key>
+  secretKey: <s3-secret-key>
+```
+
+
 ## Uninstall the Chart
 
 ```bash
@@ -239,7 +260,7 @@ The following table lists the configurable parameters of the Milvus Service and 
 |-------------------------------------------|-----------------------------------------------|---------------------------------------------------------|
 | `cluster.enabled`                         | Enable or disable Milvus Cluster mode         | `true`                                                 |
 | `image.all.repository`                    | Image repository                              | `milvusdb/milvus`                                       |
-| `image.all.tag`                           | Image tag                                     | `v2.3.11`                           |
+| `image.all.tag`                           | Image tag                                     | `v2.3.12`                           |
 | `image.all.pullPolicy`                    | Image pull policy                             | `IfNotPresent`                                          |
 | `image.all.pullSecrets`                   | Image pull secrets                            | `{}`                                                    |
 | `image.tools.repository`                  | Config image repository                       | `milvusdb/milvus-config-tool`                                       |
@@ -294,7 +315,6 @@ The following table lists the configurable parameters of the Milvus Service and 
 | `externalS3.iamEndpoint`                  | The IAM endpoint of  the external S3 | ``                                                |
 | `externalS3.region`                  | The region of  the external S3 | ``                                                |
 | `externalS3.useVirtualHost`                  | If true, the external S3 whether use virtual host bucket mode | ``                                                |
-| `externalGcs.bucketName`                  | The Bucket Name of the external GCS. Requires GCS gateway to be enabled in the minIO configuration | `unset`                                                |
 | `externalEtcd.enabled`                    | Enable or disable external Etcd               | `false`                                                 |
 | `externalEtcd.endpoints`                  | The endpoints of the external etcd            | `{}`                                                    |
 | `externalPulsar.enabled`                  | Enable or disable external Pulsar             | `false`                                                 |
