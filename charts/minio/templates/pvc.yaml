@@ -4,6 +4,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: {{ template "minio.fullname" . }}
+  namespace: {{ .Release.Namespace }}
   {{- with .Values.persistence.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}

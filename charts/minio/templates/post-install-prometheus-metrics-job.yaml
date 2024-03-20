@@ -8,6 +8,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: {{ $fullName }}-update-prometheus-secret
+  namespace: {{ .Release.Namespace }}
   labels:
     app: {{ template "minio.name" . }}-update-prometheus-secret
     chart: {{ template "minio.chart" . }}
