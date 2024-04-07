@@ -183,8 +183,9 @@ standalone:
   replicas: 1  # Run standalone mode with replication disabled
   resources: {}
   # Set local storage size in resources
-  # limits:
-  #    ephemeral-storage: 100Gi
+  # resources:
+  #   limits:
+  #     ephemeral-storage: 100Gi
   nodeSelector: {}
   affinity: {}
   tolerations: []
@@ -315,8 +316,9 @@ queryNode:
   replicas: 1
   resources: {}
   # Set local storage size in resources
-  # limits:
-  #    ephemeral-storage: 100Gi
+  # resources:
+  #   limits:
+  #     ephemeral-storage: 100Gi
   nodeSelector: {}
   affinity: {}
   tolerations: []
