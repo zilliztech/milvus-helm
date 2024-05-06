@@ -28,8 +28,7 @@ jobs:
         run: |
           helm repo add bitnami https://charts.bitnami.com/bitnami
           helm repo add milvus https://zilliztech.github.io/milvus-helm
-          helm repo add bitnami-pre-2022 https://raw.githubusercontent.com/bitnami/charts/pre-2022/bitnami
-
+          helm repo add bitnami-full-index https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
       - uses: actions/setup-python@v2
         with:
           python-version: 3.7
