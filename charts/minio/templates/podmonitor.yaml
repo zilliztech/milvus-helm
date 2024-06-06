@@ -7,6 +7,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
 metadata:
   name: {{ template "minio.fullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
     app: {{ template "minio.name" . }}
     release: {{ .Release.Name }}

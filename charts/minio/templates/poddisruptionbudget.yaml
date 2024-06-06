@@ -3,6 +3,7 @@ apiVersion: {{ template "minio.pdb.apiVersion" . }}
 kind: PodDisruptionBudget
 metadata:
   name: minio
+  namespace: {{ .Release.Namespace }}
   labels:
     app: {{ template "minio.name" . }}
 spec:
