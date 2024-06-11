@@ -38,6 +38,13 @@ affinity: {}
 labels: {}
 annotations: {}
 
+##
+## If set, the whole config will be mounted from this custom ConfigMap.
+## The ConfigMap should have a key named `milvus.yaml` which contains the full Milvus config.
+## extraConfigFiles will be ignored if this variable is set.
+##
+customConfigMap: ""
+
 # Extra configs for milvus.yaml
 # If set, this config will merge into milvus.yaml
 # Please follow the config structure in the milvus.yaml
