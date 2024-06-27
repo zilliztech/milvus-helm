@@ -603,7 +603,7 @@ etcd:
 ##
 
 pulsar:
-  enabled: true
+  enabled: false
   name: pulsar
 
   fullnameOverride: ""
@@ -802,7 +802,7 @@ pulsar:
 ##
 
 kafka:
-  enabled: false
+  enabled: true
   name: kafka
   replicaCount: 3
   image:
