@@ -1,3 +1,9 @@
+## Expand the name of the chart
+nameOverride: ""
+
+## Default fully qualified app name
+fullnameOverride: ""
+
 ## Enable or disable Milvus Cluster mode
 cluster:
   enabled: true
@@ -427,7 +433,7 @@ dataNode:
   strategy: {}
 
 ## mixCoordinator contains all coord
-## If you want to use mixcoord, enable this and disable all of other coords 
+## If you want to use mixcoord, enable this and disable all of other coords
 mixCoordinator:
   enabled: false
   # You can set the number of replicas greater than 1, only if enable active standby
@@ -926,8 +932,8 @@ externalPulsar:
 ###################################
 # External kafka
 # - these configs are only used when `externalKafka.enabled` is true
-# - note that the following are just examples, you should confirm the 
-#   value of brokerList and mechanisms according to the actual external 
+# - note that the following are just examples, you should confirm the
+#   value of brokerList and mechanisms according to the actual external
 #   Kafka configuration. E.g. If you select the AWS MSK, the configuration
 #   should look something like this:
 #   externalKafka:
