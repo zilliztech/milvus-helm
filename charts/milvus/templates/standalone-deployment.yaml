@@ -123,7 +123,7 @@ spec:
           name: tools
         {{- if .Values.customConfigMap }}
         - name: milvus-config
-          mountPath: /milvus/configs/default.yaml
+          mountPath: /milvus/configs/user.yaml
           subPath: milvus.yaml
           readOnly: true
         {{- else }}
