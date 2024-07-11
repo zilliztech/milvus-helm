@@ -57,11 +57,7 @@ minio:
   accessKeyID: {{ .Values.minio.accessKey }}
   secretAccessKey: {{ .Values.minio.secretKey }}
   useSSL: {{ .Values.minio.tls.enabled }}
-{{- if .Values.minio.gcsgateway.enabled }}
-  bucketName: {{ .Values.externalGcs.bucketName }}
-{{- else }}
   bucketName: {{ .Values.minio.bucketName }}
-{{- end }}
   rootPath: {{ .Values.minio.rootPath }}
   useIAM: {{ .Values.minio.useIAM }}
   iamEndpoint: {{ .Values.minio.iamEndpoint }}

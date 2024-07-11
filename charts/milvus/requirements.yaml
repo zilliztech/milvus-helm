@@ -1,7 +1,7 @@
 dependencies:
 - name: etcd
   version: 6.3.3
-  repository: https://raw.githubusercontent.com/bitnami/charts/pre-2022/bitnami
+  repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
   condition: etcd.enabled
   tags:
     - etcd
@@ -19,7 +19,7 @@ dependencies:
     - pulsar
 - name: kafka
   version: 15.5.1
-  repository: https://raw.githubusercontent.com/bitnami/charts/pre-2022/bitnami
+  repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
   condition: kafka.enabled
   tags:
     - kafka

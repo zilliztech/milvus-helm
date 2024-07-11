@@ -5,7 +5,7 @@ cluster:
 image:
   all:
     repository: milvusdb/milvus
-    tag: v2.3.10
+    tag: v2.4.5
     pullPolicy: IfNotPresent
     ## Optionally specify an array of imagePullSecrets.
     ## Secrets must be manually created in the namespace.
@@ -183,8 +183,9 @@ standalone:
   replicas: 1  # Run standalone mode with replication disabled
   resources: {}
   # Set local storage size in resources
-  # limits:
-  #    ephemeral-storage: 100Gi
+  # resources:
+  #   limits:
+  #     ephemeral-storage: 100Gi
   nodeSelector: {}
   affinity: {}
   tolerations: []
@@ -315,8 +316,9 @@ queryNode:
   replicas: 1
   resources: {}
   # Set local storage size in resources
-  # limits:
-  #    ephemeral-storage: 100Gi
+  # resources:
+  #   limits:
+  #     ephemeral-storage: 100Gi
   nodeSelector: {}
   affinity: {}
   tolerations: []
@@ -455,7 +457,7 @@ attu:
   name: attu
   image:
     repository: zilliz/attu
-    tag: v2.3.0
+    tag: v2.3.10
     pullPolicy: IfNotPresent
   service:
     annotations: {}
@@ -504,12 +506,6 @@ minio:
   resources:
     requests:
       memory: 2Gi
-
-  gcsgateway:
-    enabled: false
-    replicas: 1
-    gcsKeyJson: "/etc/credentials/gcs_key.json"
-    projectId: ""
 
   service:
     type: ClusterIP
