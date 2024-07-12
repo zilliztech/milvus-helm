@@ -121,6 +121,12 @@ spec:
         volumeMounts:
         - mountPath: /milvus/tools
           name: tools
+        {{- if .Values.customConfigMap }}
+        - name: milvus-config
+          mountPath: /milvus/configs/user.yaml
+          subPath: milvus.yaml
+          readOnly: true
+        {{- else }}
         - name: milvus-config
           mountPath: /milvus/configs/default.yaml
           subPath: default.yaml
@@ -129,6 +135,7 @@ spec:
           mountPath: /milvus/configs/user.yaml
           subPath: user.yaml
           readOnly: true
+        {{- end }}
         - name: milvus-data-disk
           mountPath: {{ .Values.standalone.persistence.mountPath | quote }}
           subPath: {{ .Values.standalone.persistence.persistentVolumeClaim.subPath | default "" }}
@@ -172,7 +179,11 @@ spec:
         name: tools
       - name: milvus-config
         configMap:
+          {{- if .Values.customConfigMap }}
+          name: {{ .Values.customConfigMap }}
+          {{- else }}
           name: {{ template "milvus.fullname" . }}
+          {{- end }}
       - name: milvus-data-disk
         {{- if .Values.standalone.persistence.enabled }}
         persistentVolumeClaim:
