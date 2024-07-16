@@ -57,24 +57,14 @@ spec:
         - mountPath: /milvus/tools
           name: tools
       {{- end }}
-      - name: config
-        command:
-        - /cp
-        - /run-helm.sh,/merge
-        - /milvus/tools/run-helm.sh,/milvus/tools/merge
-        image: "{{ .Values.image.tools.repository }}:{{ .Values.image.tools.tag }}"
-        imagePullPolicy: {{ .Values.image.tools.pullPolicy}}
-        volumeMounts:
-        - mountPath: /milvus/tools
-          name: tools
       containers:
       - name: querynode
         image: "{{ .Values.image.all.repository }}:{{ .Values.image.all.tag }}"
         imagePullPolicy: {{ .Values.image.all.pullPolicy }}
         {{- if .Values.queryNode.heaptrack.enabled }}
-        args: [ "/milvus/tools/run-helm.sh", "/milvus/tools/heaptrack/bin/heaptrack", "milvus", "run", "querynode" ]
+        args: [ "/milvus/tools/heaptrack/bin/heaptrack", "milvus", "run", "querynode" ]
         {{- else }}
-        args: [ "/milvus/tools/run-helm.sh", "milvus", "run", "querynode" ]
+        args: [ "milvus", "run", "querynode" ]
         {{- end }}
         env:
         {{- if .Values.queryNode.heaptrack.enabled }}
