@@ -5,7 +5,7 @@ cluster:
 image:
   all:
     repository: milvusdb/milvus
-    tag: v2.4.5
+    tag: v2.4.6
     pullPolicy: IfNotPresent
     ## Optionally specify an array of imagePullSecrets.
     ## Secrets must be manually created in the namespace.
@@ -37,6 +37,13 @@ affinity: {}
 # If set, this will apply to all milvus components
 labels: {}
 annotations: {}
+
+##
+## If set, the whole config will be mounted from this custom ConfigMap.
+## The ConfigMap should have a key named `milvus.yaml` which contains the full Milvus config.
+## extraConfigFiles will be ignored if this variable is set.
+##
+customConfigMap: ""
 
 # Extra configs for milvus.yaml
 # If set, this config will merge into milvus.yaml
@@ -642,23 +649,23 @@ pulsar:
     broker:
       repository: apachepulsar/pulsar
       pullPolicy: IfNotPresent
-      tag: 2.8.2
+      tag: 2.9.5
     autorecovery:
       repository: apachepulsar/pulsar
-      tag: 2.8.2
+      tag: 2.9.5
       pullPolicy: IfNotPresent
     zookeeper:
       repository: apachepulsar/pulsar
       pullPolicy: IfNotPresent
-      tag: 2.8.2
+      tag: 2.9.5
     bookie:
       repository: apachepulsar/pulsar
       pullPolicy: IfNotPresent
-      tag: 2.8.2
+      tag: 2.9.5
     proxy:
       repository: apachepulsar/pulsar
       pullPolicy: IfNotPresent
-      tag: 2.8.2
+      tag: 2.9.5
     pulsar_manager:
       repository: apachepulsar/pulsar-manager
       pullPolicy: IfNotPresent
@@ -776,6 +783,7 @@ pulsar:
       type: ClusterIP
     ports:
       pulsar: 6650
+      http: 8080
     configData:
       PULSAR_MEM: >
         -Xms2048m -Xmx2048m
@@ -794,7 +802,7 @@ pulsar:
     image:
       # the image used for running `pulsar-cluster-initialize` job
       repository: apachepulsar/pulsar
-      tag: 2.8.2
+      tag: 2.9.5
 
 
 ## Configuration values for the kafka dependency

@@ -63,24 +63,14 @@ spec:
         - mountPath: /milvus/tools
           name: tools
       {{- end }}
-      - name: config
-        command:
-        - /cp
-        - /run-helm.sh,/merge
-        - /milvus/tools/run-helm.sh,/milvus/tools/merge
-        image: "{{ .Values.image.tools.repository }}:{{ .Values.image.tools.tag }}"
-        imagePullPolicy: {{ .Values.image.tools.pullPolicy}}
-        volumeMounts:
-        - mountPath: /milvus/tools
-          name: tools
       containers:
       - name: indexcoord
         image: "{{ .Values.image.all.repository }}:{{ .Values.image.all.tag }}"
         imagePullPolicy: {{ .Values.image.all.pullPolicy }}
         {{- if .Values.indexCoordinator.heaptrack.enabled }}
-        args: [ "/milvus/tools/run-helm.sh", "/milvus/tools/heaptrack/bin/heaptrack", "milvus", "run", "indexcoord" ]
+        args: [ "/milvus/tools/heaptrack/bin/heaptrack", "milvus", "run", "indexcoord" ]
         {{- else }}
-        args: [ "/milvus/tools/run-helm.sh", "milvus", "run", "indexcoord" ]
+        args: [ "milvus", "run", "indexcoord" ]
         {{- end }}
         env:
         {{- if .Values.indexCoordinator.heaptrack.enabled }}
@@ -122,6 +112,12 @@ spec:
         resources:
           {{- toYaml .Values.indexCoordinator.resources | nindent 10 }}
         volumeMounts:
+        {{- if .Values.customConfigMap }}
+        - name: milvus-config
+          mountPath: /milvus/configs/user.yaml
+          subPath: milvus.yaml
+          readOnly: true
+        {{- else }}
         - name: milvus-config
           mountPath: /milvus/configs/default.yaml
           subPath: default.yaml
@@ -130,6 +126,7 @@ spec:
           mountPath: /milvus/configs/user.yaml
           subPath: user.yaml
           readOnly: true
+        {{- end }}
         {{- if .Values.log.persistence.enabled }}
         - name: milvus-logs-disk
           mountPath: {{ .Values.log.persistence.mountPath | quote }}
@@ -166,7 +163,11 @@ spec:
       volumes:
       - name: milvus-config
         configMap:
+          {{- if .Values.customConfigMap }}
+          name: {{ .Values.customConfigMap }}
+          {{- else }}
           name: {{ template "milvus.fullname" . }}
+          {{- end }}
       {{- if .Values.log.persistence.enabled }}
       - name: milvus-logs-disk
         persistentVolumeClaim:

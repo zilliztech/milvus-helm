@@ -1,3 +1,5 @@
+# If customConfigMap is not set, this ConfigMap will be redendered.
+{{- if not .Values.customConfigMap }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -10,4 +12,5 @@ data:
 {{- range $key, $value := .Values.extraConfigFiles }}
   {{ $key }}: |-
 {{ $value | indent 4 }}
+{{- end }}
 {{- end }}
