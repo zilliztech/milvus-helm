@@ -3,6 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "milvus.rootcoord.fullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
 {{ include "milvus.labels" . | indent 4 }}
     component: "rootcoord"
