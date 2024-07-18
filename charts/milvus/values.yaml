@@ -100,6 +100,7 @@ service:
 
 ingress:
   enabled: false
+  ingressClassName: ""
   annotations:
     # Annotation example: set nginx ingress type
     # kubernetes.io/ingress.class: nginx
@@ -482,6 +483,7 @@ attu:
   podLabels: {}
   ingress:
     enabled: false
+    ingressClassName: ""
     annotations: {}
     # Annotation example: set nginx ingress type
     # kubernetes.io/ingress.class: nginx
