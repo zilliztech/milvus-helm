@@ -44,12 +44,8 @@ minio:
   rootPath: {{ .Values.externalS3.rootPath }}
   useIAM: {{ .Values.externalS3.useIAM }}
   cloudProvider: {{ .Values.externalS3.cloudProvider }}
-  {{- if .Values.minio.useIAM }}
-  iamEndpoint: {{ .Values.minio.iamEndpoint }}
-  {{- end }}
-  {{- if ne .Values.minio.region "" }}
-  region: {{ .Values.minio.region }}
-  {{- end }}
+  iamEndpoint: {{ .Values.externalS3.iamEndpoint }}
+  region: {{ .Values.externalS3.region }}
   useVirtualHost: {{ .Values.externalS3.useVirtualHost }}
 {{- else }}
 {{- if contains .Values.minio.name .Release.Name }}
