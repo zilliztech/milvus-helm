@@ -106,21 +106,22 @@ By default, milvus cluster uses `pulsar` as message queue. You can also use `kaf
 $ helm upgrade --install my-release milvus/milvus --set pulsar.enabled=false --set kafka.enabled=true
 ```
 
-By default, milvus cluster uses several separate coordinators. You can also use mixCoordinator instead which contains all coordinators.
+By default, milvus cluster uses `mixCoordinator` instead which contains all coordinators since milvus-helm chart 4.2.4. To use separate coordinators, you can disable `mixCoordinator` and enable all the coordinators separately:
+
 
 ```bash
 # Helm v3.x
 $ cat << EOF > values-custom.yaml
 mixCoordinator:
-  enabled: true
+  enabled: false
 rootCoordinator:
-  enabled: false
+  enabled: true
 indexCoordinator:
-  enabled: false
+  enabled: true
 queryCoordinator:
-  enabled: false
+  enabled: true
 dataCoordinator:
-  enabled: false
+  enabled: true
 EOF
 $ helm upgrade --install my-release milvus/milvus -f values-custom.yaml
 ```
@@ -137,10 +138,10 @@ $ helm upgrade --install --set queryNode.replicas=2 my-release milvus/milvus
 ```
 
 ### Milvus Coordinator Active Standby
-> **IMPORTANT** Milvus helm chart 4.0.7 (Milvus 2.2.3) support deploying multiple coordinators. For example, you run a Milvus cluster with two rootcoord pods:
+> **IMPORTANT** Milvus helm chart 4.0.7 (Milvus 2.2.3) support deploying multiple coordinators. For example, you run a Milvus cluster with two mixcoord pods:
 
 ```bash
-helm upgrade --install my-release milvus/milvus --set rootCoordinator.activeStandby.enabled=true --set rootCoordinator.replicas=2
+helm upgrade --install my-release milvus/milvus --set mixCoordinator.activeStandby.enabled=true --set mixCoordinator.replicas=2
 ```
 
 ### Breaking Changes
@@ -387,7 +388,7 @@ The following table lists the configurable parameters of the Milvus Root Coordin
 
 | Parameter                                 | Description                                   | Default                                                 |
 |-------------------------------------------|-----------------------------------------------|---------------------------------------------------------|
-| `rootCoordinator.enabled`                 | Enable or disable Milvus Root Coordinator component  | `true`                                           |
+| `rootCoordinator.enabled`                 | Enable or disable Milvus Root Coordinator component  | `false`                                           |
 | `rootCoordinator.resources`               | Resource requests/limits for the Milvus Root Coordinator pods | `{}`                                    |
 | `rootCoordinator.nodeSelector`            | Node labels for Milvus Root Coordinator pods assignment | `{}`                                          |
 | `rootCoordinator.affinity`                | Affinity settings for Milvus Root Coordinator pods assignment | `{}`                                    |
@@ -411,7 +412,7 @@ The following table lists the configurable parameters of the Milvus Query Coordi
 
 | Parameter                                 | Description                                   | Default                                                 |
 |-------------------------------------------|-----------------------------------------------|---------------------------------------------------------|
-| `queryCoordinator.enabled`                | Enable or disable Query Coordinator component | `true`                                                  |
+| `queryCoordinator.enabled`                | Enable or disable Query Coordinator component | `false`                                                  |
 | `queryCoordinator.resources`              | Resource requests/limits for the Milvus Query Coordinator pods | `{}`                                   |
 | `queryCoordinator.nodeSelector`           | Node labels for Milvus Query Coordinator pods assignment | `{}`                                         |
 | `queryCoordinator.affinity`               | Affinity settings for Milvus Query Coordinator pods assignment | `{}`                                   |
@@ -453,7 +454,7 @@ The following table lists the configurable parameters of the Milvus Index Coordi
 
 | Parameter                                 | Description                                   | Default                                                 |
 |-------------------------------------------|-----------------------------------------------|---------------------------------------------------------|
-| `indexCoordinator.enabled`                | Enable or disable Index Coordinator component | `true`                                                  |
+| `indexCoordinator.enabled`                | Enable or disable Index Coordinator component | `false`                                                  |
 | `indexCoordinator.resources`              | Resource requests/limits for the Milvus Index Coordinator pods | `{}`                                   |
 | `indexCoordinator.nodeSelector`           | Node labels for Milvus Index Coordinator pods assignment | `{}`                                         |
 | `indexCoordinator.affinity`               | Affinity settings for Milvus Index Coordinator pods assignment | `{}`                                   |
@@ -495,7 +496,7 @@ The following table lists the configurable parameters of the Milvus Data Coordin
 
 | Parameter                                 | Description                                   | Default                                                 |
 |-------------------------------------------|-----------------------------------------------|---------------------------------------------------------|
-| `dataCoordinator.enabled`                 | Enable or disable Data Coordinator component  | `true`                                                  |
+| `dataCoordinator.enabled`                 | Enable or disable Data Coordinator component  | `false`                                                  |
 | `dataCoordinator.resources`               | Resource requests/limits for the Milvus Data Coordinator pods | `{}`                                    |
 | `dataCoordinator.nodeSelector`            | Node labels for Milvus Data Coordinator pods assignment | `{}`                                          |
 | `dataCoordinator.affinity`                | Affinity settings for Milvus Data Coordinator pods assignment  | `{}`                                   |

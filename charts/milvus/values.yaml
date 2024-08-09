@@ -275,7 +275,7 @@ proxy:
   strategy: {}
 
 rootCoordinator:
-  enabled: true
+  enabled: false
   # You can set the number of replicas greater than 1, only if enable active standby
   replicas: 1  # Run Root Coordinator mode with replication disabled
   resources: {}
@@ -300,7 +300,7 @@ rootCoordinator:
     clusterIP: ""
 
 queryCoordinator:
-  enabled: true
+  enabled: false
   # You can set the number of replicas greater than 1, only if enable active standby
   replicas: 1  # Run Query Coordinator mode with replication disabled
   resources: {}
@@ -350,7 +350,7 @@ queryNode:
   strategy: {}
 
 indexCoordinator:
-  enabled: true
+  enabled: false
   # You can set the number of replicas greater than 1, only if enable active standby
   replicas: 1   # Run Index Coordinator mode with replication disabled
   resources: {}
@@ -399,7 +399,7 @@ indexNode:
   strategy: {}
 
 dataCoordinator:
-  enabled: true
+  enabled: false
   # You can set the number of replicas greater than 1, only if enable active standby
   replicas: 1           # Run Data Coordinator mode with replication disabled
   resources: {}
@@ -443,7 +443,7 @@ dataNode:
 ## mixCoordinator contains all coord
 ## If you want to use mixcoord, enable this and disable all of other coords
 mixCoordinator:
-  enabled: false
+  enabled: true
   # You can set the number of replicas greater than 1, only if enable active standby
   replicas: 1           # Run Mixture Coordinator mode with replication disabled
   resources: {}
