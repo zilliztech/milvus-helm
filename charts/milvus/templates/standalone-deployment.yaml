@@ -95,6 +95,10 @@ spec:
         resources:
           {{- toYaml .Values.standalone.resources | nindent 10 }}
         env:
+        {{- if .Values.streaming.enabled }}
+        - name: MILVUS_STREAMING_SERVICE_ENABLED
+          value: "1"
+        {{- end }}
         {{- if .Values.standalone.heaptrack.enabled }}
         - name: LD_LIBRARY_PATH
           value: /milvus/tools/heaptrack/lib:/milvus/lib:/usr/lib

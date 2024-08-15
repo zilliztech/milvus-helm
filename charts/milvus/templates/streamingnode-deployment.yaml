@@ -1,43 +1,39 @@
-{{- if and .Values.queryCoordinator.enabled .Values.cluster.enabled }}
+{{- if and .Values.streaming.enabled .Values.cluster.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "milvus.querycoord.fullname" . }}
+  name: {{ template "milvus.streamingnode.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
 {{ include "milvus.labels" . | indent 4 }}
-    component: "querycoord"
+    component: "streamingnode"
+
 {{ include "milvus.ud.labels" . | indent 4 }}
   annotations:
 {{ include "milvus.ud.annotations" . | indent 4 }}
 
 spec:
-  {{- if ge (int .Values.queryCoordinator.replicas) 0 }}
-  replicas: {{ .Values.queryCoordinator.replicas }}
+  {{- if ge (int .Values.streamingNode.replicas) 0 }}
+  replicas: {{ .Values.streamingNode.replicas }}
   {{- end }}
-  {{- if .Values.queryCoordinator.activeStandby.enabled}}
-  {{- with .Values.queryCoordinator.strategy }}
+  {{- with .Values.streamingNode.strategy }}
   strategy:
     {{- toYaml . | nindent 4 }}
-  {{- end }}
-  {{- else }}
-  strategy:
-    type: Recreate
   {{- end }}
   selector:
     matchLabels:
 {{ include "milvus.matchLabels" . | indent 6 }}
-      component: "querycoord"
+      component: "streamingnode"
   template:
     metadata:
       labels:
 {{ include "milvus.matchLabels" . | indent 8 }}
+        component: "streamingnode"
 {{ include "milvus.ud.labels" . | indent 8 }}
-        component: "querycoord"
       annotations:
-      {{- if .Values.queryCoordinator.profiling.enabled }}
+      {{- if .Values.streamingNode.profiling.enabled }}
         pyroscope.io/scrape: "true"
-        pyroscope.io/application-name: {{ template "milvus.querycoord.fullname" . }}
+        pyroscope.io/application-name: {{ template "milvus.streamingnode.fullname" . }}
         pyroscope.io/port: "9091"
       {{- end }}
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
@@ -51,7 +47,7 @@ spec:
       {{- end }}
       {{- end }}
       initContainers:
-      {{- if .Values.queryCoordinator.heaptrack.enabled }}
+      {{- if .Values.streamingNode.heaptrack.enabled }}
       - name: heaptrack
         command:
         - /bin/bash
@@ -64,29 +60,27 @@ spec:
           name: tools
       {{- end }}
       containers:
-      - name: querycoord
+      - name: streamingnode
         image: "{{ .Values.image.all.repository }}:{{ .Values.image.all.tag }}"
         imagePullPolicy: {{ .Values.image.all.pullPolicy }}
-        {{- if .Values.queryCoordinator.heaptrack.enabled }}
-        args: [ "/milvus/tools/heaptrack/bin/heaptrack", "milvus", "run", "querycoord" ]
+        {{- if .Values.streamingNode.heaptrack.enabled }}
+        args: [ "/milvus/tools/heaptrack/bin/heaptrack", "milvus", "run", "streamingnode" ]
         {{- else }}
-        args: [ "milvus", "run", "querycoord" ]
+        args: [ "milvus", "run", "streamingnode" ]
         {{- end }}
         env:
-        {{- if .Values.streaming.enabled }}
         - name: MILVUS_STREAMING_SERVICE_ENABLED
           value: "1"
-        {{- end }}
-        {{- if .Values.queryCoordinator.heaptrack.enabled }}
+        {{- if .Values.streamingNode.heaptrack.enabled }}
         - name: LD_LIBRARY_PATH
           value: /milvus/tools/heaptrack/lib:/milvus/lib:/usr/lib
         {{- end }}
-        {{- if .Values.queryCoordinator.extraEnv }}
-          {{- toYaml .Values.queryCoordinator.extraEnv | nindent 8 }}
+        {{- if .Values.streamingNode.extraEnv }}
+          {{- toYaml .Values.streamingNode.extraEnv | nindent 8 }}
         {{- end }}
         ports:
-          - name: querycoord
-            containerPort: 19531
+          - name: streamingnode
+            containerPort: 22222
             protocol: TCP
           - name: metrics
             containerPort: 9091
@@ -114,7 +108,7 @@ spec:
           failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
         {{- end }}
         resources:
-          {{- toYaml .Values.queryCoordinator.resources | nindent 10 }}
+          {{- toYaml .Values.streamingNode.resources | nindent 10 }}
         volumeMounts:
         {{- if .Values.customConfigMap }}
         - name: milvus-config
@@ -139,31 +133,30 @@ spec:
         - mountPath: /milvus/tools
           name: tools
 
-    {{- if and (.Values.nodeSelector) (not .Values.queryCoordinator.nodeSelector) }}
+    {{- if and (.Values.nodeSelector) (not .Values.streamingNode.nodeSelector) }}
       nodeSelector:
 {{ toYaml .Values.nodeSelector | indent 8 }}
     {{- end }}
-    {{- if .Values.queryCoordinator.nodeSelector }}
+    {{- if .Values.streamingNode.nodeSelector }}
       nodeSelector:
-{{ toYaml .Values.queryCoordinator.nodeSelector | indent 8 }}
+{{ toYaml .Values.streamingNode.nodeSelector | indent 8 }}
     {{- end }}
-    {{- if and (.Values.affinity) (not .Values.queryCoordinator.affinity) }}
+    {{- if and (.Values.affinity) (not .Values.streamingNode.affinity) }}
       affinity:
 {{ toYaml .Values.affinity | indent 8 }}
     {{- end }}
-    {{- if .Values.queryCoordinator.affinity }}
+    {{- if .Values.streamingNode.affinity }}
       affinity:
-{{ toYaml .Values.queryCoordinator.affinity | indent 8 }}
+{{ toYaml .Values.streamingNode.affinity | indent 8 }}
     {{- end }}
-    {{- if and (.Values.tolerations) (not .Values.queryCoordinator.tolerations) }}
+    {{- if and (.Values.tolerations) (not .Values.streamingNode.tolerations) }}
       tolerations:
 {{ toYaml .Values.tolerations | indent 8 }}
     {{- end }}
-    {{- if .Values.queryCoordinator.tolerations }}
+    {{- if .Values.streamingNode.tolerations }}
       tolerations:
-{{ toYaml .Values.queryCoordinator.tolerations | indent 8 }}
+{{ toYaml .Values.streamingNode.tolerations | indent 8 }}
     {{- end }}
-
       volumes:
       - name: milvus-config
         configMap:

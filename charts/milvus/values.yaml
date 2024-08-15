@@ -44,6 +44,13 @@ affinity: {}
 labels: {}
 annotations: {}
 
+# Experimental feature: streaming node
+# Only support standalone mode with rocksmq and pulsar message queue,
+# cluster mode with pulsar message queue.
+# Experimental feature, not recommended for production.
+streaming:
+  enabled: false
+
 ##
 ## If set, the whole config will be mounted from this custom ConfigMap.
 ## The ConfigMap should have a key named `milvus.yaml` which contains the full Milvus config.
@@ -465,6 +472,19 @@ mixCoordinator:
     annotations: {}
     labels: {}
     clusterIP: ""
+
+streamingNode:
+  replicas: 1
+  resources: {}
+  nodeSelector: {}
+  affinity: {}
+  tolerations: []
+  extraEnv: []
+  heaptrack:
+    enabled: false
+  profiling:
+    enabled: false  # Enable live profiling
+  strategy: {}
 
 attu:
   enabled: false
