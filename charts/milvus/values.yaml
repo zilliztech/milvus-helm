@@ -471,7 +471,7 @@ attu:
   name: attu
   image:
     repository: zilliz/attu
-    tag: v2.4.6
+    tag: v2.4.7
     pullPolicy: IfNotPresent
   service:
     annotations: {}
