@@ -18,8 +18,8 @@ metadata:
 {{ toYaml . | indent 4 }}
 {{- end }}
 spec:
-{{- if .Values.ingress.ingressClassName }}
-  ingressClassName: {{ .Values.ingress.ingressClassName }}
+{{- if .Values.attu.ingress.ingressClassName }}
+  ingressClassName: {{ .Values.attu.ingress.ingressClassName }}
 {{- end }}
 {{- if .Values.attu.ingress.tls }}
   tls:
