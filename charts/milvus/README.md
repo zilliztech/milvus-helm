@@ -434,19 +434,22 @@ The following table lists the configurable parameters of the Milvus Query Coordi
 
 The following table lists the configurable parameters of the Milvus Query Node component and their default values.
 
-| Parameter                                 | Description                                   | Default                                                 |
-|-------------------------------------------|-----------------------------------------------|---------------------------------------------------------|
-| `queryNode.enabled`                       | Enable or disable Milvus Query Node component | `true`                                                  |
-| `queryNode.replicas`                      | Desired number of Milvus Query Node pods | `1`                                                          |
-| `queryNode.resources`                     | Resource requests/limits for the Milvus Query Node pods | `{}`                                          |
-| `queryNode.nodeSelector`                  | Node labels for Milvus Query Node pods assignment | `{}`                                                |
-| `queryNode.affinity`                      | Affinity settings for Milvus Query Node pods assignment | `{}`                                          |
-| `queryNode.tolerations`                   | Toleration labels for Milvus Query Node pods assignment | `[]`                                          |
-| `queryNode.heaptrack.enabled`             | Whether to enable heaptrack                             | `false`                                          |
-| `queryNode.disk.enabled`                  | Whether to enable disk for query                             | `true`                                          |
-| `queryNode.profiling.enabled`             | Whether to enable live profiling                   | `false`                                          |
-| `queryNode.extraEnv`                      | Additional Milvus Query Node container environment variables | `[]`                                     |
-| `queryNode.strategy`                      | Deployment strategy configuration |  RollingUpdate                                         |
+| Parameter                     | Description                                                  | Default       |
+|-------------------------------|--------------------------------------------------------------|---------------|
+| `queryNode.enabled`           | Enable or disable Milvus Query Node component                | `true`        |
+| `queryNode.replicas`          | Desired number of Milvus Query Node pods                     | `1`           |
+| `queryNode.resources`         | Resource requests/limits for the Milvus Query Node pods      | `{}`          |
+| `queryNode.nodeSelector`      | Node labels for Milvus Query Node pods assignment            | `{}`          |
+| `queryNode.affinity`          | Affinity settings for Milvus Query Node pods assignment      | `{}`          |
+| `queryNode.tolerations`       | Toleration labels for Milvus Query Node pods assignment      | `[]`          |
+| `queryNode.heaptrack.enabled` | Whether to enable heaptrack                                  | `false`       |
+| `queryNode.disk.enabled`      | Whether to enable disk for query                             | `true`        |
+| `queryNode.profiling.enabled` | Whether to enable live profiling                             | `false`       |
+| `queryNode.extraEnv`          | Additional Milvus Query Node container environment variables | `[]`          |
+| `queryNode.strategy`          | Deployment strategy configuration                            | RollingUpdate |
+| `queryNode.enableDisk`        | Allows use of disk storage for loading and searching indexes | `false`       |
+| `queryNode.loadMemoryUsageFactor` | Estimate the memory usage when loading segments              | `{}`          |
+| `queryNode.maxDiskUsagePercentage` | Maximum percentage of disk space that the query node can use | `90`          |
 
 ### Milvus Index Coordinator Deployment Configuration
 
