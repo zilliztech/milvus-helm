@@ -7,6 +7,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ template "milvus.attu.fullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
 {{ include "milvus.labels" . | indent 4 }}
 {{- if .Values.attu.ingress.labels }}
@@ -17,6 +18,9 @@ metadata:
 {{ toYaml . | indent 4 }}
 {{- end }}
 spec:
+{{- if .Values.attu.ingress.ingressClassName }}
+  ingressClassName: {{ .Values.attu.ingress.ingressClassName }}
+{{- end }}
 {{- if .Values.attu.ingress.tls }}
   tls:
   {{- range .Values.attu.ingress.tls }}
@@ -56,6 +60,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: {{ template "milvus.attu.fullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
 {{ include "milvus.labels" . | indent 4 }}
 {{- if .Values.attu.ingress.labels }}

@@ -10,6 +10,18 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied. See the License for the specific language governing permissions and limitations under the License.
 
+
+{{- $etcdReleaseName := "" -}}
+{{- if contains .Values.etcd.name .Release.Name }}
+  {{- $etcdReleaseName = printf "%s" .Release.Name -}}
+{{- else }}
+  {{- $etcdReleaseName = printf "%s-%s" .Release.Name  .Values.etcd.name -}}
+{{- end }}
+
+{{- $etcdPort := .Values.etcd.service.port }}
+
+{{- $namespace := .Release.Namespace }}
+
 etcd:
 {{- if .Values.externalEtcd.enabled }}
   endpoints:
@@ -18,10 +30,8 @@ etcd:
   {{- end }}
 {{- else }}
   endpoints:
-{{- if contains .Values.etcd.name .Release.Name }}
-    - {{ .Release.Name }}:{{ .Values.etcd.service.port }}
-{{- else }}
-    - {{ .Release.Name }}-{{ .Values.etcd.name }}:{{ .Values.etcd.service.port }}
+{{- range $i := until ( .Values.etcd.replicaCount | int ) }}
+  - {{ $etcdReleaseName }}-{{ $i }}.{{ $etcdReleaseName }}-headless.{{ $namespace }}.svc.cluster.local:{{ $etcdPort }}
 {{- end }}
 {{- end }}
 
@@ -57,15 +67,15 @@ minio:
   accessKeyID: {{ .Values.minio.accessKey }}
   secretAccessKey: {{ .Values.minio.secretKey }}
   useSSL: {{ .Values.minio.tls.enabled }}
-{{- if .Values.minio.gcsgateway.enabled }}
-  bucketName: {{ .Values.externalGcs.bucketName }}
-{{- else }}
   bucketName: {{ .Values.minio.bucketName }}
-{{- end }}
   rootPath: {{ .Values.minio.rootPath }}
   useIAM: {{ .Values.minio.useIAM }}
+  {{- if .Values.minio.useIAM }}
   iamEndpoint: {{ .Values.minio.iamEndpoint }}
+  {{- end }}
+  {{- if ne .Values.minio.region "" }}
   region: {{ .Values.minio.region }}
+  {{- end }}
   useVirtualHost: {{ .Values.minio.useVirtualHost }}
 {{- end }}
 

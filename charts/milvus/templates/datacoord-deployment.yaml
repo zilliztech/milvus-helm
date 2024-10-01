@@ -3,6 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "milvus.datacoord.fullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
 {{ include "milvus.labels" . | indent 4 }}
     component: "datacoord"
@@ -11,9 +12,18 @@ metadata:
 {{ include "milvus.ud.annotations" . | indent 4 }}
 
 spec:
+  {{- if ge (int .Values.dataCoordinator.replicas) 0 }}
   replicas: {{ .Values.dataCoordinator.replicas }}
+  {{- end }}
+  {{- if .Values.dataCoordinator.activeStandby.enabled}}
+  {{- with .Values.dataCoordinator.strategy }}
+  strategy:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- else }}
   strategy:
     type: Recreate
+  {{- end }}
   selector:
     matchLabels:
 {{ include "milvus.matchLabels" . | indent 6 }}
@@ -53,26 +63,20 @@ spec:
         - mountPath: /milvus/tools
           name: tools
       {{- end }}
-      - name: config
-        command:
-        - /cp
-        - /run-helm.sh,/merge
-        - /milvus/tools/run-helm.sh,/milvus/tools/merge
-        image: "{{ .Values.image.tools.repository }}:{{ .Values.image.tools.tag }}"
-        imagePullPolicy: {{ .Values.image.tools.pullPolicy}}
-        volumeMounts:
-        - mountPath: /milvus/tools
-          name: tools
       containers:
       - name: datacoord
         image: "{{ .Values.image.all.repository }}:{{ .Values.image.all.tag }}"
         imagePullPolicy: {{ .Values.image.all.pullPolicy }}
         {{- if .Values.dataCoordinator.heaptrack.enabled }}
-        args: [ "/milvus/tools/run-helm.sh", "/milvus/tools/heaptrack/bin/heaptrack", "milvus", "run", "datacoord" ]
+        args: [ "/milvus/tools/heaptrack/bin/heaptrack", "milvus", "run", "datacoord" ]
         {{- else }}
-        args: [ "/milvus/tools/run-helm.sh", "milvus", "run", "datacoord" ]
+        args: [ "milvus", "run", "datacoord" ]
         {{- end }}
         env:
+        {{- if .Values.streaming.enabled }}
+        - name: MILVUS_STREAMING_SERVICE_ENABLED
+          value: "1"
+        {{- end }}
         {{- if .Values.dataCoordinator.heaptrack.enabled }}
         - name: LD_LIBRARY_PATH
           value: /milvus/tools/heaptrack/lib:/milvus/lib:/usr/lib
@@ -112,6 +116,12 @@ spec:
         resources:
           {{- toYaml .Values.dataCoordinator.resources | nindent 10 }}
         volumeMounts:
+        {{- if .Values.customConfigMap }}
+        - name: milvus-config
+          mountPath: /milvus/configs/user.yaml
+          subPath: milvus.yaml
+          readOnly: true
+        {{- else }}
         - name: milvus-config
           mountPath: /milvus/configs/default.yaml
           subPath: default.yaml
@@ -120,6 +130,7 @@ spec:
           mountPath: /milvus/configs/user.yaml
           subPath: user.yaml
           readOnly: true
+        {{- end }}
         {{- if .Values.log.persistence.enabled }}
         - name: milvus-logs-disk
           mountPath: {{ .Values.log.persistence.mountPath | quote }}
@@ -156,7 +167,11 @@ spec:
       volumes:
       - name: milvus-config
         configMap:
+          {{- if .Values.customConfigMap }}
+          name: {{ .Values.customConfigMap }}
+          {{- else }}
           name: {{ template "milvus.fullname" . }}
+          {{- end }}
       {{- if .Values.log.persistence.enabled }}
       - name: milvus-logs-disk
         persistentVolumeClaim:

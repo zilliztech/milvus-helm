@@ -1,13 +1,13 @@
 {{- if .Values.metrics.enabled }}
-{{- if and .Values.indexNode.enabled .Values.cluster.enabled }}
+{{- if and .Values.streaming.enabled .Values.cluster.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "milvus.indexnode.fullname" . }}
+  name: {{ template "milvus.streamingnode.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
 {{ include "milvus.labels" . | indent 4 }}
-    component: "indexnode"
+    component: "streamingnode"
 spec:
   type: ClusterIP
   clusterIP: None
@@ -18,6 +18,6 @@ spec:
       targetPort: metrics
   selector:
 {{ include "milvus.matchLabels" . | indent 4 }}
-    component: "indexnode"
+    component: "streamingnode"
 {{- end }}
 {{- end }}

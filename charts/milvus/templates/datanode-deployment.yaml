@@ -3,6 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "milvus.datanode.fullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
 {{ include "milvus.labels" . | indent 4 }}
     component: "datanode"
@@ -14,6 +15,10 @@ metadata:
 spec:
   {{- if ge (int .Values.dataNode.replicas) 0 }}
   replicas: {{ .Values.dataNode.replicas }}
+  {{- end }}
+  {{- with .Values.dataNode.strategy }}
+  strategy:
+    {{- toYaml . | nindent 4 }}
   {{- end }}
   selector:
     matchLabels:
@@ -54,26 +59,20 @@ spec:
         - mountPath: /milvus/tools
           name: tools
       {{- end }}
-      - name: config
-        command:
-        - /cp
-        - /run-helm.sh,/merge
-        - /milvus/tools/run-helm.sh,/milvus/tools/merge
-        image: "{{ .Values.image.tools.repository }}:{{ .Values.image.tools.tag }}"
-        imagePullPolicy: {{ .Values.image.tools.pullPolicy}}
-        volumeMounts:
-        - mountPath: /milvus/tools
-          name: tools
       containers:
       - name: datanode
         image: "{{ .Values.image.all.repository }}:{{ .Values.image.all.tag }}"
         imagePullPolicy: {{ .Values.image.all.pullPolicy }}
         {{- if .Values.dataNode.heaptrack.enabled }}
-        args: [ "/milvus/tools/run-helm.sh", "/milvus/tools/heaptrack/bin/heaptrack", "milvus", "run", "datanode" ]
+        args: [ "/milvus/tools/heaptrack/bin/heaptrack", "milvus", "run", "datanode" ]
         {{- else }}
-        args: [ "/milvus/tools/run-helm.sh", "milvus", "run", "datanode" ]
+        args: [ "milvus", "run", "datanode" ]
         {{- end }}
         env:
+        {{- if .Values.streaming.enabled }}
+        - name: MILVUS_STREAMING_SERVICE_ENABLED
+          value: "1"
+        {{- end }}
         {{- if .Values.dataNode.heaptrack.enabled }}
         - name: LD_LIBRARY_PATH
           value: /milvus/tools/heaptrack/lib:/milvus/lib:/usr/lib
@@ -113,6 +112,12 @@ spec:
         resources:
           {{- toYaml .Values.dataNode.resources | nindent 10 }}
         volumeMounts:
+        {{- if .Values.customConfigMap }}
+        - name: milvus-config
+          mountPath: /milvus/configs/user.yaml
+          subPath: milvus.yaml
+          readOnly: true
+        {{- else }}
         - name: milvus-config
           mountPath: /milvus/configs/default.yaml
           subPath: default.yaml
@@ -121,6 +126,7 @@ spec:
           mountPath: /milvus/configs/user.yaml
           subPath: user.yaml
           readOnly: true
+        {{- end }}
         {{- if .Values.log.persistence.enabled }}
         - name: milvus-logs-disk
           mountPath: {{ .Values.log.persistence.mountPath | quote }}
@@ -156,7 +162,11 @@ spec:
       volumes:
       - name: milvus-config
         configMap:
+          {{- if .Values.customConfigMap }}
+          name: {{ .Values.customConfigMap }}
+          {{- else }}
           name: {{ template "milvus.fullname" . }}
+          {{- end }}
       {{- if .Values.log.persistence.enabled }}
       - name: milvus-logs-disk
         persistentVolumeClaim:

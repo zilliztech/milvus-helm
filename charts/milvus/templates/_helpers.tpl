@@ -105,6 +105,14 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 
 {{/*
+Create a default fully qualified Streaming Node name.
+We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+*/}}
+{{- define "milvus.streamingnode.fullname" -}}
+{{ template "milvus.fullname" . }}-streamingnode
+{{- end -}}
+
+{{/*
 Create a default fully qualified pulsar name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
@@ -117,7 +125,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 {{- end -}}
 
-{/*
+{{/*
 Create a default fully qualified attu name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
@@ -161,14 +169,14 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 
-{{/* labels defiend by user*/}}
+{{/* labels defined by user*/}}
 {{- define "milvus.ud.labels" -}}
 {{- if .Values.labels }}
 {{- toYaml .Values.labels }}
 {{- end -}}
 {{- end -}}
 
-{{/* annotations defiend by user*/}}
+{{/* annotations defined by user*/}}
 {{- define "milvus.ud.annotations" -}}
 {{- if .Values.annotations }}
 {{- toYaml .Values.annotations }}

@@ -1,3 +1,9 @@
+## Expand the name of the chart
+nameOverride: ""
+
+## Default fully qualified app name
+fullnameOverride: ""
+
 ## Enable or disable Milvus Cluster mode
 cluster:
   enabled: true
@@ -5,7 +11,7 @@ cluster:
 image:
   all:
     repository: milvusdb/milvus
-    tag: v2.3.9
+    tag: v2.4.12
     pullPolicy: IfNotPresent
     ## Optionally specify an array of imagePullSecrets.
     ## Secrets must be manually created in the namespace.
@@ -38,6 +44,20 @@ affinity: {}
 labels: {}
 annotations: {}
 
+# Experimental feature: streaming node
+# Only support standalone mode with rocksmq and pulsar message queue,
+# cluster mode with pulsar message queue.
+# Experimental feature, not recommended for production.
+streaming:
+  enabled: false
+
+##
+## If set, the whole config will be mounted from this custom ConfigMap.
+## The ConfigMap should have a key named `milvus.yaml` which contains the full Milvus config.
+## extraConfigFiles will be ignored if this variable is set.
+##
+customConfigMap: ""
+
 # Extra configs for milvus.yaml
 # If set, this config will merge into milvus.yaml
 # Please follow the config structure in the milvus.yaml
@@ -50,6 +70,8 @@ extraConfigFiles:
     #    proxy:
     #      http:
     #        enabled: true
+    #      maxUserNum: 100
+    #      maxRoleNum: 10
     ##  Enable tlsMode and set the tls cert and key
     #  tls:
     #    serverPemPath: /etc/milvus/certs/tls.crt
@@ -85,6 +107,7 @@ service:
 
 ingress:
   enabled: false
+  ingressClassName: ""
   annotations:
     # Annotation example: set nginx ingress type
     # kubernetes.io/ingress.class: nginx
@@ -181,8 +204,9 @@ standalone:
   replicas: 1  # Run standalone mode with replication disabled
   resources: {}
   # Set local storage size in resources
-  # limits:
-  #    ephemeral-storage: 100Gi
+  # resources:
+  #   limits:
+  #     ephemeral-storage: 100Gi
   nodeSelector: {}
   affinity: {}
   tolerations: []
@@ -253,9 +277,12 @@ proxy:
 #  volumeMounts:
 #  - mountPath: /etc/milvus/certs/
 #    name: milvus-tls
+  # Deployment strategy, default is RollingUpdate
+  # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
+  strategy: {}
 
 rootCoordinator:
-  enabled: true
+  enabled: false
   # You can set the number of replicas greater than 1, only if enable active standby
   replicas: 1  # Run Root Coordinator mode with replication disabled
   resources: {}
@@ -269,6 +296,9 @@ rootCoordinator:
     enabled: false  # Enable live profiling
   activeStandby:
     enabled: false  # Enable active-standby when you set multiple replicas for root coordinator
+  # Deployment strategy, default is RollingUpdate
+  # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
+  strategy: {}
 
   service:
     port: 53100
@@ -277,7 +307,7 @@ rootCoordinator:
     clusterIP: ""
 
 queryCoordinator:
-  enabled: true
+  enabled: false
   # You can set the number of replicas greater than 1, only if enable active standby
   replicas: 1  # Run Query Coordinator mode with replication disabled
   resources: {}
@@ -291,6 +321,9 @@ queryCoordinator:
     enabled: false  # Enable live profiling
   activeStandby:
     enabled: false  # Enable active-standby when you set multiple replicas for query coordinator
+  # Deployment strategy, default is RollingUpdate
+  # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
+  strategy: {}
 
   service:
     port: 19531
@@ -304,8 +337,9 @@ queryNode:
   replicas: 1
   resources: {}
   # Set local storage size in resources
-  # limits:
-  #    ephemeral-storage: 100Gi
+  # resources:
+  #   limits:
+  #     ephemeral-storage: 100Gi
   nodeSelector: {}
   affinity: {}
   tolerations: []
@@ -318,9 +352,12 @@ queryNode:
       enabled: false  # Enable local storage size limit
   profiling:
     enabled: false  # Enable live profiling
+  # Deployment strategy, default is RollingUpdate
+  # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
+  strategy: {}
 
 indexCoordinator:
-  enabled: true
+  enabled: false
   # You can set the number of replicas greater than 1, only if enable active standby
   replicas: 1   # Run Index Coordinator mode with replication disabled
   resources: {}
@@ -334,6 +371,9 @@ indexCoordinator:
     enabled: false  # Enable live profiling
   activeStandby:
     enabled: false  # Enable active-standby when you set multiple replicas for index coordinator
+  # Deployment strategy, default is RollingUpdate
+  # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
+  strategy: {}
 
   service:
     port: 31000
@@ -361,9 +401,12 @@ indexNode:
     enabled: true  # Enable index node build disk vector index
     size:
       enabled: false  # Enable local storage size limit
+  # Deployment strategy, default is RollingUpdate
+  # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
+  strategy: {}
 
 dataCoordinator:
-  enabled: true
+  enabled: false
   # You can set the number of replicas greater than 1, only if enable active standby
   replicas: 1           # Run Data Coordinator mode with replication disabled
   resources: {}
@@ -377,6 +420,9 @@ dataCoordinator:
     enabled: false  # Enable live profiling
   activeStandby:
     enabled: false  # Enable active-standby when you set multiple replicas for data coordinator
+  # Deployment strategy, default is RollingUpdate
+  # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
+  strategy: {}
 
   service:
     port: 13333
@@ -397,11 +443,14 @@ dataNode:
     enabled: false
   profiling:
     enabled: false  # Enable live profiling
+  # Deployment strategy, default is RollingUpdate
+  # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
+  strategy: {}
 
 ## mixCoordinator contains all coord
-## If you want to use mixcoord, enable this and disable all of other coords 
+## If you want to use mixcoord, enable this and disable all of other coords
 mixCoordinator:
-  enabled: false
+  enabled: true
   # You can set the number of replicas greater than 1, only if enable active standby
   replicas: 1           # Run Mixture Coordinator mode with replication disabled
   resources: {}
@@ -415,18 +464,34 @@ mixCoordinator:
     enabled: false  # Enable live profiling
   activeStandby:
     enabled: false  # Enable active-standby when you set multiple replicas for Mixture coordinator
+  # Deployment strategy, default is RollingUpdate
+  # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
+  strategy: {}
 
   service:
     annotations: {}
     labels: {}
     clusterIP: ""
 
+streamingNode:
+  replicas: 1
+  resources: {}
+  nodeSelector: {}
+  affinity: {}
+  tolerations: []
+  extraEnv: []
+  heaptrack:
+    enabled: false
+  profiling:
+    enabled: false  # Enable live profiling
+  strategy: {}
+
 attu:
   enabled: false
   name: attu
   image:
     repository: zilliz/attu
-    tag: v2.3.0
+    tag: v2.4.7
     pullPolicy: IfNotPresent
   service:
     annotations: {}
@@ -438,6 +503,7 @@ attu:
   podLabels: {}
   ingress:
     enabled: false
+    ingressClassName: ""
     annotations: {}
     # Annotation example: set nginx ingress type
     # kubernetes.io/ingress.class: nginx
@@ -475,12 +541,6 @@ minio:
   resources:
     requests:
       memory: 2Gi
-
-  gcsgateway:
-    enabled: false
-    replicas: 1
-    gcsKeyJson: "/etc/credentials/gcs_key.json"
-    projectId: ""
 
   service:
     type: ClusterIP
@@ -529,7 +589,7 @@ etcd:
     create: false
   image:
     repository: "milvusdb/etcd"
-    tag: "3.5.5-r4"
+    tag: "3.5.14-r1"
     pullPolicy: IfNotPresent
 
   service:
@@ -617,23 +677,23 @@ pulsar:
     broker:
       repository: apachepulsar/pulsar
       pullPolicy: IfNotPresent
-      tag: 2.8.2
+      tag: 2.9.5
     autorecovery:
       repository: apachepulsar/pulsar
-      tag: 2.8.2
+      tag: 2.9.5
       pullPolicy: IfNotPresent
     zookeeper:
       repository: apachepulsar/pulsar
       pullPolicy: IfNotPresent
-      tag: 2.8.2
+      tag: 2.9.5
     bookie:
       repository: apachepulsar/pulsar
       pullPolicy: IfNotPresent
-      tag: 2.8.2
+      tag: 2.9.5
     proxy:
       repository: apachepulsar/pulsar
       pullPolicy: IfNotPresent
-      tag: 2.8.2
+      tag: 2.9.5
     pulsar_manager:
       repository: apachepulsar/pulsar-manager
       pullPolicy: IfNotPresent
@@ -751,6 +811,7 @@ pulsar:
       type: ClusterIP
     ports:
       pulsar: 6650
+      http: 8080
     configData:
       PULSAR_MEM: >
         -Xms2048m -Xmx2048m
@@ -769,7 +830,7 @@ pulsar:
     image:
       # the image used for running `pulsar-cluster-initialize` job
       repository: apachepulsar/pulsar
-      tag: 2.8.2
+      tag: 2.9.5
 
 
 ## Configuration values for the kafka dependency
@@ -901,8 +962,8 @@ externalPulsar:
 ###################################
 # External kafka
 # - these configs are only used when `externalKafka.enabled` is true
-# - note that the following are just examples, you should confirm the 
-#   value of brokerList and mechanisms according to the actual external 
+# - note that the following are just examples, you should confirm the
+#   value of brokerList and mechanisms according to the actual external
 #   Kafka configuration. E.g. If you select the AWS MSK, the configuration
 #   should look something like this:
 #   externalKafka:
