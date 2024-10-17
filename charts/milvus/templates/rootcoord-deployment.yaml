@@ -73,7 +73,7 @@ spec:
         args: [ "milvus", "run", "rootcoord" ]
         {{- end }}
         env:
-        {{- if .Values.streaming.enabled }}
+        {{- if and .Values.streaming .Values.streaming.enabled }}
         - name: MILVUS_STREAMING_SERVICE_ENABLED
           value: "1"
         {{- end }}
