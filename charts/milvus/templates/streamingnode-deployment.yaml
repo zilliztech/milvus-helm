@@ -1,4 +1,4 @@
-{{- if and .Values.streaming.enabled .Values.cluster.enabled }}
+{{- if and .Values.streaming .Values.streaming.enabled .Values.cluster.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
