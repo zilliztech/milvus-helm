@@ -11,7 +11,7 @@ cluster:
 image:
   all:
     repository: milvusdb/milvus
-    tag: v2.4.13
+    tag: v2.4.13-hotfix
     pullPolicy: IfNotPresent
     ## Optionally specify an array of imagePullSecrets.
     ## Secrets must be manually created in the namespace.
@@ -79,6 +79,10 @@ extraConfigFiles:
     #   common:
     #     security:
     #       tlsMode: 1
+    #        queryNode:
+    #          enableDisk: false
+    #          loadMemoryUsageFactor: 2      
+    #          maxDiskUsagePercentage: 90 
 
 ## Expose the Milvus service to be accessed from outside the cluster (LoadBalancer service).
 ## or access it from within the cluster (ClusterIP service). Set the service type and the port to serve it.

@@ -264,7 +264,7 @@ The following table lists the configurable parameters of the Milvus Service and 
 |-------------------------------------------|-----------------------------------------------|---------------------------------------------------------|
 | `cluster.enabled`                         | Enable or disable Milvus Cluster mode         | `true`                                                 |
 | `image.all.repository`                    | Image repository                              | `milvusdb/milvus`                                       |
-| `image.all.tag`                           | Image tag                                     | `v2.4.13`                           |
+| `image.all.tag`                           | Image tag                                     | `v2.4.13-hotfix`                           |
 | `image.all.pullPolicy`                    | Image pull policy                             | `IfNotPresent`                                          |
 | `image.all.pullSecrets`                   | Image pull secrets                            | `{}`                                                    |
 | `image.tools.repository`                  | Config image repository                       | `milvusdb/milvus-config-tool`                                       |
@@ -447,7 +447,9 @@ The following table lists the configurable parameters of the Milvus Query Node c
 | `queryNode.profiling.enabled`             | Whether to enable live profiling                   | `false`                                          |
 | `queryNode.extraEnv`                      | Additional Milvus Query Node container environment variables | `[]`                                     |
 | `queryNode.strategy`                      | Deployment strategy configuration |  RollingUpdate                                         |
-
+| `queryNode.enableDisk`        | Allows use of disk storage for loading and searching indexes | `false`       |
+| `queryNode.loadMemoryUsageFactor` | Estimate the memory usage when loading segments              | `{}`          |
+| `queryNode.maxDiskUsagePercentage` | Maximum percentage of disk space that the query node can use | `90`          |
 ### Milvus Index Coordinator Deployment Configuration
 
 The following table lists the configurable parameters of the Milvus Index Coordinator component and their default values.
