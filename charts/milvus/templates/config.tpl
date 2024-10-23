@@ -31,7 +31,7 @@ etcd:
 {{- else }}
   endpoints:
 {{- range $i := until ( .Values.etcd.replicaCount | int ) }}
-  - {{ $etcdReleaseName }}-{{ $i }}.{{ $etcdReleaseName }}-headless.{{ $namespace }}.svc.cluster.local:{{ $etcdPort }}
+  - {{ $etcdReleaseName }}-{{ $i }}.{{ $etcdReleaseName }}-headless.{{ $namespace }}.svc.{{ $.Values.etcd.clusterDomain }}:{{ $etcdPort }}
 {{- end }}
 {{- end }}
 
