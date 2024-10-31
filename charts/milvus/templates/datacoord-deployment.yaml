@@ -40,6 +40,9 @@ spec:
         pyroscope.io/application-name: {{ template "milvus.datacoord.fullname" . }}
         pyroscope.io/port: "9091"
       {{- end }}
+      {{- if .Values.dataCoordinator.annotations }}
+        {{- toYaml .Values.dataCoordinator.annotations | nindent 8 }}
+      {{- end }}
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
 {{ include "milvus.ud.annotations" . | indent 8 }}
     spec:

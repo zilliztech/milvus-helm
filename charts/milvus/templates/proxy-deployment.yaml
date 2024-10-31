@@ -36,6 +36,9 @@ spec:
         pyroscope.io/application-name: {{ template "milvus.proxy.fullname" . }}
         pyroscope.io/port: "9091"
       {{- end }}
+      {{- if .Values.proxy.annotations }}
+        {{- toYaml .Values.proxy.annotations | nindent 8 }}
+      {{- end }}
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
 {{ include "milvus.ud.annotations" . | indent 8 }}
     spec:
