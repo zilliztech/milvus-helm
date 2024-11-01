@@ -280,6 +280,7 @@ proxy:
   # Deployment strategy, default is RollingUpdate
   # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
   strategy: {}
+  annotations: {}
 
 rootCoordinator:
   enabled: false
@@ -299,6 +300,7 @@ rootCoordinator:
   # Deployment strategy, default is RollingUpdate
   # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
   strategy: {}
+  annotations: {}
 
   service:
     port: 53100
@@ -324,6 +326,7 @@ queryCoordinator:
   # Deployment strategy, default is RollingUpdate
   # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
   strategy: {}
+  annotations: {}
 
   service:
     port: 19531
@@ -355,6 +358,7 @@ queryNode:
   # Deployment strategy, default is RollingUpdate
   # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
   strategy: {}
+  annotations: {}
 
 indexCoordinator:
   enabled: false
@@ -374,6 +378,7 @@ indexCoordinator:
   # Deployment strategy, default is RollingUpdate
   # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
   strategy: {}
+  annotations: {}
 
   service:
     port: 31000
@@ -404,6 +409,7 @@ indexNode:
   # Deployment strategy, default is RollingUpdate
   # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
   strategy: {}
+  annotations: {}
 
 dataCoordinator:
   enabled: false
@@ -423,6 +429,7 @@ dataCoordinator:
   # Deployment strategy, default is RollingUpdate
   # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
   strategy: {}
+  annotations: {}
 
   service:
     port: 13333
@@ -446,6 +453,7 @@ dataNode:
   # Deployment strategy, default is RollingUpdate
   # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
   strategy: {}
+  annotations: {}
 
 ## mixCoordinator contains all coord
 ## If you want to use mixcoord, enable this and disable all of other coords
@@ -467,6 +475,7 @@ mixCoordinator:
   # Deployment strategy, default is RollingUpdate
   # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
   strategy: {}
+  annotations: {}
 
   service:
     annotations: {}
