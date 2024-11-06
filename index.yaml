@@ -2,6 +2,56 @@ apiVersion: v1
 entries:
   milvus:
   - apiVersion: v1
+    appVersion: 2.4.15
+    created: "2024-11-06T02:55:07.319416992Z"
+    dependencies:
+    - condition: etcd.enabled
+      name: etcd
+      repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
+      tags:
+      - etcd
+      version: 6.3.3
+    - condition: minio.enabled
+      name: minio
+      repository: https://zilliztech.github.io/milvus-helm
+      tags:
+      - minio
+      version: 8.0.17
+    - condition: pulsar.enabled
+      name: pulsar
+      repository: https://pulsar.apache.org/charts
+      tags:
+      - pulsar
+      version: 2.7.8
+    - condition: kafka.enabled
+      name: kafka
+      repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
+      tags:
+      - kafka
+      version: 15.5.1
+    description: Milvus is an open-source vector database built to power AI applications
+      and vector similarity search.
+    digest: e4608d35b0303c2381f63dc93184e48d75f342fe80541da999c73ef5830c0c89
+    home: https://milvus.io/
+    icon: https://raw.githubusercontent.com/milvus-io/docs/master/v1.0.0/assets/milvus_logo.png
+    keywords:
+    - milvus
+    - elastic
+    - vector
+    - search
+    - deploy
+    kubeVersion: ^1.10.0-0
+    maintainers:
+    - email: contact@milvus.io
+      name: contact
+      url: milvus.io
+    name: milvus
+    sources:
+    - https://github.com/zilliztech/milvus
+    urls:
+    - https://github.com/zilliztech/milvus-helm/releases/download/milvus-4.2.19/milvus-4.2.19.tgz
+    version: 4.2.19
+  - apiVersion: v1
     appVersion: 2.4.14
     created: "2024-11-01T03:23:05.060874418Z"
     dependencies:
@@ -12173,4 +12223,4 @@ entries:
     urls:
     - https://github.com/zilliztech/milvus-helm/releases/download/minio-8.0.10/minio-8.0.10.tgz
     version: 8.0.10
-generated: "2024-11-01T03:23:05.063036053Z"
+generated: "2024-11-06T02:55:07.321510142Z"
