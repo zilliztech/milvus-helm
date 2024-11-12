@@ -594,9 +594,9 @@ You can find more information at:
 
 ### Node Selector, Affinity and Tolerations Configuration Guide
 
-- [Node Selector Configuration Guide](docs/node-selector-configuration-guide.md)
-- [Affinity Configuration Guide](docs/affinity-configuration-guide.md)
-- [Tolerations Configuration Guide](docs/tolerations-configuration-guide.md)
+- [Node Selector Configuration Guide](../../docs/node-selector-configuration-guide.md)
+- [Affinity Configuration Guide](../../docs/affinity-configuration-guide.md)
+- [Tolerations Configuration Guide](../../docs/tolerations-configuration-guide.md)
 
 #### Important Configuration Considerations
 
