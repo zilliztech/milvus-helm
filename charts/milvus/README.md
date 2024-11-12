@@ -591,6 +591,37 @@ This version of the chart includes the dependent Kafka chart in the charts/ dire
 You can find more information at:
 * [https://artifacthub.io/packages/helm/bitnami/kafka](https://artifacthub.io/packages/helm/bitnami/kafka)
 
+
+### Node Selector, Affinity and Tolerations Configuration Guide
+
+- [Node Selector Configuration Guide](docs/node-selector-configuration-guide.md)
+- [Affinity Configuration Guide](docs/affinity-configuration-guide.md)
+- [Tolerations Configuration Guide](docs/tolerations-configuration-guide.md)
+
+#### Important Configuration Considerations
+
+When configuring pod scheduling in Kubernetes, be aware of potential conflicts between different scheduling mechanisms:
+
+1. **Node Selectors vs Node Affinity**
+   - Node selectors provide a simple way to constrain pods to nodes with specific labels
+   - Node affinity provides more flexible pod scheduling rules
+   - When used together, **both** node selector and node affinity rules must be satisfied
+   - Consider using only one mechanism unless you have specific requirements
+
+2. **Scheduling Priority**
+   - Node Selectors: Hard requirement that must be satisfied
+   - Required Node Affinity: Hard requirement that must be satisfied
+   - Preferred Node Affinity: Soft preference that Kubernetes will try to satisfy
+   - Pod Anti-Affinity: Can prevent pods from being scheduled on the same node
+
+3. **Best Practices**
+   - Start with simple node selectors for basic constraints
+   - Use node/pod affinity for more complex scheduling requirements
+   - Avoid combining multiple scheduling constraints unless necessary
+   - Test your configuration in a non-production environment first
+
+For detailed examples and configurations, please refer to the documentation guides linked above.
+
 ### Milvus Live Profiling
 Profiling is an effective way of understanding which parts of your application are consuming the most resources.
 
