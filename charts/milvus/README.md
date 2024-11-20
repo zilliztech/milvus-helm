@@ -9,8 +9,8 @@ This chart bootstraps Milvus deployment on a Kubernetes cluster using the Helm p
 
 ## Prerequisites
 
-- Kubernetes 1.14+ (Attu requires 1.18+)
-- Helm >= 3.2.0
+- Kubernetes 1.20+
+- Helm >= 3.12.3
 
 ## Compatibility Notice
 As of version 4.2.0, the Milvus Helm chart no longer supports Milvus v2.3.x. If you need to deploy Milvus v2.3.x using Helm, please use Milvus Helm chart version less than 4.2.0 (e.g 4.1.36).
@@ -566,6 +566,12 @@ The following table lists the configurable parameters of the Milvus Mixture Coor
 ### Pulsar Configuration
 
 This version of the chart includes the dependent Pulsar chart in the charts/ directory.
+- `pulsar-v3.3.0` is used for Pulsar v3
+- `pulsar-v2.7.8` is used for Pulsar v2
+
+Since milvus chart version 4.2.21, pulsar v3 is supported, but pulsar v2 will be still used by default until the release of Milvus v2.5.0. 
+
+We recommend creating new instances with pulsar v3 to avoid security vulnerabilities & some bugs in pulsar v2. To use pulsar v3, set `pulsarv3.enabled` to `true` and `pulsar.enabled` to `false`. Set other values for pulsar v3 under `pulsarv3` field.
 
 You can find more information at:
 * [https://pulsar.apache.org/charts](https://pulsar.apache.org/charts)

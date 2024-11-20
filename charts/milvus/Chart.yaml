@@ -3,7 +3,7 @@ name: milvus
 appVersion: "2.4.16"
 kubeVersion: "^1.10.0-0"
 description: Milvus is an open-source vector database built to power AI applications and vector similarity search.
-version: 4.2.20
+version: 4.2.21
 keywords:
   - milvus
   - elastic
@@ -18,4 +18,3 @@ maintainers:
   - email: contact@milvus.io
     name: contact
     url: milvus.io
-engine: gotpl

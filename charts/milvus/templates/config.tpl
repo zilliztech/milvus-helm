@@ -110,6 +110,22 @@ pulsar:
 {{- end }}
   port: {{ .Values.pulsar.proxy.ports.pulsar }}
   maxMessageSize: {{ .Values.pulsar.maxMessageSize }}
+
+{{- else if .Values.pulsarv3.enabled }}
+
+mq:
+  type: pulsar
+
+messageQueue: pulsar
+
+pulsar:
+{{- if contains .Values.pulsarv3.name .Release.Name }}
+  address: {{ .Release.Name }}-proxy
+{{- else }}
+  address: {{ .Release.Name }}-{{ .Values.pulsarv3.name }}-proxy
+{{- end }}
+  port: {{ .Values.pulsarv3.proxy.ports.pulsar }}
+  maxMessageSize: {{ .Values.pulsarv3.broker.configData.maxMessageSize }}
 {{- end }}
 
 {{- if .Values.externalKafka.enabled }}
