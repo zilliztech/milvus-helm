@@ -9,11 +9,13 @@ This chart bootstraps Milvus deployment on a Kubernetes cluster using the Helm p
 
 ## Prerequisites
 
-- Kubernetes 1.20+
-- Helm >= 3.12.3
+- Kubernetes >= 1.20.0
+- Helm >= 3.14.0
 
 ## Compatibility Notice
-As of version 4.2.0, the Milvus Helm chart no longer supports Milvus v2.3.x. If you need to deploy Milvus v2.3.x using Helm, please use Milvus Helm chart version less than 4.2.0 (e.g 4.1.36).
+- As of version 4.2.21, the Milvus Helm chart introduced pulsar-v3.x chart as dependency. For backward compatibility, please upgrade your helm to v3.14 or later version, and be sure to add the `--reset-then-reuse-values` option whenever you use `helm upgrade`.
+
+- As of version 4.2.0, the Milvus Helm chart no longer supports Milvus v2.3.x. If you need to deploy Milvus v2.3.x using Helm, please use Milvus Helm chart version less than 4.2.0 (e.g 4.1.36).
 
 > **IMPORTANT** The master branch is for the development of Milvus v2.x. On March 9th, 2021, we released Milvus v1.0, the first stable version of Milvus with long-term support. To use Milvus v1.x, switch to [branch 1.1](https://github.com/zilliztech/milvus-helm/tree/1.1).
 
@@ -133,8 +135,8 @@ $ helm upgrade --install my-release milvus/milvus -f values-custom.yaml
 E.g. to scale out query node from 1(default) to 2:
 
 ```bash
-# Helm v3.x
-$ helm upgrade --install --set queryNode.replicas=2 my-release milvus/milvus
+# Helm v3.14.0+
+$ helm upgrade --reset-then-reuse-values --install --set queryNode.replicas=2 my-release milvus/milvus
 ```
 
 ### Milvus Coordinator Active Standby
