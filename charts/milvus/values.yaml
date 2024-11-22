@@ -697,6 +697,8 @@ pulsarv3:
       pullPolicy: IfNotPresent
 
   zookeeper:
+    pdb:
+      usePolicy: false
     affinity:
       anti_affinity: false
     component: zookeeper
@@ -733,6 +735,8 @@ pulsarv3:
         -XX:+PerfDisableSharedMem
 
   bookkeeper:
+    pdb:
+      usePolicy: false
     affinity:
       anti_affinity: false
     component: bookie
@@ -775,7 +779,7 @@ pulsarv3:
         -XX:-ResizePLAB
         -XX:+ExitOnOutOfMemoryError
         -XX:+PerfDisableSharedMem
-
+      nettyMaxFrameSizeBytes: "104867840"
   autorecovery:
     affinity:
       anti_affinity: false
@@ -799,6 +803,8 @@ pulsarv3:
       pullPolicy: IfNotPresent
 
   broker:
+    pdb:
+      usePolicy: false
     affinity:
       anti_affinity: false
     component: broker
@@ -841,6 +847,8 @@ pulsarv3:
       backlogQuotaDefaultRetentionPolicy: producer_exception
 
   proxy:
+    pdb:
+      usePolicy: false
     affinity:
       anti_affinity: false
     component: proxy
