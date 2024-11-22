@@ -598,7 +598,7 @@ etcd:
     create: false
   image:
     repository: "milvusdb/etcd"
-    tag: "3.5.14-r1"
+    tag: "3.5.16-r1"
     pullPolicy: IfNotPresent
 
   service:
