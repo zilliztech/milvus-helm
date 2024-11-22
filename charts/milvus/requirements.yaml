@@ -12,6 +12,7 @@ dependencies:
   tags:
     - minio
 - name: pulsar
+  alias: pulsar
   version: 2.7.8
   repository: https://pulsar.apache.org/charts
   condition: pulsar.enabled
