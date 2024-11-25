@@ -650,7 +650,7 @@ etcd:
 pulsarv3:
   name: "pulsarv3" # note: nameOveride should be kept the same as the name field
   nameOverride: "pulsarv3"
-  enabled: false
+  enabled: true
   persistence: true
   volumes:
     persistence: true
@@ -903,7 +903,7 @@ pulsarv3:
 
 # default values for pulsar v2
 pulsar:
-  enabled: true
+  enabled: false
   name: pulsar
 
   fullnameOverride: ""
