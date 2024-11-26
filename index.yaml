@@ -12677,4 +12677,21 @@ entries:
     urls:
     - https://github.com/zilliztech/milvus-helm/releases/download/minio-8.0.10/minio-8.0.10.tgz
     version: 8.0.10
-generated: "2024-11-25T08:07:17.59592346Z"
+  pulsarv2:
+  - apiVersion: v1
+    appVersion: 2.7.4
+    created: "2024-11-26T03:20:38.632211995Z"
+    description: Apache Pulsar Helm chart for Kubernetes
+    digest: bca455b2a49ce5443910514ff0f7b130e3468de0d17c61d5763ed56047714915
+    home: https://pulsar.apache.org
+    icon: http://pulsar.apache.org/img/pulsar.svg
+    maintainers:
+    - email: contact@milvus.io
+      name: contact
+    name: pulsarv2
+    sources:
+    - https://github.com/apache/pulsar
+    urls:
+    - https://github.com/zilliztech/milvus-helm/releases/download/pulsarv2-2.7.8/pulsarv2-2.7.8.tgz
+    version: 2.7.8
+generated: "2024-11-26T03:20:38.634204073Z"
