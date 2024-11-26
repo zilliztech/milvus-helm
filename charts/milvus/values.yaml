@@ -652,6 +652,8 @@ pulsarv3:
   nameOverride: "pulsarv3"
   enabled: true
   persistence: true
+  extra: {}
+  monitoring: {}
   volumes:
     persistence: true
     local_storage: false
