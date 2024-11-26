@@ -3,6 +3,64 @@ entries:
   milvus:
   - apiVersion: v1
     appVersion: 2.5.0-beta
+    created: "2024-11-26T08:05:23.576709039Z"
+    dependencies:
+    - condition: etcd.enabled
+      name: etcd
+      repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
+      tags:
+      - etcd
+      version: 6.3.3
+    - condition: minio.enabled
+      name: minio
+      repository: https://zilliztech.github.io/milvus-helm
+      tags:
+      - minio
+      version: 8.0.17
+    - alias: pulsar
+      condition: pulsar.enabled
+      name: pulsarv2
+      repository: https://zilliztech.github.io/milvus-helm
+      tags:
+      - pulsar
+      version: 2.7.8
+    - alias: pulsarv3
+      condition: pulsarv3.enabled
+      name: pulsar
+      repository: https://pulsar.apache.org/charts
+      tags:
+      - pulsarv3
+      version: 3.3.0
+    - condition: kafka.enabled
+      name: kafka
+      repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
+      tags:
+      - kafka
+      version: 15.5.1
+    description: Milvus is an open-source vector database built to power AI applications
+      and vector similarity search.
+    digest: f9dca650f93e4aa2fba9f5a1ca18596c3e817580053e0977ee7b7ea96d3f3d2c
+    home: https://milvus.io/
+    icon: https://raw.githubusercontent.com/milvus-io/docs/master/v1.0.0/assets/milvus_logo.png
+    keywords:
+    - milvus
+    - elastic
+    - vector
+    - search
+    - deploy
+    kubeVersion: ^1.10.0-0
+    maintainers:
+    - email: contact@milvus.io
+      name: contact
+      url: milvus.io
+    name: milvus
+    sources:
+    - https://github.com/zilliztech/milvus
+    urls:
+    - https://github.com/zilliztech/milvus-helm/releases/download/milvus-4.2.28/milvus-4.2.28.tgz
+    version: 4.2.28
+  - apiVersion: v1
+    appVersion: 2.5.0-beta
     created: "2024-11-25T08:07:17.593662915Z"
     dependencies:
     - condition: etcd.enabled
@@ -12694,4 +12752,4 @@ entries:
     urls:
     - https://github.com/zilliztech/milvus-helm/releases/download/pulsarv2-2.7.8/pulsarv2-2.7.8.tgz
     version: 2.7.8
-generated: "2024-11-26T03:20:38.634204073Z"
+generated: "2024-11-26T08:05:23.579030923Z"
