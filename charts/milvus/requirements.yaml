@@ -11,10 +11,10 @@ dependencies:
   condition: minio.enabled
   tags:
     - minio
-- name: pulsar
+- name: pulsarv2
   alias: pulsar
   version: 2.7.8
-  repository: https://pulsar.apache.org/charts
+  repository: https://zilliztech.github.io/milvus-helm
   condition: pulsar.enabled
   tags:
     - pulsar

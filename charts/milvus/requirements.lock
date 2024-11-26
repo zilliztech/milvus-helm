@@ -5,8 +5,8 @@ dependencies:
 - name: minio
   repository: https://zilliztech.github.io/milvus-helm
   version: 8.0.17
-- name: pulsar
-  repository: https://pulsar.apache.org/charts
+- name: pulsarv2
+  repository: https://zilliztech.github.io/milvus-helm
   version: 2.7.8
 - name: pulsar
   repository: https://pulsar.apache.org/charts
@@ -14,5 +14,5 @@ dependencies:
 - name: kafka
   repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
   version: 15.5.1
-digest: sha256:1404dd04da6911d724e0bc3d8334df99451dbdae444f281d139e6fd80d2a0843
-generated: "2024-11-22T15:53:03.438015+08:00"
+digest: sha256:21c2518331186b743edb4564fab17d3789fa41baf9e1f48313c09b0a59696626
+generated: "2024-11-26T15:34:03.319376+08:00"
