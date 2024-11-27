@@ -140,6 +140,9 @@ spec:
         {{- if .Values.proxy.volumeMounts }}
           {{- toYaml .Values.proxy.volumeMounts | nindent 8 }}
         {{- end}}
+        {{- if .Values.volumeMounts }}
+          {{- toYaml .Values.volumeMounts | nindent 8 }}
+        {{- end}}
 
     {{- if and (.Values.nodeSelector) (not .Values.proxy.nodeSelector) }}
       nodeSelector:
@@ -184,5 +187,7 @@ spec:
       {{- if .Values.proxy.volumes }}
 {{ toYaml .Values.proxy.volumes | indent 6 }}
       {{- end}}
-
+      {{- if .Values.volumes }}
+        {{- toYaml .Values.volumes | nindent 6 }}
+      {{- end}}
 {{- end }}

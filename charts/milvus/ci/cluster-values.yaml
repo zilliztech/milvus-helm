@@ -1,6 +1,12 @@
 ## Enable or disable Milvus Cluster mode
 cluster:
   enabled: true
+volumes: 
+- name: custom
+  emptyDir: {}
+volumeMounts: 
+- name: custom
+  mountPath: /custom
 etcd:
   replicaCount: 1
 minio:
