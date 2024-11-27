@@ -13,6 +13,8 @@ This chart bootstraps Milvus deployment on a Kubernetes cluster using the Helm p
 - Helm >= 3.14.0
 
 ## Compatibility Notice
+- **IMPORTANT** For users using pulsar2. Please don't use version 4.2.21～4.2.29 for upgrading, there're some known issues. 4.2.30 or later version is recommended. Remember to add `--set pulsar.enabled=true,pulsarv3.enabled=false` or set them in your values file when upgrading.
+
 - As of version 4.2.21, the Milvus Helm chart introduced pulsar-v3.x chart as dependency. For backward compatibility, please upgrade your helm to v3.14 or later version, and be sure to add the `--reset-then-reuse-values` option whenever you use `helm upgrade`.
 
 - As of version 4.2.0, the Milvus Helm chart no longer supports Milvus v2.3.x. If you need to deploy Milvus v2.3.x using Helm, please use Milvus Helm chart version less than 4.2.0 (e.g 4.1.36).
