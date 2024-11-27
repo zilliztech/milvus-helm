@@ -147,6 +147,9 @@ spec:
         - mountPath: /var/lib/milvus/data
           name: disk
         {{- end }}
+        {{- if .Values.volumeMounts }}
+          {{- toYaml .Values.volumeMounts | nindent 8 }}
+        {{- end}}
 
     {{- if and (.Values.nodeSelector) (not .Values.queryNode.nodeSelector) }}
       nodeSelector:
@@ -192,4 +195,7 @@ spec:
       - name: disk
         emptyDir: {}
       {{- end }}
+      {{- if .Values.volumes }}
+        {{- toYaml .Values.volumes | nindent 6 }}
+      {{- end}}
 {{- end }}

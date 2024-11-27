@@ -141,6 +141,9 @@ spec:
         {{- end }}
         - mountPath: /milvus/tools
           name: tools
+        {{- if .Values.volumeMounts }}
+          {{- toYaml .Values.volumeMounts | nindent 8 }}
+        {{- end}}
 
     {{- if and (.Values.nodeSelector) (not .Values.indexCoordinator.nodeSelector) }}
       nodeSelector:
@@ -182,4 +185,7 @@ spec:
       {{- end }}
       - name: tools
         emptyDir: {}
+      {{- if .Values.volumes }}
+        {{- toYaml .Values.volumes | nindent 6 }}
+      {{- end}}
 {{- end }}

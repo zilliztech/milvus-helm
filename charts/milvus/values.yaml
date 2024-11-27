@@ -44,6 +44,12 @@ affinity: {}
 labels: {}
 annotations: {}
 
+# Global Volumes & volumeMounts
+# If set, this will apply to all milvus components
+# ref: https://kubernetes.io/docs/concepts/storage/volumes/
+volumes: []
+volumeMounts: []
+
 # Experimental feature: streaming node
 # Only support standalone mode with rocksmq and pulsar message queue,
 # cluster mode with pulsar message queue.
