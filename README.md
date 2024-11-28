@@ -8,6 +8,20 @@ This GitHub repository is the official source for Milvus's Helm charts.
 For instructions about how to install charts from this repository, visit the public website at:
 [Milvus Helm Charts](https://artifacthub.io/packages/helm/milvus-helm/milvus)
 
+## Prerequisites
+
+- Kubernetes >= 1.20.0
+- Helm >= 3.14.0
+
+## Compatibility Notice
+- **IMPORTANT** For users using pulsar2. Please don't use version 4.2.21～4.2.29 for upgrading, there're some known issues. 4.2.30 or later version is recommended. Remember to add `--set pulsar.enabled=true,pulsarv3.enabled=false` or set them in your values file when upgrading.
+
+- As of version 4.2.21, the Milvus Helm chart introduced pulsar-v3.x chart as dependency. For backward compatibility, please upgrade your helm to v3.14 or later version, and be sure to add the `--reset-then-reuse-values` option whenever you use `helm upgrade`.
+
+- As of version 4.2.0, the Milvus Helm chart no longer supports Milvus v2.3.x. If you need to deploy Milvus v2.3.x using Helm, please use Milvus Helm chart version less than 4.2.0 (e.g 4.1.36).
+
+> **IMPORTANT** The master branch is for the development of Milvus v2.x. On March 9th, 2021, we released Milvus v1.0, the first stable version of Milvus with long-term support. To use Milvus v1.x, switch to [branch 1.1](https://github.com/zilliztech/milvus-helm/tree/1.1).
+
 ## Make changes to an existing chart without publishing
 
 If you make changes to an existing chart, but do not change its version, nothing new will be published to the _charts repository_.
@@ -25,13 +39,6 @@ When it detects that the version in the folder doesn't exist in  `index.yaml`, i
 `index.yaml` is accesible from [zilliztech.github.io/milvus-helm/index.yaml](https://github.com/zilliztech/milvus-helm/blob/gh-pages/index.yaml) and is the list of all _charts_ and their _versions_ available when you interact with the _charts repository_ using Helm.
 
 The packaged referenced in `index.yaml`, when it's updated using the GitHub action, will link for download to the URL provided by the _GitHub repository_ release files.
-
-## Add a new chart
-
-To add a new chart, create a directory inside _charts_ with it contents at _master_ branch.
-
-When you commit it, it will be picked up by the GitHub action, and if it contains a chart and version that doesn't already exist in the _charts repository_, a new release with the package for the chart will be published on the _GitHub repository_,
-and the list of all charts at `index.yaml` on _gh-pages_ branch will be updated on the _charts repository_.
 
 ## More information
 

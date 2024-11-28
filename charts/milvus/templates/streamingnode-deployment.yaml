@@ -1,4 +1,4 @@
-{{- if and .Values.streaming.enabled .Values.cluster.enabled }}
+{{- if and .Values.streaming .Values.streaming.enabled .Values.cluster.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -132,6 +132,9 @@ spec:
         {{- end }}
         - mountPath: /milvus/tools
           name: tools
+        {{- if .Values.volumeMounts }}
+          {{- toYaml .Values.volumeMounts | nindent 8 }}
+        {{- end}}
 
     {{- if and (.Values.nodeSelector) (not .Values.streamingNode.nodeSelector) }}
       nodeSelector:
@@ -172,4 +175,7 @@ spec:
       {{- end }}
       - name: tools
         emptyDir: {}
+      {{- if .Values.volumes }}
+        {{- toYaml .Values.volumes | nindent 6 }}
+      {{- end}}
 {{- end }}

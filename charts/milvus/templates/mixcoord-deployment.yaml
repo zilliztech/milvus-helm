@@ -40,6 +40,9 @@ spec:
         pyroscope.io/application-name: {{ template "milvus.mixcoord.fullname" . }}
         pyroscope.io/port: "9091"
       {{- end }}
+      {{- if .Values.mixCoordinator.annotations }}
+        {{- toYaml .Values.mixCoordinator.annotations | nindent 8 }}
+      {{- end }}
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
 {{ include "milvus.ud.annotations" . | indent 8 }}
     spec:
@@ -73,7 +76,7 @@ spec:
         args: [ "milvus", "run", "mixture", "-rootcoord", "-querycoord", "-datacoord", "-indexcoord" ]
         {{- end }}
         env:
-        {{- if .Values.streaming.enabled }}
+        {{- if and .Values.streaming .Values.streaming.enabled }}
         - name: MILVUS_STREAMING_SERVICE_ENABLED
           value: "1"
         {{- end }}
@@ -135,6 +138,9 @@ spec:
         {{- end }}
         - mountPath: /milvus/tools
           name: tools
+        {{- if .Values.volumeMounts }}
+          {{- toYaml .Values.volumeMounts | nindent 8 }}
+        {{- end}}
 
     {{- if and (.Values.nodeSelector) (not .Values.mixCoordinator.nodeSelector) }}
       nodeSelector:
@@ -176,4 +182,7 @@ spec:
       {{- end }}
       - name: tools
         emptyDir: {}
+      {{- if .Values.volumes }}
+        {{- toYaml .Values.volumes | nindent 6 }}
+      {{- end}}
 {{- end }}

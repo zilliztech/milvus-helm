@@ -9,11 +9,15 @@ This chart bootstraps Milvus deployment on a Kubernetes cluster using the Helm p
 
 ## Prerequisites
 
-- Kubernetes 1.14+ (Attu requires 1.18+)
-- Helm >= 3.2.0
+- Kubernetes >= 1.20.0
+- Helm >= 3.14.0
 
 ## Compatibility Notice
-As of version 4.2.0, the Milvus Helm chart no longer supports Milvus v2.3.x. If you need to deploy Milvus v2.3.x using Helm, please use Milvus Helm chart version less than 4.2.0 (e.g 4.1.36).
+- **IMPORTANT** For users using pulsar2. Please don't use version 4.2.21～4.2.29 for upgrading, there're some known issues. 4.2.30 or later version is recommended. Remember to add `--set pulsar.enabled=true,pulsarv3.enabled=false` or set them in your values file when upgrading.
+
+- As of version 4.2.21, the Milvus Helm chart introduced pulsar-v3.x chart as dependency. For backward compatibility, please upgrade your helm to v3.14 or later version, and be sure to add the `--reset-then-reuse-values` option whenever you use `helm upgrade`.
+
+- As of version 4.2.0, the Milvus Helm chart no longer supports Milvus v2.3.x. If you need to deploy Milvus v2.3.x using Helm, please use Milvus Helm chart version less than 4.2.0 (e.g 4.1.36).
 
 > **IMPORTANT** The master branch is for the development of Milvus v2.x. On March 9th, 2021, we released Milvus v1.0, the first stable version of Milvus with long-term support. To use Milvus v1.x, switch to [branch 1.1](https://github.com/zilliztech/milvus-helm/tree/1.1).
 
@@ -133,8 +137,8 @@ $ helm upgrade --install my-release milvus/milvus -f values-custom.yaml
 E.g. to scale out query node from 1(default) to 2:
 
 ```bash
-# Helm v3.x
-$ helm upgrade --install --set queryNode.replicas=2 my-release milvus/milvus
+# Helm v3.14.0+
+$ helm upgrade --reset-then-reuse-values --install --set queryNode.replicas=2 my-release milvus/milvus
 ```
 
 ### Milvus Coordinator Active Standby
@@ -264,7 +268,7 @@ The following table lists the configurable parameters of the Milvus Service and 
 |-------------------------------------------|-----------------------------------------------|---------------------------------------------------------|
 | `cluster.enabled`                         | Enable or disable Milvus Cluster mode         | `true`                                                 |
 | `image.all.repository`                    | Image repository                              | `milvusdb/milvus`                                       |
-| `image.all.tag`                           | Image tag                                     | `v2.4.12`                           |
+| `image.all.tag`                           | Image tag                                     | `v2.5.0-beta`                           |
 | `image.all.pullPolicy`                    | Image pull policy                             | `IfNotPresent`                                          |
 | `image.all.pullSecrets`                   | Image pull secrets                            | `{}`                                                    |
 | `image.tools.repository`                  | Config image repository                       | `milvusdb/milvus-config-tool`                                       |
@@ -381,6 +385,7 @@ The following table lists the configurable parameters of the Milvus Proxy compon
 | `proxy.http.debugMode.enabled`            | Enable debug mode for rest api                          | `false`       |
 | `proxy.tls.enabled`                       | Enable porxy tls connection                             | `false`       |
 | `proxy.strategy`                          | Deployment strategy configuration                       | RollingUpdate |
+| `proxy.annotations`                       | Additional pod annotations                              | `{}`          |
 
 ### Milvus Root Coordinator Deployment Configuration
 
@@ -406,6 +411,7 @@ The following table lists the configurable parameters of the Milvus Root Coordin
 | `rootCoordinator.service.loadBalancerSourceRanges` | List of IP CIDRs allowed access to lb (if supported) | `[]`                                  |
 | `rootCoordinator.service.externalIPs`             | Service external IP addresses                 | `[]`                                         |
 | `rootCoordinator.strategy`                       | Deployment strategy configuration |  RollingUpdate                                         |
+| `rootCoordinator.annotations`                    | Additional pod annotations | `{}` |
 ### Milvus Query Coordinator Deployment Configuration
 
 The following table lists the configurable parameters of the Milvus Query Coordinator component and their default values.
@@ -430,6 +436,7 @@ The following table lists the configurable parameters of the Milvus Query Coordi
 | `queryCoordinator.service.loadBalancerSourceRanges`   | List of IP CIDRs allowed access to lb (if supported) | `[]`                                 |
 | `queryCoordinator.service.externalIPs`                | Service external IP addresses                 | `[]`                                        |
 | `queryCoordinator.strategy`                       | Deployment strategy configuration |  RollingUpdate                                         |
+| `queryCoordinator.annotations`                    | Additional pod annotations | `{}` |
 ### Milvus Query Node Deployment Configuration
 
 The following table lists the configurable parameters of the Milvus Query Node component and their default values.
@@ -447,6 +454,7 @@ The following table lists the configurable parameters of the Milvus Query Node c
 | `queryNode.profiling.enabled`             | Whether to enable live profiling                   | `false`                                          |
 | `queryNode.extraEnv`                      | Additional Milvus Query Node container environment variables | `[]`                                     |
 | `queryNode.strategy`                      | Deployment strategy configuration |  RollingUpdate                                         |
+| `queryNode.annotations`                    | Additional pod annotations | `{}` |
 
 ### Milvus Index Coordinator Deployment Configuration
 
@@ -472,6 +480,7 @@ The following table lists the configurable parameters of the Milvus Index Coordi
 | `indexCoordinator.service.loadBalancerSourceRanges`   | List of IP CIDRs allowed access to lb (if supported) | `[]`                                 |
 | `indexCoordinator.service.externalIPs`                | Service external IP addresses                 | `[]`                                        |
 | `indexCoordinator.strategy`                       | Deployment strategy configuration |  RollingUpdate                                         |
+| `indexCoordinator.annotations`                    | Additional pod annotations | `{}` |
 ### Milvus Index Node Deployment Configuration
 
 The following table lists the configurable parameters of the Milvus Index Node component and their default values.
@@ -489,6 +498,7 @@ The following table lists the configurable parameters of the Milvus Index Node c
 | `indexNode.profiling.enabled`             | Whether to enable live profiling                   | `false`                                          |
 | `indexNode.extraEnv`                      | Additional Milvus Index Node container environment variables | `[]`                                     |
 | `indexNode.strategy`                      | Deployment strategy configuration |  RollingUpdate                                         |
+| `indexNode.annotations`                    | Additional pod annotations | `{}` |
 
 ### Milvus Data Coordinator Deployment Configuration
 
@@ -514,6 +524,7 @@ The following table lists the configurable parameters of the Milvus Data Coordin
 | `dataCoordinator.service.loadBalancerSourceRanges`    | List of IP CIDRs allowed access to lb (if supported) | `[]`                                 |
 | `dataCoordinator.service.externalIPs`                 | Service external IP addresses                 | `[]`                                        |
 | `dataCoordinator.strategy`                       | Deployment strategy configuration |  RollingUpdate                                         |
+| `dataCoordinator.annotations`                    | Additional pod annotations | `{}` |
 ### Milvus Data Node Deployment Configuration
 
 The following table lists the configurable parameters of the Milvus Data Node component and their default values.
@@ -530,6 +541,7 @@ The following table lists the configurable parameters of the Milvus Data Node co
 | `dataNode.profiling.enabled`              | Whether to enable live profiling                   | `false`                                          |
 | `dataNode.extraEnv`                       | Additional Milvus Data Node container environment variables | `[]`                                      |
 | `dataNode.strategy`                       | Deployment strategy configuration |  RollingUpdate                                         |
+| `dataNode.annotations`                    | Additional pod annotations | `{}` |
 
 ### Milvus Mixture Coordinator Deployment Configuration
 
@@ -554,9 +566,16 @@ The following table lists the configurable parameters of the Milvus Mixture Coor
 | `mixCoordinator.service.loadBalancerSourceRanges`    | List of IP CIDRs allowed access to lb (if supported) | `[]`                                 |
 | `mixCoordinator.service.externalIPs`                 | Service external IP addresses                 | `[]`                                        |
 | `mixCoordinator.strategy`                       | Deployment strategy configuration |  RollingUpdate                                         |
+| `mixCoordinator.annotations`                    | Additional pod annotations | `{}` |
 ### Pulsar Configuration
 
 This version of the chart includes the dependent Pulsar chart in the charts/ directory.
+- `pulsar-v3.3.0` is used for Pulsar v3
+- `pulsar-v2.7.8` is used for Pulsar v2
+
+Since milvus chart version 4.2.21, pulsar v3 is supported, but pulsar v2 will be still used by default until the release of Milvus v2.5.0. 
+
+We recommend creating new instances with pulsar v3 to avoid security vulnerabilities & some bugs in pulsar v2. To use pulsar v3, set `pulsarv3.enabled` to `true` and `pulsar.enabled` to `false`. Set other values for pulsar v3 under `pulsarv3` field.
 
 You can find more information at:
 * [https://pulsar.apache.org/charts](https://pulsar.apache.org/charts)
@@ -581,6 +600,37 @@ This version of the chart includes the dependent Kafka chart in the charts/ dire
 
 You can find more information at:
 * [https://artifacthub.io/packages/helm/bitnami/kafka](https://artifacthub.io/packages/helm/bitnami/kafka)
+
+
+### Node Selector, Affinity and Tolerations Configuration Guide
+
+- [Node Selector Configuration Guide](../../docs/node-selector-configuration-guide.md)
+- [Affinity Configuration Guide](../../docs/affinity-configuration-guide.md)
+- [Tolerations Configuration Guide](../../docs/tolerations-configuration-guide.md)
+
+#### Important Configuration Considerations
+
+When configuring pod scheduling in Kubernetes, be aware of potential conflicts between different scheduling mechanisms:
+
+1. **Node Selectors vs Node Affinity**
+   - Node selectors provide a simple way to constrain pods to nodes with specific labels
+   - Node affinity provides more flexible pod scheduling rules
+   - When used together, **both** node selector and node affinity rules must be satisfied
+   - Consider using only one mechanism unless you have specific requirements
+
+2. **Scheduling Priority**
+   - Node Selectors: Hard requirement that must be satisfied
+   - Required Node Affinity: Hard requirement that must be satisfied
+   - Preferred Node Affinity: Soft preference that Kubernetes will try to satisfy
+   - Pod Anti-Affinity: Can prevent pods from being scheduled on the same node
+
+3. **Best Practices**
+   - Start with simple node selectors for basic constraints
+   - Use node/pod affinity for more complex scheduling requirements
+   - Avoid combining multiple scheduling constraints unless necessary
+   - Test your configuration in a non-production environment first
+
+For detailed examples and configurations, please refer to the documentation guides linked above.
 
 ### Milvus Live Profiling
 Profiling is an effective way of understanding which parts of your application are consuming the most resources.

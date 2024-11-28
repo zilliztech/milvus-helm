@@ -35,6 +35,9 @@ spec:
         pyroscope.io/application-name: {{ template "milvus.querynode.fullname" . }}
         pyroscope.io/port: "9091"
       {{- end }}
+      {{- if .Values.queryNode.annotations }}
+        {{- toYaml .Values.queryNode.annotations | nindent 8 }}
+      {{- end }}
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
 {{ include "milvus.ud.annotations" . | indent 8 }}
     spec:
@@ -68,7 +71,7 @@ spec:
         args: [ "milvus", "run", "querynode" ]
         {{- end }}
         env:
-        {{- if .Values.streaming.enabled }}
+        {{- if and .Values.streaming .Values.streaming.enabled }}
         - name: MILVUS_STREAMING_SERVICE_ENABLED
           value: "1"
         {{- end }}
@@ -144,6 +147,9 @@ spec:
         - mountPath: /var/lib/milvus/data
           name: disk
         {{- end }}
+        {{- if .Values.volumeMounts }}
+          {{- toYaml .Values.volumeMounts | nindent 8 }}
+        {{- end}}
 
     {{- if and (.Values.nodeSelector) (not .Values.queryNode.nodeSelector) }}
       nodeSelector:
@@ -189,4 +195,7 @@ spec:
       - name: disk
         emptyDir: {}
       {{- end }}
+      {{- if .Values.volumes }}
+        {{- toYaml .Values.volumes | nindent 6 }}
+      {{- end}}
 {{- end }}
