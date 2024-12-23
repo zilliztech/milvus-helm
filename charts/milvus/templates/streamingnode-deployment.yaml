@@ -160,6 +160,14 @@ spec:
       tolerations:
 {{ toYaml .Values.streamingNode.tolerations | indent 8 }}
     {{- end }}
+    {{- if and (.Values.topologySpreadConstraints) (not .Values.streamingNode.topologySpreadConstraints) }}
+      topologySpreadConstraints:
+{{ toYaml .Values.topologySpreadConstraints | indent 8 }}
+    {{- end }}
+    {{- if .Values.streamingNode.topologySpreadConstraints }}
+      topologySpreadConstraints:
+{{ toYaml .Values.streamingNode.topologySpreadConstraints | indent 8 }}
+    {{- end }}
       volumes:
       - name: milvus-config
         configMap:

@@ -165,6 +165,14 @@ spec:
       tolerations:
 {{ toYaml .Values.dataNode.tolerations | indent 8 }}
     {{- end }}
+    {{- if and (.Values.topologySpreadConstraints) (not .Values.dataNode.topologySpreadConstraints) }}
+      topologySpreadConstraints:
+{{ toYaml .Values.topologySpreadConstraints | indent 8 }}
+    {{- end }}
+    {{- if .Values.dataNode.topologySpreadConstraints }}
+      topologySpreadConstraints:
+{{ toYaml .Values.dataNode.topologySpreadConstraints | indent 8 }}
+    {{- end }}
       volumes:
       - name: milvus-config
         configMap:
