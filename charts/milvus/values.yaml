@@ -39,6 +39,18 @@ tolerations: []
 # Individual components can be set to a different affinity
 affinity: {}
 
+# Global topologySpreadConstraints
+# If set, this will apply to all milvus components
+# Individual components can be set to different topologySpreadConstraints
+# ref: https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/
+topologySpreadConstraints: []
+# - maxSkew: 1
+#   topologyKey: topology.kubernetes.io/zone
+#   whenUnsatisfiable: DoNotSchedule
+#   labelSelector:
+#     matchLabels:
+#       app.kubernetes.io/name: milvus
+
 # Global labels and annotations
 # If set, this will apply to all milvus components
 labels: {}
@@ -216,6 +228,7 @@ standalone:
   nodeSelector: {}
   affinity: {}
   tolerations: []
+  topologySpreadConstraints: []  # Component specific topologySpreadConstraints
   extraEnv: []
   heaptrack:
     enabled: false
@@ -258,6 +271,7 @@ proxy:
   nodeSelector: {}
   affinity: {}
   tolerations: []
+  topologySpreadConstraints: []  # Component specific topologySpreadConstraints
   extraEnv: []
   heaptrack:
     enabled: false
@@ -296,6 +310,7 @@ rootCoordinator:
   nodeSelector: {}
   affinity: {}
   tolerations: []
+  topologySpreadConstraints: []  # Component specific topologySpreadConstraints
   extraEnv: []
   heaptrack:
     enabled: false
@@ -322,6 +337,7 @@ queryCoordinator:
   nodeSelector: {}
   affinity: {}
   tolerations: []
+  topologySpreadConstraints: []  # Component specific topologySpreadConstraints
   extraEnv: []
   heaptrack:
     enabled: false
@@ -352,6 +368,7 @@ queryNode:
   nodeSelector: {}
   affinity: {}
   tolerations: []
+  topologySpreadConstraints: []  # Component specific topologySpreadConstraints
   extraEnv: []
   heaptrack:
     enabled: false
@@ -374,6 +391,7 @@ indexCoordinator:
   nodeSelector: {}
   affinity: {}
   tolerations: []
+  topologySpreadConstraints: []  # Component specific topologySpreadConstraints
   extraEnv: []
   heaptrack:
     enabled: false
@@ -403,6 +421,7 @@ indexNode:
   nodeSelector: {}
   affinity: {}
   tolerations: []
+  topologySpreadConstraints: []  # Component specific topologySpreadConstraints
   extraEnv: []
   heaptrack:
     enabled: false
@@ -425,6 +444,7 @@ dataCoordinator:
   nodeSelector: {}
   affinity: {}
   tolerations: []
+  topologySpreadConstraints: []  # Component specific topologySpreadConstraints
   extraEnv: []
   heaptrack:
     enabled: false
@@ -451,6 +471,7 @@ dataNode:
   nodeSelector: {}
   affinity: {}
   tolerations: []
+  topologySpreadConstraints: []  # Component specific topologySpreadConstraints
   extraEnv: []
   heaptrack:
     enabled: false
@@ -471,6 +492,7 @@ mixCoordinator:
   nodeSelector: {}
   affinity: {}
   tolerations: []
+  topologySpreadConstraints: []  # Component specific topologySpreadConstraints
   extraEnv: []
   heaptrack:
     enabled: false

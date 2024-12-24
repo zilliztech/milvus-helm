@@ -176,6 +176,15 @@ spec:
 {{ toYaml .Values.queryNode.tolerations | indent 8 }}
     {{- end }}
 
+    {{- if and (.Values.topologySpreadConstraints) (not .Values.queryNode.topologySpreadConstraints) }}
+      topologySpreadConstraints:
+{{ toYaml .Values.topologySpreadConstraints | indent 8 }}
+    {{- end }}
+    {{- if .Values.queryNode.topologySpreadConstraints }}
+      topologySpreadConstraints:
+{{ toYaml .Values.queryNode.topologySpreadConstraints | indent 8 }}
+    {{- end }}
+
       volumes:
       - name: milvus-config
         configMap:

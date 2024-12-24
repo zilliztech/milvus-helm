@@ -171,6 +171,14 @@ spec:
       tolerations:
 {{ toYaml .Values.standalone.tolerations | indent 8 }}
     {{- end }}
+    {{- if and (.Values.topologySpreadConstraints) (not .Values.standalone.topologySpreadConstraints) }}
+      topologySpreadConstraints:
+{{ toYaml .Values.topologySpreadConstraints | indent 8 }}
+    {{- end }}
+    {{- if .Values.standalone.topologySpreadConstraints }}
+      topologySpreadConstraints:
+{{ toYaml .Values.standalone.topologySpreadConstraints | indent 8 }}
+    {{- end }}
 
       volumes:
       - emptyDir: {}

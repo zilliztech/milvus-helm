@@ -169,6 +169,15 @@ spec:
 {{ toYaml .Values.proxy.tolerations | indent 8 }}
     {{- end }}
 
+    {{- if and (.Values.topologySpreadConstraints) (not .Values.proxy.topologySpreadConstraints) }}
+      topologySpreadConstraints:
+{{ toYaml .Values.topologySpreadConstraints | indent 8 }}
+    {{- end }}
+    {{- if .Values.proxy.topologySpreadConstraints }}
+      topologySpreadConstraints:
+{{ toYaml .Values.proxy.topologySpreadConstraints | indent 8 }}
+    {{- end }}
+
       volumes:
       - name: milvus-config
         configMap:
