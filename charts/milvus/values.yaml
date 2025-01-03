@@ -1187,7 +1187,7 @@ kafka:
       enabled: false
       image:
         repository: bitnami/jmx-exporter
-        tag: 0.16.1-debian-10-2245
+        tag: 0.16.1-debian-10-r245
 
     ## To enable serviceMonitor, you must enable either kafka exporter or jmx exporter.
     ## And you can enable them both
