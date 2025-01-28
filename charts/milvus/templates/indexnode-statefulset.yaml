@@ -203,7 +203,7 @@ spec:
         emptyDir: {}
       {{- if and .Values.indexNode.disk.enabled .Values.indexNode.disk.persistence.enabled }}
        - name: disk
-         claimName: {{ template "milvus.indexnode.fullname" . }}-pvc
+         claimName: {{ include "milvus.indexnode.fullname" . }}-pvc
       {{- else if .Values.indexNode.disk.enabled }}
       - name: disk
         emptyDir: {}
@@ -214,7 +214,7 @@ spec:
   {{- if and .Values.indexNode.disk.enabled .Values.indexNode.disk.persistence.enabled }}
   volumeClaimTemplates:
     - metadata:
-        name: {{ template "milvus.indexnode.fullname" . }}-pvc
+        name: {{ include "milvus.indexnode.fullname" . }}-pvc
       spec:
         accessModes:
           - ReadWriteOnce
