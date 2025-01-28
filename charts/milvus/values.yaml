@@ -418,10 +418,6 @@ indexCoordinator:
 
 indexNode:
   enabled: true
-  # Note: only one of the following two fields should be set to true
-  # query node can be deployed as a statefulset or a deployment
-  deployment: true
-  statefulset: false
   # You can set the number of replicas to -1 to remove the replicas field in case you want to use HPA
   replicas: 1
   resources: {}
@@ -441,8 +437,6 @@ indexNode:
     enabled: true  # Enable index node build disk vector index
     size:
       enabled: false  # Enable local storage size limit
-    persistence:
-      enabled: false
   # Deployment strategy, default is RollingUpdate
   # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
   strategy: {}
