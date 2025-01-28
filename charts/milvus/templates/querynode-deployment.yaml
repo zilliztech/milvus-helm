@@ -1,4 +1,4 @@
-{{- if and .Values.queryNode.enabled .Values.cluster.enabled }}
+{{- if and .Values.queryNode.enabled .Values.queryNode.deployment .Values.cluster.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
