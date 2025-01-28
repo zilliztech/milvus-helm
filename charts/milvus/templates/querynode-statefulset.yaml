@@ -220,7 +220,7 @@ spec:
           - ReadWriteOnce
         resources:
           requests:
-            storage: {{ .Values.queryNode.disk..persistence.size }}
+            storage: {{ .Values.queryNode.disk.persistence.size }}
         storageClassName: {{ .Values.queryNode.disk.persistence.storageClass | default "standard" }}
   {{- end }}
 {{- end }}
