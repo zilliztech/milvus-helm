@@ -380,14 +380,14 @@ queryNode:
     enabled: true  # Enable querynode load disk index, and search on disk index
     size:
       enabled: false  # Enable local storage size limit
-    persistence:
-      enabled: false
   profiling:
     enabled: false  # Enable live profiling
   # Deployment strategy, default is RollingUpdate
   # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
   strategy: {}
   annotations: {}
+  persistence:
+    enabled: false
 
 indexCoordinator:
   enabled: false

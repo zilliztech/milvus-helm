@@ -148,6 +148,10 @@ spec:
         - mountPath: /var/lib/milvus/data
           name: disk
         {{- end }}
+        {{- if .Values.queryNode.persistence.enabled }}
+        - mountPath: /var/lib/milvus/data
+          name: {{ include "milvus.querynode.fullname" . }}-pvc
+        {{- end }}
         {{- if .Values.volumeMounts }}
           {{- toYaml .Values.volumeMounts | nindent 8 }}
         {{- end}}
@@ -201,17 +205,18 @@ spec:
       {{- end }}
       - name: tools
         emptyDir: {}
-      {{- if and .Values.queryNode.disk.enabled .Values.queryNode.disk.persistence.enabled }}
-      - name: disk
-        claimName: {{ include "milvus.querynode.fullname" . }}-pvc
-      {{- else if .Values.queryNode.disk.enabled }}
+      {{- if .Values.queryNode.disk.enabled }}
       - name: disk
         emptyDir: {}
+      {{- end }}
+      {{- if .Values.queryNode.persistence.enabled }}
+      - name: {{ include "milvus.querynode.fullname" . }}-pvc
+        claimName: {{ include "milvus.querynode.fullname" . }}-pvc
       {{- end }}
       {{- if .Values.volumes }}
         {{- toYaml .Values.volumes | nindent 6 }}
       {{- end}}
-  {{- if and .Values.queryNode.disk.enabled .Values.queryNode.disk.persistence.enabled }}
+  {{- if .Values.queryNode.persistence.enabled }}
   volumeClaimTemplates:
     - metadata:
         name: {{ include "milvus.querynode.fullname" . }}-pvc
@@ -220,7 +225,7 @@ spec:
           - ReadWriteOnce
         resources:
           requests:
-            storage: {{ .Values.queryNode.disk.persistence.size }}
-        storageClassName: {{ .Values.queryNode.disk.persistence.storageClass | default "standard" }}
+            storage: {{ .Values.queryNode.persistence.size }}
+        storageClassName: {{ .Values.queryNode.persistence.storageClass | default "standard" }}
   {{- end }}
 {{- end }}
