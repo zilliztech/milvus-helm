@@ -196,7 +196,7 @@ queryCoord:
 queryNode:
   port: 21123
 {{- if .Values.cluster.enabled }}
-  enableDisk: {{ .Values.queryNode.disk.enabled }} # Enable querynode load disk index, and search on disk index
+  enableDisk: {{ or .Values.queryNode.disk.enabled .Values.queryNode.persistence.enabled }} # Enable querynode load disk index, and search on disk index
 {{- else }}
   enableDisk: {{ .Values.standalone.disk.enabled }} # Enable querynode load disk index, and search on disk index
 {{- end }}
