@@ -224,3 +224,10 @@ true
 false
 {{- end -}}
 {{- end -}}
+
+{{/* labels defined by user*/}}
+{{- define "milvus.querynode.podLabels" -}}
+{{- if .Values.queryNode.podLabels }}
+{{- toYaml .Values.queryNode.podLabels }}
+{{- end -}}
+{{- end -}}
