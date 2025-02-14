@@ -8,6 +8,7 @@ metadata:
 {{ include "milvus.labels" . | indent 4 }}
     component: "querynode"
 {{ include "milvus.ud.labels" . | indent 4 }}
+{{ include "milvus.querynode.podLabels" . | indent 4 }}
   annotations:
 {{ include "milvus.ud.annotations" . | indent 4 }}
 
@@ -30,6 +31,7 @@ spec:
 {{ include "milvus.matchLabels" . | indent 8 }}
         component: "querynode"
 {{ include "milvus.ud.labels" . | indent 8 }}
+{{ include "milvus.querynode.podLabels" . | indent 8 }}
       annotations:
       {{- if .Values.queryNode.profiling.enabled }}
         pyroscope.io/scrape: "true"
