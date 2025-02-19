@@ -3,6 +3,64 @@ entries:
   milvus:
   - apiVersion: v1
     appVersion: 2.5.4
+    created: "2025-02-19T10:39:40.454770076Z"
+    dependencies:
+    - condition: etcd.enabled
+      name: etcd
+      repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
+      tags:
+      - etcd
+      version: 6.3.3
+    - condition: minio.enabled
+      name: minio
+      repository: https://zilliztech.github.io/milvus-helm
+      tags:
+      - minio
+      version: 8.0.17
+    - alias: pulsar
+      condition: pulsar.enabled
+      name: pulsarv2
+      repository: https://zilliztech.github.io/milvus-helm
+      tags:
+      - pulsar
+      version: 2.7.8
+    - alias: pulsarv3
+      condition: pulsarv3.enabled
+      name: pulsar
+      repository: https://pulsar.apache.org/charts
+      tags:
+      - pulsarv3
+      version: 3.3.0
+    - condition: kafka.enabled
+      name: kafka
+      repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
+      tags:
+      - kafka
+      version: 15.5.1
+    description: Milvus is an open-source vector database built to power AI applications
+      and vector similarity search.
+    digest: 7518308cee8a6cfd3cf5ee6c306bff775f4a34a20423fbc84f605d1cec2160a1
+    home: https://milvus.io/
+    icon: https://raw.githubusercontent.com/milvus-io/docs/master/v1.0.0/assets/milvus_logo.png
+    keywords:
+    - milvus
+    - elastic
+    - vector
+    - search
+    - deploy
+    kubeVersion: ^1.10.0-0
+    maintainers:
+    - email: contact@milvus.io
+      name: contact
+      url: milvus.io
+    name: milvus
+    sources:
+    - https://github.com/zilliztech/milvus
+    urls:
+    - https://github.com/zilliztech/milvus-helm/releases/download/milvus-4.2.39/milvus-4.2.39.tgz
+    version: 4.2.39
+  - apiVersion: v1
+    appVersion: 2.5.4
     created: "2025-02-06T07:36:02.060966479Z"
     dependencies:
     - condition: etcd.enabled
@@ -13332,4 +13390,4 @@ entries:
     urls:
     - https://github.com/zilliztech/milvus-helm/releases/download/pulsarv2-2.7.8/pulsarv2-2.7.8.tgz
     version: 2.7.8
-generated: "2025-02-06T07:36:02.063396522Z"
+generated: "2025-02-19T10:39:40.457368022Z"
