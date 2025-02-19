@@ -39,20 +39,20 @@ Assume the release name is `my-release`:
 
 ```bash
 # Helm v3.x
-$ helm upgrade --install my-release --set cluster.enabled=false --set etcd.replicaCount=1 --set pulsar.enabled=false --set minio.mode=standalone milvus/milvus
+$ helm upgrade --install my-release --set cluster.enabled=false --set etcd.replicaCount=1 --set pulsarv3.enabled=false --set minio.mode=standalone milvus/milvus
 ```
 By default, milvus standalone uses `rocksmq` as message queue. You can also use `pulsar` or `kafka` as message queue:
 
 ```bash
 # Helm v3.x
 # Milvus Standalone with pulsar as message queue
-$ helm upgrade --install my-release --set cluster.enabled=false --set standalone.messageQueue=pulsar --set etcd.replicaCount=1 --set pulsar.enabled=true --set minio.mode=standalone milvus/milvus
+$ helm upgrade --install my-release --set cluster.enabled=false --set standalone.messageQueue=pulsar --set etcd.replicaCount=1 --set pulsarv3.enabled=true --set minio.mode=standalone milvus/milvus
 ```
 
 ```bash
 # Helm v3.x
 # Milvus Standalone with kafka as message queue
-$ helm upgrade --install my-release --set cluster.enabled=false --set standalone.messageQueue=kafka --set etcd.replicaCount=1 --set pulsar.enabled=false --set kafka.enabled=true --set minio.mode=standalone milvus/milvus
+$ helm upgrade --install my-release --set cluster.enabled=false --set standalone.messageQueue=kafka --set etcd.replicaCount=1 --set pulsarv3.enabled=false --set kafka.enabled=true --set minio.mode=standalone milvus/milvus
 ```
 If you need to use standalone mode with embedded ETCD and local storage (without starting MinIO and additional ETCD), you can use the following steps:
 
@@ -66,7 +66,7 @@ cluster:
 etcd:
   enabled: false
 
-pulsar:
+pulsarv3:
   enabled: false
 
 minio:
@@ -107,7 +107,7 @@ By default, milvus cluster uses `pulsar` as message queue. You can also use `kaf
 
 ```bash
 # Helm v3.x
-$ helm upgrade --install my-release milvus/milvus --set pulsar.enabled=false --set kafka.enabled=true
+$ helm upgrade --install my-release milvus/milvus --set pulsarv3.enabled=false --set kafka.enabled=true
 ```
 
 By default, milvus cluster uses `mixCoordinator` instead which contains all coordinators since milvus-helm chart 4.2.4. To use separate coordinators, you can disable `mixCoordinator` and enable all the coordinators separately:
