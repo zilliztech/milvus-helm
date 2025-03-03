@@ -11,7 +11,7 @@ cluster:
 image:
   all:
     repository: milvusdb/milvus
-    tag: v2.5.4
+    tag: v2.5.5
     pullPolicy: IfNotPresent
     ## Optionally specify an array of imagePullSecrets.
     ## Secrets must be manually created in the namespace.
@@ -534,7 +534,7 @@ attu:
   name: attu
   image:
     repository: zilliz/attu
-    tag: v2.4.12
+    tag: v2.5.3
     pullPolicy: IfNotPresent
   service:
     annotations: {}
@@ -632,7 +632,7 @@ etcd:
     create: false
   image:
     repository: "milvusdb/etcd"
-    tag: "3.5.16-r1"
+    tag: "3.5.18-r1"
     pullPolicy: IfNotPresent
 
   service:
