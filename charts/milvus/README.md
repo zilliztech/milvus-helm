@@ -389,7 +389,7 @@ The following table lists the configurable parameters of the Milvus Proxy compon
 | `proxy.hpa` | Enable hpa for proxy node | false |
 | `proxy.minReplicas` | Specify the minimum number of replicas | 1 |
 | `proxy.maxReplicas` | Specify the maximum number of replicas | 5 |
-| `proxy.cpuUtilization` | Specify the cpu auto-scaling valve | 40 |
+| `proxy.cpuUtilization` | Specify the cpu auto-scaling value | 40 |
 
 ### Milvus Root Coordinator Deployment Configuration
 
@@ -462,7 +462,7 @@ The following table lists the configurable parameters of the Milvus Query Node c
 | `queryNode.hpa` | Enable hpa for query node | false |
 | `queryNode.minReplicas` | Specify the minimum number of replicas | 1 |
 | `queryNode.maxReplicas` | Specify the maximum number of replicas | 5 |
-| `queryNode.cpuUtilization` | Specify the cpu auto-scaling valve | 40 |
+| `queryNode.cpuUtilization` | Specify the cpu auto-scaling value | 40 |
 
 ### Milvus Index Coordinator Deployment Configuration
 
@@ -510,7 +510,7 @@ The following table lists the configurable parameters of the Milvus Index Node c
 | `indexNode.hpa` | Enable hpa for index node | false |
 | `indexNode.minReplicas` | Specify the minimum number of replicas | 1 |
 | `indexNode.maxReplicas` | Specify the maximum number of replicas | 5 |
-| `indexNode.cpuUtilization` | Specify the cpu auto-scaling valve | 40 |
+| `indexNode.cpuUtilization` | Specify the cpu auto-scaling value | 40 |
 
 ### Milvus Data Coordinator Deployment Configuration
 
@@ -557,7 +557,7 @@ The following table lists the configurable parameters of the Milvus Data Node co
 | `dataNode.hpa` | Enable hpa for data node | false |
 | `dataNode.minReplicas` | Specify the minimum number of replicas | 1 |
 | `dataNode.maxReplicas` | Specify the maximum number of replicas | 5 |
-| `dataNode.cpuUtilization` | Specify the cpu auto-scaling valve | 40 |
+| `dataNode.cpuUtilization` | Specify the cpu auto-scaling value | 40 |
 
 ### Milvus Mixture Coordinator Deployment Configuration
 
