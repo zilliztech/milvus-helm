@@ -463,6 +463,7 @@ The following table lists the configurable parameters of the Milvus Query Node c
 | `queryNode.minReplicas` | Specify the minimum number of replicas | 1 |
 | `queryNode.maxReplicas` | Specify the maximum number of replicas | 5 |
 | `queryNode.cpuUtilization` | Specify the cpu auto-scaling value | 40 |
+| `queryNode.memoryUtilization` | Specify the memory auto-scaling value | 40 |
 
 ### Milvus Index Coordinator Deployment Configuration
 
