@@ -301,6 +301,11 @@ proxy:
   # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
   strategy: {}
   annotations: {}
+  hpa:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 5
+    cpuUtilization: 40
 
 rootCoordinator:
   enabled: false
@@ -382,6 +387,11 @@ queryNode:
   # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
   strategy: {}
   annotations: {}
+  hpa:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 5
+    cpuUtilization: 40
 
 indexCoordinator:
   enabled: false
@@ -435,6 +445,11 @@ indexNode:
   # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
   strategy: {}
   annotations: {}
+  hpa:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 5
+    cpuUtilization: 40
 
 dataCoordinator:
   enabled: false
@@ -481,6 +496,11 @@ dataNode:
   # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
   strategy: {}
   annotations: {}
+  hpa:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 5
+    cpuUtilization: 40
 
 ## mixCoordinator contains all coord
 ## If you want to use mixcoord, enable this and disable all of other coords
