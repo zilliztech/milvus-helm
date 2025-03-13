@@ -103,7 +103,6 @@ spec:
         requests:
           storage: {{ .Values.tei.persistence.persistentVolumeClaim.size }}
   {{- else }}
-  # 如果不启用持久化存储，则使用emptyDir
   template:
     spec:
       volumes:

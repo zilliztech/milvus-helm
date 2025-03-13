@@ -583,6 +583,45 @@ The following table lists the configurable parameters of the Milvus Mixture Coor
 | `mixCoordinator.service.externalIPs`                 | Service external IP addresses                 | `[]`                                        |
 | `mixCoordinator.strategy`                       | Deployment strategy configuration |  RollingUpdate                                         |
 | `mixCoordinator.annotations`                    | Additional pod annotations | `{}` |
+
+
+### TEI Configuration
+
+The following table lists the configurable parameters of the Text Embeddings Inference (TEI) component and their default values.
+
+| Parameter                                 | Description                                             | Default                                     |
+|-------------------------------------------|---------------------------------------------------------|---------------------------------------------|
+| `tei.enabled`                             | Enable or disable TEI deployment                        | `false`                                     |
+| `tei.name`                                | Name of the TEI component                               | `text-embeddings-inference`                 |
+| `tei.image.repository`                    | TEI image repository                                    | `ghcr.io/huggingface/text-embeddings-inference` |
+| `tei.image.tag`                           | TEI image tag                                           | `cpu-1.6`                                   |
+| `tei.image.pullPolicy`                    | TEI image pull policy                                   | `IfNotPresent`                              |
+| `tei.service.type`                        | TEI service type                                        | `ClusterIP`                                 |
+| `tei.service.port`                        | TEI service port                                        | `8080`                                      |
+| `tei.service.annotations`                 | TEI service annotations                                 | `{}`                                        |
+| `tei.service.labels`                      | TEI service custom labels                               | `{}`                                        |
+| `tei.resources.requests.cpu`              | CPU resource requests for TEI pods                      | `4`                                         |
+| `tei.resources.requests.memory`           | Memory resource requests for TEI pods                   | `8Gi`                                       |
+| `tei.resources.limits.cpu`                | CPU resource limits for TEI pods                        | `8`                                         |
+| `tei.resources.limits.memory`             | Memory resource limits for TEI pods                     | `16Gi`                                      |
+| `tei.persistence.enabled`                 | Enable persistence for TEI                              | `true`                                      |
+| `tei.persistence.mountPath`               | Mount path for TEI persistence                          | `/data`                                     |
+| `tei.persistence.annotations`             | Annotations for TEI PVC                                 | `{}`                                        |
+| `tei.persistence.persistentVolumeClaim.existingClaim` | Existing PVC for TEI                       | `""`                                        |
+| `tei.persistence.persistentVolumeClaim.storageClass` | Storage class for TEI PVC                   | `""`                                        |
+| `tei.persistence.persistentVolumeClaim.accessModes` | Access modes for TEI PVC                     | `ReadWriteOnce`                             |
+| `tei.persistence.persistentVolumeClaim.size` | Size of TEI PVC                                     | `50Gi`                                      |
+| `tei.persistence.persistentVolumeClaim.subPath` | SubPath for TEI PVC                              | `""`                                        |
+| `tei.modelId`                             | Model ID for TEI                                        | `BAAI/bge-large-en-v1.5`                    |
+| `tei.extraArgs`                           | Additional arguments for TEI                            | `[]`                                        |
+| `tei.nodeSelector`                        | Node labels for TEI pods assignment                     | `{}`                                        |
+| `tei.affinity`                            | Affinity settings for TEI pods assignment               | `{}`                                        |
+| `tei.tolerations`                         | Toleration labels for TEI pods assignment               | `[]`                                        |
+| `tei.topologySpreadConstraints`           | Topology spread constraints for TEI pods                | `[]`                                        |
+| `tei.extraEnv`                            | Additional TEI container environment variables          | `[]`                                        |
+| `tei.replicas`                            | Number of TEI replicas                                  | `1`                                         |
+
+
 ### Pulsar Configuration
 
 This version of the chart includes the dependent Pulsar chart in the charts/ directory.
@@ -658,152 +697,12 @@ You can enable profiling with Pyroscope and you can find more information at:
 
 ## Text Embeddings Inference (TEI) Integration Guide for Milvus
 
-This document describes how to use Text Embeddings Inference (TEI) service with Milvus Helm Chart, and how to integrate TEI with Milvus. TEI is an open-source project developed by Hugging Face, available at [https://github.com/huggingface/text-embeddings-inference](https://github.com/huggingface/text-embeddings-inference).
-
-### Overview
-
 Text Embeddings Inference (TEI) is a high-performance text embedding model inference service that converts text into vector representations. Milvus is a vector database that can store and retrieve these vectors. By combining the two, you can build powerful semantic search and retrieval systems.
+
+TEI is an open-source project developed by Hugging Face, available at [https://github.com/huggingface/text-embeddings-inference](https://github.com/huggingface/text-embeddings-inference).
 
 This guide provides two ways to use TEI:
 1. Deploy TEI service directly through the Milvus Helm Chart
-2. Use TEI with Milvus text embedding function
+2. Use external TEI service with Milvus integration
 
-### Deploy TEI through Milvus Helm Chart
-
-#### Basic Configuration
-
-Enable TEI service in `values.yaml`:
-
-```yaml
-tei:
-  enabled: true
-  modelId: "BAAI/bge-large-en-v1.5"  # Specify the model to use
-```
-
-This is the simplest configuration, just specify `enabled: true` and the desired `modelId`.
-
-#### Complete Configuration Options
-
-```yaml
-tei:
-  enabled: true                        # Enable TEI service
-  name: text-embeddings-inference      # Service name
-  replicas: 1                          # Number of TEI replicas
-  image:
-    repository: ghcr.io/huggingface/text-embeddings-inference  # Image repository
-    tag: cpu-1.6                       # Image tag (CPU version)
-    pullPolicy: IfNotPresent           # Image pull policy
-  service:
-    type: ClusterIP                    # Service type
-    port: 8080                         # Service port
-    annotations: {}                    # Service annotations
-    labels: {}                         # Service labels
-  resources:                           # Resource configuration
-    requests:
-      cpu: "4"                         # CPU request
-      memory: "8Gi"                    # Memory request
-    limits:
-      cpu: "8"                         # CPU limit
-      memory: "16Gi"                   # Memory limit
-  persistence:                         # Persistence storage configuration
-    enabled: true                      # Enable persistence storage
-    mountPath: "/data"                 # Mount path
-    annotations: {}                    # Storage annotations
-    persistentVolumeClaim:             # PVC configuration
-      existingClaim: ""                # Use existing PVC
-      storageClass:                    # Storage class
-      accessModes: ReadWriteOnce       # Access modes
-      size: 50Gi                       # Storage size
-      subPath: ""                      # Sub path
-  modelId: "BAAI/bge-large-en-v1.5"    # Model ID
-  extraArgs: []                        # Additional command line arguments for TEI, such as "--max-batch-tokens=16384", "--max-client-batch-size=32", "--max-concurrent-requests=128", etc.
-  nodeSelector: {}                     # Node selector
-  affinity: {}                         # Affinity configuration
-  tolerations: []                      # Tolerations
-  topologySpreadConstraints: []        # Topology spread constraints
-  extraEnv: []                         # Additional environment variables
-```
-
-#### Using GPU Acceleration
-
-If you have GPU resources, you can use the GPU version of the TEI image to accelerate inference:
-
-```yaml
-tei:
-  enabled: true
-  modelId: "BAAI/bge-large-en-v1.5"
-  image:
-    repository: ghcr.io/huggingface/text-embeddings-inference
-    tag: 1.6  # GPU version
-  resources:
-    limits:
-      nvidia.com/gpu: 1  # Allocate 1 GPU
-```
-
-### Frequently Asked Questions
-
-#### How to determine the embedding dimension of a model?
-
-Different models have different embedding dimensions. Here are the dimensions of some commonly used models:
-- BAAI/bge-large-en-v1.5: 1024
-- BAAI/bge-base-en-v1.5: 768
-- nomic-ai/nomic-embed-text-v1: 768
-- sentence-transformers/all-mpnet-base-v2: 768
-
-You can find this information in the model's documentation or get it through the TEI service's API.
-
-#### How to test if the TEI service is working properly?
-
-After deploying the TEI service, you can use the following commands to test if the service is working properly:
-
-```bash
-# Get the TEI service endpoint
-export TEI_SERVICE=$(kubectl get svc -l component=text-embeddings-inference -o jsonpath='{.items[0].metadata.name}')
-
-# Test the embedding functionality
-kubectl run -it --rm curl --image=curlimages/curl -- curl -X POST "http://${TEI_SERVICE}:8080/embed" \
-  -H "Content-Type: application/json" \
-  -d '{"inputs":"This is a test text"}'
-```
-
-If the service is working properly, you will receive a JSON response containing the embedding vector.
-
-### Use TEI with Milvus text embedding function
-
-Milvus provides a text embedding function feature that allows you to generate vector embeddings directly within Milvus. You can configure Milvus to use TEI as the backend for this function.
-
-#### Using the Text Embedding Function in Milvus
-
-After configuration, you can use the text embedding function in your Milvus queries. Here's an example using the Python SDK:
-
-```python
-from pymilvus import connections, Collection, DataType, Function, FunctionType
-
-# Connect to Milvus
-connections.connect(host="<milvus-ip>", port="19530")
-
-# Create a schema with text field and vector field
-schema = milvus_client.create_schema()
-schema.add_field("id", DataType.INT64, is_primary=True, auto_id=False)
-schema.add_field("document", DataType.VARCHAR, max_length=9000)
-schema.add_field("dense", DataType.FLOAT_VECTOR, dim=1024)
-
-# Create a text embedding function that uses TEI
-text_embedding_function = Function(
-    name="TEI_func",
-    function_type=FunctionType.TEXTEMBEDDING,
-    input_field_names=["document"],
-    output_field_names="dense",
-    params={
-        "provider": "TEI",
-        "endpoint": "http://<tei-service-ip>:8080"
-    }
-)
-```
-
-
-### Additional Resources
-
-- [Text Embeddings Inference GitHub Repository](https://github.com/huggingface/text-embeddings-inference)
-- [Milvus Documentation](https://milvus.io/docs)
-- [Hugging Face Model Hub](https://huggingface.co/models)
+For detailed configuration and usage instructions, please refer to the [README-TEI.md](./README-TEI.md) document.
