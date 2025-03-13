@@ -1,6 +1,6 @@
 {{- if .Values.tei.enabled }}
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ template "milvus.fullname" . }}-tei
   labels:
@@ -17,7 +17,8 @@ metadata:
 {{ toYaml .Values.annotations | indent 4 }}
   {{- end }}
 spec:
-  replicas: 1
+  serviceName: {{ template "milvus.fullname" . }}-tei-headless
+  replicas: {{ .Values.tei.replicas | default 1 }}
   selector:
     matchLabels:
       app: {{ template "milvus.name" . }}
@@ -81,19 +82,32 @@ spec:
         {{- if .Values.volumeMounts }}
 {{ toYaml .Values.volumeMounts | indent 8 }}
         {{- end }}
-      volumes:
-      - name: data-volume
-        {{- if .Values.tei.persistence.enabled }}
-        persistentVolumeClaim:
-          {{- if .Values.tei.persistence.persistentVolumeClaim.existingClaim }}
-          claimName: {{ .Values.tei.persistence.persistentVolumeClaim.existingClaim }}
-          {{- else }}
-          claimName: {{ template "milvus.fullname" . }}-tei-data
-          {{- end }}
-        {{- else }}
-        emptyDir: {}
-        {{- end }}
       {{- if .Values.volumes }}
+      volumes:
 {{ toYaml .Values.volumes | indent 6 }}
       {{- end }}
+  {{- if .Values.tei.persistence.enabled }}
+  volumeClaimTemplates:
+  - metadata:
+      name: data-volume
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      {{- if .Values.tei.persistence.persistentVolumeClaim.storageClass }}
+      {{- if (eq "-" .Values.tei.persistence.persistentVolumeClaim.storageClass) }}
+      storageClassName: ""
+      {{- else }}
+      storageClassName: "{{ .Values.tei.persistence.persistentVolumeClaim.storageClass }}"
+      {{- end }}
+      {{- end }}
+      resources:
+        requests:
+          storage: {{ .Values.tei.persistence.persistentVolumeClaim.size }}
+  {{- else }}
+  # 如果不启用持久化存储，则使用emptyDir
+  template:
+    spec:
+      volumes:
+      - name: data-volume
+        emptyDir: {}
+  {{- end }}
 {{- end }}

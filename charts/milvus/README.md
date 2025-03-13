@@ -688,6 +688,7 @@ This is the simplest configuration, just specify `enabled: true` and the desired
 tei:
   enabled: true                        # Enable TEI service
   name: text-embeddings-inference      # Service name
+  replicas: 1                          # Number of TEI replicas
   image:
     repository: ghcr.io/huggingface/text-embeddings-inference  # Image repository
     tag: cpu-1.6                       # Image tag (CPU version)
