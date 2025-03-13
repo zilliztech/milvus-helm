@@ -268,7 +268,7 @@ The following table lists the configurable parameters of the Milvus Service and 
 |-------------------------------------------|-----------------------------------------------|---------------------------------------------------------|
 | `cluster.enabled`                         | Enable or disable Milvus Cluster mode         | `true`                                                 |
 | `image.all.repository`                    | Image repository                              | `milvusdb/milvus`                                       |
-| `image.all.tag`                           | Image tag                                     | `v2.5.5`                           |
+| `image.all.tag`                           | Image tag                                     | `v2.5.6`                           |
 | `image.all.pullPolicy`                    | Image pull policy                             | `IfNotPresent`                                          |
 | `image.all.pullSecrets`                   | Image pull secrets                            | `{}`                                                    |
 | `image.tools.repository`                  | Config image repository                       | `milvusdb/milvus-config-tool`                                       |
@@ -386,6 +386,10 @@ The following table lists the configurable parameters of the Milvus Proxy compon
 | `proxy.tls.enabled`                       | Enable porxy tls connection                             | `false`       |
 | `proxy.strategy`                          | Deployment strategy configuration                       | RollingUpdate |
 | `proxy.annotations`                       | Additional pod annotations                              | `{}`          |
+| `proxy.hpa` | Enable hpa for proxy node | false |
+| `proxy.minReplicas` | Specify the minimum number of replicas | 1 |
+| `proxy.maxReplicas` | Specify the maximum number of replicas | 5 |
+| `proxy.cpuUtilization` | Specify the cpu auto-scaling value | 40 |
 
 ### Milvus Root Coordinator Deployment Configuration
 
@@ -455,6 +459,10 @@ The following table lists the configurable parameters of the Milvus Query Node c
 | `queryNode.extraEnv`                      | Additional Milvus Query Node container environment variables | `[]`                                     |
 | `queryNode.strategy`                      | Deployment strategy configuration |  RollingUpdate                                         |
 | `queryNode.annotations`                    | Additional pod annotations | `{}` |
+| `queryNode.hpa` | Enable hpa for query node | false |
+| `queryNode.minReplicas` | Specify the minimum number of replicas | 1 |
+| `queryNode.maxReplicas` | Specify the maximum number of replicas | 5 |
+| `queryNode.cpuUtilization` | Specify the cpu auto-scaling value | 40 |
 
 ### Milvus Index Coordinator Deployment Configuration
 
@@ -499,6 +507,10 @@ The following table lists the configurable parameters of the Milvus Index Node c
 | `indexNode.extraEnv`                      | Additional Milvus Index Node container environment variables | `[]`                                     |
 | `indexNode.strategy`                      | Deployment strategy configuration |  RollingUpdate                                         |
 | `indexNode.annotations`                    | Additional pod annotations | `{}` |
+| `indexNode.hpa` | Enable hpa for index node | false |
+| `indexNode.minReplicas` | Specify the minimum number of replicas | 1 |
+| `indexNode.maxReplicas` | Specify the maximum number of replicas | 5 |
+| `indexNode.cpuUtilization` | Specify the cpu auto-scaling value | 40 |
 
 ### Milvus Data Coordinator Deployment Configuration
 
@@ -542,6 +554,10 @@ The following table lists the configurable parameters of the Milvus Data Node co
 | `dataNode.extraEnv`                       | Additional Milvus Data Node container environment variables | `[]`                                      |
 | `dataNode.strategy`                       | Deployment strategy configuration |  RollingUpdate                                         |
 | `dataNode.annotations`                    | Additional pod annotations | `{}` |
+| `dataNode.hpa` | Enable hpa for data node | false |
+| `dataNode.minReplicas` | Specify the minimum number of replicas | 1 |
+| `dataNode.maxReplicas` | Specify the maximum number of replicas | 5 |
+| `dataNode.cpuUtilization` | Specify the cpu auto-scaling value | 40 |
 
 ### Milvus Mixture Coordinator Deployment Configuration
 
