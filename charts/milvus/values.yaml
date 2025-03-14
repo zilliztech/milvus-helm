@@ -1298,3 +1298,46 @@ externalKafka:
     mechanisms: PLAIN
     username: ""
     password: ""
+
+###################################
+# Text Embeddings Inference (TEI)
+# - these configs are used to deploy TEI service
+###################################
+tei:
+  enabled: false
+  name: text-embeddings-inference
+  image:
+    repository: ghcr.io/huggingface/text-embeddings-inference
+    tag: cpu-1.6
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 8080
+    annotations: {}
+    labels: {}
+  resources:
+    requests:
+      cpu: "4"
+      memory: "8Gi"
+    limits:
+      cpu: "8"
+      memory: "16Gi"
+  persistence:
+    enabled: true
+    mountPath: "/data"
+    annotations: {}
+    persistentVolumeClaim:
+      existingClaim: ""
+      storageClass:
+      accessModes: ReadWriteOnce
+      size: 50Gi
+      subPath: ""
+  # TEI model configuration
+  modelId: "BAAI/bge-large-en-v1.5"
+  # Additional TEI configuration
+  extraArgs: []
+  nodeSelector: {}
+  affinity: {}
+  tolerations: []
+  topologySpreadConstraints: []
+  extraEnv: []

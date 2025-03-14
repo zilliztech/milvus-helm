@@ -1,0 +1,112 @@
+{{- if .Values.tei.enabled }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ template "milvus.fullname" . }}-tei
+  labels:
+    app: {{ template "milvus.name" . }}
+    chart: {{ template "milvus.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: text-embeddings-inference
+    {{- if .Values.labels }}
+{{ toYaml .Values.labels | indent 4 }}
+    {{- end }}
+  {{- if .Values.annotations }}
+  annotations:
+{{ toYaml .Values.annotations | indent 4 }}
+  {{- end }}
+spec:
+  serviceName: {{ template "milvus.fullname" . }}-tei-headless
+  replicas: {{ .Values.tei.replicas | default 1 }}
+  selector:
+    matchLabels:
+      app: {{ template "milvus.name" . }}
+      release: {{ .Release.Name }}
+      component: text-embeddings-inference
+  template:
+    metadata:
+      labels:
+        app: {{ template "milvus.name" . }}
+        release: {{ .Release.Name }}
+        component: text-embeddings-inference
+        {{- if .Values.labels }}
+{{ toYaml .Values.labels | indent 8 }}
+        {{- end }}
+      {{- if .Values.annotations }}
+      annotations:
+{{ toYaml .Values.annotations | indent 8 }}
+      {{- end }}
+    spec:
+      {{- if .Values.serviceAccount.name }}
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      {{- end }}
+      {{- if .Values.tei.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.tei.nodeSelector | indent 8 }}
+      {{- end }}
+      {{- if .Values.tei.affinity }}
+      affinity:
+{{ toYaml .Values.tei.affinity | indent 8 }}
+      {{- end }}
+      {{- if .Values.tei.tolerations }}
+      tolerations:
+{{ toYaml .Values.tei.tolerations | indent 8 }}
+      {{- end }}
+      {{- if .Values.tei.topologySpreadConstraints }}
+      topologySpreadConstraints:
+{{ toYaml .Values.tei.topologySpreadConstraints | indent 8 }}
+      {{- end }}
+      containers:
+      - name: text-embeddings-inference
+        image: {{ .Values.tei.image.repository }}:{{ .Values.tei.image.tag }}
+        imagePullPolicy: {{ .Values.tei.image.pullPolicy }}
+        args:
+        - "--model-id"
+        - "{{ .Values.tei.modelId }}"
+        {{- range .Values.tei.extraArgs }}
+        - {{ . | quote }}
+        {{- end }}
+        ports:
+        - containerPort: 80
+          name: http
+        resources:
+{{ toYaml .Values.tei.resources | indent 10 }}
+        {{- if .Values.tei.extraEnv }}
+        env:
+{{ toYaml .Values.tei.extraEnv | indent 8 }}
+        {{- end }}
+        volumeMounts:
+        - name: data-volume
+          mountPath: {{ .Values.tei.persistence.mountPath }}
+        {{- if .Values.volumeMounts }}
+{{ toYaml .Values.volumeMounts | indent 8 }}
+        {{- end }}
+      {{- if .Values.volumes }}
+      volumes:
+{{ toYaml .Values.volumes | indent 6 }}
+      {{- end }}
+  {{- if .Values.tei.persistence.enabled }}
+  volumeClaimTemplates:
+  - metadata:
+      name: data-volume
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      {{- if .Values.tei.persistence.persistentVolumeClaim.storageClass }}
+      {{- if (eq "-" .Values.tei.persistence.persistentVolumeClaim.storageClass) }}
+      storageClassName: ""
+      {{- else }}
+      storageClassName: "{{ .Values.tei.persistence.persistentVolumeClaim.storageClass }}"
+      {{- end }}
+      {{- end }}
+      resources:
+        requests:
+          storage: {{ .Values.tei.persistence.persistentVolumeClaim.size }}
+  {{- else }}
+  template:
+    spec:
+      volumes:
+      - name: data-volume
+        emptyDir: {}
+  {{- end }}
+{{- end }}
