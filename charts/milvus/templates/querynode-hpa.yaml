@@ -19,5 +19,11 @@ spec:
       name: cpu
       target:
         type: Utilization
-        averageUtilization: {{ .Values.queryNode.hpa.cpuUtilization | default 50 }}
+        averageUtilization: {{ .Values.queryNode.hpa.cpuUtilization | default 40 }}
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: {{ .Values.queryNode.hpa.memoryUtilization | default 40 }}
 {{- end }}
