@@ -1,6 +1,6 @@
 dependencies:
 - name: etcd
-  version: 6.3.3
+  version: 11.1.5
   repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
   condition: etcd.enabled
   tags:
