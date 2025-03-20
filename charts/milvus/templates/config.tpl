@@ -244,4 +244,31 @@ log:
     maxBackups: {{ .Values.log.file.maxBackups }}
   format: {{ .Values.log.format }}
 
+
+
+woodpecker:
+  # Configuration of Woodpecker metadata storage.
+  meta:
+    type: {{ .Values.woodpecker.meta.type }} # Type of the configuration, currently only support etcd.
+    prefix: {{ .Values.woodpecker.meta.prefix }} # Root prefix of the key to where Woodpecker stores data in etcd.
+  # Configuration of Woodpecker service.
+  client:
+    segmentAppend:
+      queueSize: {{ .Values.woodpecker.client.segmentAppend.queueSize }} # Maximum number of queued segment append requests, default is 10000
+      maxRetries: {{ .Values.woodpecker.client.segmentAppend.maxRetries }} # Maximum number of retries for segment append operations
+    segmentRollingPolicy:
+      maxSize: {{ .Values.woodpecker.client.segmentRollingPolicy.maxSize }} # Maximum entries count of a segment, default is 2GB
+      maxInterval: {{ .Values.woodpecker.client.segmentRollingPolicy.maxInterval }} # Maximum interval between two segments in seconds, default is 10 minutes
+    auditor:
+      maxInterval: {{ .Values.woodpecker.client.auditor.maxInterval }} # Maximum interval between two auditing operations in seconds, default is 10 seconds
+  # Configuration of Woodpecker logstore.
+  logstore:
+    logFileSyncPolicy:
+      maxInterval: {{ .Values.woodpecker.logstore.logFileSyncPolicy.maxInterval }} # Maximum interval between two sync operations in milliseconds
+      maxEntries: {{ .Values.woodpecker.logstore.logFileSyncPolicy.maxEntries }} # Maximum entries number of write buffer
+      maxBytes: {{ .Values.woodpecker.logstore.logFileSyncPolicy.maxBytes }} # Maximum size of write buffer in bytes
+      maxFlushRetries: {{ .Values.woodpecker.logstore.logFileSyncPolicy.maxFlushRetries }} # Maximum number of retries for sync operations
+      retryInterval: {{ .Values.woodpecker.logstore.logFileSyncPolicy.retryInterval }} # Maximum interval between two retries in milliseconds
+      maxFlushSize: {{ .Values.woodpecker.logstore.logFileSyncPolicy.maxFlushSize }} # Maximum size of a fragment in bytes to flush, default is 8M
+      maxFlushThreads: {{ .Values.woodpecker.logstore.logFileSyncPolicy.maxFlushThreads }} # Maximum number of threads to flush data
 {{- end }}

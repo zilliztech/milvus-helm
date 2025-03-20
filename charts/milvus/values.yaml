@@ -1342,3 +1342,33 @@ tei:
   tolerations: []
   topologySpreadConstraints: []
   extraEnv: []
+
+###################################
+# Woodpecker
+# - these configs are used to deploy Woodpecker service
+###################################
+woodpecker:
+  enabled: false
+  meta:
+    type: etcd # Type of the configuration, currently only support etcd.
+    prefix: woodpecker # Root prefix of the key to where Woodpecker stores data in etcd.
+  # Configuration of Woodpecker service.
+  client:
+    segmentAppend:
+      queueSize: 10000 # Maximum number of queued segment append requests, default is 10000
+      maxRetries: 3 # Maximum number of retries for segment append operations
+    segmentRollingPolicy:
+      maxSize: 2000000000 # Maximum entries count of a segment, default is 2GB
+      maxInterval: 600 # Maximum interval between two segments in seconds, default is 10 minutes
+    auditor:
+      maxInterval: 10 # Maximum interval between two auditing operations in seconds, default is 10 seconds
+  # Configuration of Woodpecker logstore.
+  logstore:
+    logFileSyncPolicy:
+      maxInterval: 1000 # Maximum interval between two sync operations in milliseconds
+      maxEntries: 100000 # Maximum entries number of write buffer
+      maxBytes: 64000000 # Maximum size of write buffer in bytes
+      maxFlushRetries: 5 # Maximum number of retries for sync operations
+      retryInterval: 1000 # Maximum interval between two retries in milliseconds
+      maxFlushSize: 8000000 # Maximum size of a fragment in bytes to flush, default is 8M
+      maxFlushThreads: 4 # Maximum number of threads to flush data
