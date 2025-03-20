@@ -240,7 +240,7 @@ standalone:
     enabled: false  # Enable live profiling
 
   ## Default message queue for milvus standalone
-  ## Supported value: rocksmq, natsmq, pulsar and kafka
+  ## Supported value: rocksmq, natsmq, pulsar, kafka and woodpecker
   messageQueue: rocksmq
   persistence:
     mountPath: "/var/lib/milvus"
@@ -1223,6 +1223,13 @@ kafka:
   zookeeper:
     enabled: true
     replicaCount: 3
+
+###################################
+# Woodpecker
+# - these configs are used to enable Woodpecker message queue
+###################################
+woodpecker:
+  enabled: false
 
 ###################################
 # External S3
