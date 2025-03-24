@@ -13564,4 +13564,25 @@ entries:
     urls:
     - https://github.com/zilliztech/milvus-helm/releases/download/pulsarv2-2.7.8/pulsarv2-2.7.8.tgz
     version: 2.7.8
-generated: "2025-03-24T02:47:08.064429497Z"
+  tei:
+  - apiVersion: v1
+    appVersion: 1.6.0
+    created: "2025-03-24T09:24:37.061352371Z"
+    description: A text-embeddings-inference Helm chart for Kubernetes
+    digest: fe35a88546a3f911c4d0a37e5eedc269be46f34d2d8123f85975e464db038912
+    home: https://github.com/huggingface/text-embeddings-inference
+    icon: https://avatars.githubusercontent.com/u/25720743?s=200&v=4
+    keywords:
+    - embeddings
+    - inference
+    maintainers:
+    - email: devops@zilliz.com
+      name: zilliz
+    name: tei
+    sources:
+    - https://github.com/huggingface/text-embeddings-inference
+    type: application
+    urls:
+    - https://github.com/zilliztech/milvus-helm/releases/download/tei-1.6.0/tei-1.6.0.tgz
+    version: 1.6.0
+generated: "2025-03-24T09:24:37.064135145Z"
