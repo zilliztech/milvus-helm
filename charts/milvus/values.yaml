@@ -559,7 +559,7 @@ attu:
     # loadBalancerIP: ""
   resources: {}
   podLabels: {}
-  podAnnotations: {}
+  annotations: {}
   ingress:
     enabled: false
     ingressClassName: ""

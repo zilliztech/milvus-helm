@@ -26,8 +26,8 @@ spec:
 {{ toYaml .Values.attu.podLabels | indent 8 }}
 {{- end }}
       annotations:
-      {{- if .Values.attu.podAnnotations }}
-        {{- toYaml .Values.attu.podAnnotations | nindent 8 }}
+      {{- if .Values.attu.annotations }}
+        {{- toYaml .Values.attu.annotations | nindent 8 }}
       {{- end }}
 {{ include "milvus.ud.annotations" . | indent 8 }}
     spec:
