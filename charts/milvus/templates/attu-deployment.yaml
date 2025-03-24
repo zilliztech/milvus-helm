@@ -8,6 +8,8 @@ metadata:
 {{ include "milvus.labels" . | indent 4 }}
     component: "attu"
 {{ include "milvus.ud.labels" . | indent 4 }}
+    annotations:
+{{ include "milvus.ud.annotations" . | indent 4 }}
 spec:
   replicas: 1
   selector:
@@ -23,6 +25,11 @@ spec:
 {{- if .Values.attu.podLabels }}
 {{ toYaml .Values.attu.podLabels | indent 8 }}
 {{- end }}
+      annotations:
+      {{- if .Values.attu.podAnnotations }}
+        {{- toYaml .Values.attu.podAnnotations | nindent 8 }}
+      {{- end }}
+{{ include "milvus.ud.annotations" . | indent 8 }}
     spec:
       {{- if .Values.attu.image.pullSecrets }}
       imagePullSecrets:
