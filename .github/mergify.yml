@@ -7,3 +7,14 @@ pull_request_rules:
       label:
         toggle:
           - ci-passed
+  - name: "Ensure commits follow DCO"
+    conditions:
+      - "#commits > 0"
+      - "body~Signed-off-by:"
+    actions:
+      comment:
+        message: |
+          ⚠️ Your PR is missing a `Signed-off-by:` line in at least one commit.
+          Please use `git commit -s` to sign your commits.
+      dismiss_reviews:
+        message: "DCO check failed. Please sign your commits."
