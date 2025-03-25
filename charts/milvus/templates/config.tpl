@@ -111,7 +111,7 @@ pulsar:
   port: {{ .Values.pulsar.proxy.ports.pulsar }}
   maxMessageSize: {{ .Values.pulsar.maxMessageSize }}
 
-{{- else if and .Values.cluster.enabled .Values.woodpecker.enabled }}
+{{- else if .Values.woodpecker.enabled }}
 
 mq:
   type: woodpecker
@@ -119,7 +119,7 @@ mq:
 messageQueue: woodpecker
 
 
-{{- else if and .Values.cluster.enabled .Values.pulsarv3.enabled }}
+{{- else if .Values.pulsarv3.enabled }}
 
 mq:
   type: pulsar
@@ -169,7 +169,7 @@ kafka:
 {{- end }}
 
 {{- if not .Values.cluster.enabled }}
-{{- if or (eq .Values.standalone.messageQueue "rocksmq") (eq .Values.standalone.messageQueue "natsmq") (eq .Values.standalone.messageQueue "woodpecker") }}
+{{- if or (eq .Values.standalone.messageQueue "rocksmq") (eq .Values.standalone.messageQueue "natsmq")}}
 
 mq:
   type: {{ .Values.standalone.messageQueue }}
