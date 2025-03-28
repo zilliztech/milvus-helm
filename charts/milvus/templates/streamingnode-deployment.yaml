@@ -171,6 +171,14 @@ spec:
       topologySpreadConstraints:
 {{ toYaml .Values.streamingNode.topologySpreadConstraints | indent 8 }}
     {{- end }}
+    {{- if and (.Values.securityContext) (not .Values.streamingNode.securityContext) }}
+      securityContext:
+{{ toYaml .Values.securityContext | indent 8 }}
+    {{- end }}
+    {{- if .Values.streamingNode.securityContext }}
+      securityContext:
+{{ toYaml .Values.streamingNode.securityContext | indent 8 }}
+    {{- end }}
       volumes:
       - name: milvus-config
         configMap:

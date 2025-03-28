@@ -178,6 +178,14 @@ spec:
       topologySpreadConstraints:
 {{ toYaml .Values.standalone.topologySpreadConstraints | indent 8 }}
     {{- end }}
+    {{- if and (.Values.securityContext) (not .Values.standalone.securityContext) }}
+      securityContext:
+{{ toYaml .Values.securityContext | indent 8 }}
+    {{- end }}
+    {{- if .Values.standalone.securityContext }}
+      securityContext:
+{{ toYaml .Values.standalone.securityContext | indent 8 }}
+    {{- end }}
 
       volumes:
       - emptyDir: {}

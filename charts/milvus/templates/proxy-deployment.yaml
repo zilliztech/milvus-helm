@@ -176,6 +176,14 @@ spec:
       topologySpreadConstraints:
 {{ toYaml .Values.proxy.topologySpreadConstraints | indent 8 }}
     {{- end }}
+    {{- if and (.Values.securityContext) (not .Values.proxy.securityContext) }}
+      securityContext:
+{{ toYaml .Values.securityContext | indent 8 }}
+    {{- end }}
+    {{- if .Values.proxy.securityContext }}
+      securityContext:
+{{ toYaml .Values.proxy.securityContext | indent 8 }}
+    {{- end }}
 
       volumes:
       - name: milvus-config
