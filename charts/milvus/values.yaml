@@ -39,6 +39,15 @@ tolerations: []
 # Individual components can be set to a different affinity
 affinity: {}
 
+# Global securityContext
+# If set, this will apply to all milvus components
+# Individual components can be set to a different securityContext
+securityContext: {}
+  # runAsUser: 1000
+  # runAsGroup: 1000
+  # fsGroup: 1000
+  # runAsNonRoot: true
+
 # Global topologySpreadConstraints
 # If set, this will apply to all milvus components
 # Individual components can be set to different topologySpreadConstraints
@@ -228,6 +237,7 @@ standalone:
   nodeSelector: {}
   affinity: {}
   tolerations: []
+  securityContext: {}
   topologySpreadConstraints: []  # Component specific topologySpreadConstraints
   extraEnv: []
   heaptrack:
@@ -271,6 +281,7 @@ proxy:
   nodeSelector: {}
   affinity: {}
   tolerations: []
+  securityContext: {}
   topologySpreadConstraints: []  # Component specific topologySpreadConstraints
   extraEnv: []
   heaptrack:
@@ -315,6 +326,7 @@ rootCoordinator:
   nodeSelector: {}
   affinity: {}
   tolerations: []
+  securityContext: {}
   topologySpreadConstraints: []  # Component specific topologySpreadConstraints
   extraEnv: []
   heaptrack:
@@ -342,6 +354,7 @@ queryCoordinator:
   nodeSelector: {}
   affinity: {}
   tolerations: []
+  securityContext: {}
   topologySpreadConstraints: []  # Component specific topologySpreadConstraints
   extraEnv: []
   heaptrack:
@@ -373,6 +386,7 @@ queryNode:
   nodeSelector: {}
   affinity: {}
   tolerations: []
+  securityContext: {}
   topologySpreadConstraints: []  # Component specific topologySpreadConstraints
   extraEnv: []
   heaptrack:
@@ -402,6 +416,7 @@ indexCoordinator:
   nodeSelector: {}
   affinity: {}
   tolerations: []
+  securityContext: {}
   topologySpreadConstraints: []  # Component specific topologySpreadConstraints
   extraEnv: []
   heaptrack:
@@ -432,6 +447,7 @@ indexNode:
   nodeSelector: {}
   affinity: {}
   tolerations: []
+  securityContext: {}
   topologySpreadConstraints: []  # Component specific topologySpreadConstraints
   extraEnv: []
   heaptrack:
@@ -460,6 +476,7 @@ dataCoordinator:
   nodeSelector: {}
   affinity: {}
   tolerations: []
+  securityContext: {}
   topologySpreadConstraints: []  # Component specific topologySpreadConstraints
   extraEnv: []
   heaptrack:
@@ -487,6 +504,7 @@ dataNode:
   nodeSelector: {}
   affinity: {}
   tolerations: []
+  securityContext: {}
   topologySpreadConstraints: []  # Component specific topologySpreadConstraints
   extraEnv: []
   heaptrack:
@@ -513,6 +531,7 @@ mixCoordinator:
   nodeSelector: {}
   affinity: {}
   tolerations: []
+  securityContext: {}
   topologySpreadConstraints: []  # Component specific topologySpreadConstraints
   extraEnv: []
   heaptrack:
@@ -537,6 +556,7 @@ streamingNode:
   nodeSelector: {}
   affinity: {}
   tolerations: []
+  securityContext: {}
   extraEnv: []
   heaptrack:
     enabled: false
@@ -558,6 +578,7 @@ attu:
     port: 3000
     # loadBalancerIP: ""
   resources: {}
+  securityContext: {}
   podLabels: {}
   annotations: {}
   ingress:

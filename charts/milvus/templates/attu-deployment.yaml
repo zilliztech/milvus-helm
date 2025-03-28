@@ -73,4 +73,12 @@ spec:
       nodeSelector:
    {{ toYaml .Values.attu.nodeSelector | indent 8 }}
    {{- end }}
+   {{- if and (.Values.securityContext) (not .Values.attu.securityContext) }}
+      securityContext:
+{{ toYaml .Values.securityContext | indent 8 }}
+    {{- end }}
+    {{- if .Values.attu.securityContext }}
+      securityContext:
+{{ toYaml .Values.attu.securityContext | indent 8 }}
+    {{- end }}
 {{- end }}
