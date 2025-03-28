@@ -14,5 +14,8 @@ dependencies:
 - name: kafka
   repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
   version: 15.5.1
-digest: sha256:21c2518331186b743edb4564fab17d3789fa41baf9e1f48313c09b0a59696626
-generated: "2024-11-26T15:34:03.319376+08:00"
+- name: tei
+  repository: https://zilliztech.github.io/milvus-helm
+  version: 1.6.0
+digest: sha256:b267492a8fdd43832e8b21612e094ae402ac0c78f3a45599feb5876bed1bbd93
+generated: "2025-03-24T19:19:28.35228+08:00"

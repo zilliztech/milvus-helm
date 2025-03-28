@@ -31,3 +31,9 @@ dependencies:
   condition: kafka.enabled
   tags:
     - kafka
+- name: tei
+  version: 1.6.0
+  repository: https://zilliztech.github.io/milvus-helm
+  condition: tei.enabled
+  tags:
+    - tei
