@@ -183,6 +183,13 @@ spec:
       topologySpreadConstraints:
 {{ toYaml .Values.indexNode.topologySpreadConstraints | indent 8 }}
     {{- end }}
+    {{- if .Values.indexNode.securityContext }}
+      securityContext:
+{{ toYaml .Values.indexNode.securityContext | indent 8 }}
+    {{- else }}
+      securityContext:
+{{ toYaml .Values.securityContext | indent 8 }}
+    {{- end }}
 
       volumes:
       - name: milvus-config

@@ -177,6 +177,13 @@ spec:
       topologySpreadConstraints:
 {{ toYaml .Values.rootCoordinator.topologySpreadConstraints | indent 8 }}
     {{- end }}
+    {{- if .Values.rootCoordinator.securityContext }}
+      securityContext:
+{{ toYaml .Values.rootCoordinator.securityContext | indent 8 }}
+    {{- else }}
+      securityContext:
+{{ toYaml .Values.securityContext | indent 8 }}
+    {{- end }}
 
       volumes:
       - name: milvus-config
