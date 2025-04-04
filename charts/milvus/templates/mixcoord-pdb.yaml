@@ -1,0 +1,17 @@
+{{- if and .Values.mixCoordinator.enabled .Values.cluster.enabled (gt (int .Values.mixCoordinator.replicas) 1) }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ template "milvus.mixcoord.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "milvus.labels" . | indent 4 }}
+    component: "mixcoord"
+{{ include "milvus.ud.labels" . | indent 4 }}
+spec:
+  selector:
+    matchLabels:
+{{ include "milvus.matchLabels" . | indent 6 }}
+      component: "mixcoord"
+  minAvailable: 1
+{{- end }}

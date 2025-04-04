@@ -1,0 +1,17 @@
+{{- if and .Values.dataNode.enabled .Values.cluster.enabled (gt (int .Values.dataNode.replicas) 1) }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ template "milvus.datanode.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "milvus.labels" . | indent 4 }}
+    component: "datanode"
+{{ include "milvus.ud.labels" . | indent 4 }}
+spec:
+  selector:
+    matchLabels:
+{{ include "milvus.matchLabels" . | indent 6 }}
+      component: "datanode"
+  minAvailable: 1
+{{- end }}

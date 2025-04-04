@@ -1,0 +1,17 @@
+{{- if and .Values.proxy.enabled .Values.cluster.enabled (gt (int .Values.proxy.replicas) 1) }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ template "milvus.proxy.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "milvus.labels" . | indent 4 }}
+    component: "proxy"
+{{ include "milvus.ud.labels" . | indent 4 }}
+spec:
+  selector:
+    matchLabels:
+{{ include "milvus.matchLabels" . | indent 6 }}
+      component: "proxy"
+  minAvailable: 1
+{{- end }}

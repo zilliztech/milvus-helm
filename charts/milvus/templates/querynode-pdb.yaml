@@ -1,0 +1,17 @@
+{{- if and .Values.queryNode.enabled .Values.queryNode.deployment .Values.cluster.enabled (gt (int .Values.queryNode.replicas) 1) }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ template "milvus.querynode.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "milvus.labels" . | indent 4 }}
+    component: "querynode"
+{{ include "milvus.ud.labels" . | indent 4 }}
+spec:
+  selector:
+    matchLabels:
+{{ include "milvus.matchLabels" . | indent 6 }}
+      component: "querynode"
+  minAvailable: 1
+{{- end }}
