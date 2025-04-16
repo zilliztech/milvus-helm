@@ -8,7 +8,7 @@ metadata:
 {{ include "milvus.labels" . | indent 4 }}
     component: "attu"
 {{ include "milvus.ud.labels" . | indent 4 }}
-    annotations:
+  annotations:
 {{ include "milvus.ud.annotations" . | indent 4 }}
 spec:
   replicas: 1
