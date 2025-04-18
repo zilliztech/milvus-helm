@@ -2,8 +2,8 @@ apiVersion: v1
 entries:
   milvus:
   - apiVersion: v1
-    appVersion: 2.5.9
-    created: "2025-04-18T03:43:24.117301469Z"
+    appVersion: 2.5.10
+    created: "2025-04-18T08:19:29.319319524Z"
     dependencies:
     - condition: etcd.enabled
       name: etcd
@@ -39,7 +39,7 @@ entries:
       version: 15.5.1
     description: Milvus is an open-source vector database built to power AI applications
       and vector similarity search.
-    digest: 80c2424a0e14fc621b4f00f933be5720fda1474600989c3f2183e21575725db4
+    digest: d1f23b3fcd57c91d121af3f9266ac8f7de1e861ac82ca799e13169acf5173d79
     home: https://milvus.io/
     icon: https://raw.githubusercontent.com/milvus-io/docs/master/v1.0.0/assets/milvus_logo.png
     keywords:
@@ -57,8 +57,8 @@ entries:
     sources:
     - https://github.com/zilliztech/milvus
     urls:
-    - https://github.com/zilliztech/milvus-helm/releases/download/milvus-4.2.46/milvus-4.2.46.tgz
-    version: 4.2.46
+    - https://github.com/zilliztech/milvus-helm/releases/download/milvus-4.2.47/milvus-4.2.47.tgz
+    version: 4.2.47
   - apiVersion: v1
     appVersion: 2.5.9
     created: "2025-04-11T13:07:18.318583976Z"
@@ -13817,4 +13817,4 @@ entries:
     urls:
     - https://github.com/zilliztech/milvus-helm/releases/download/tei-1.6.0/tei-1.6.0.tgz
     version: 1.6.0
-generated: "2025-04-18T03:43:24.119874364Z"
+generated: "2025-04-18T08:19:29.321712081Z"
