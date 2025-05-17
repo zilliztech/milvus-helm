@@ -1,4 +1,4 @@
-{{- if and .Values.queryNode.enabled .Values.queryNode.deployment .Values.cluster.enabled (gt (int .Values.queryNode.replicas) 1) }}
+{{- if and .Values.queryNode.enabled .Values.cluster.enabled (gt (int .Values.queryNode.replicas) 1) }}
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
