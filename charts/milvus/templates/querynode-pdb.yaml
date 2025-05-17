@@ -13,5 +13,5 @@ spec:
     matchLabels:
 {{ include "milvus.matchLabels" . | indent 6 }}
       component: "querynode"
-  minAvailable: 1
+  minAvailable: {{ default 1 .Values.queryNode.pdb.minAvailable }}
 {{- end }}

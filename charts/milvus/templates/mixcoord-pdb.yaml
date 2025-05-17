@@ -13,5 +13,5 @@ spec:
     matchLabels:
 {{ include "milvus.matchLabels" . | indent 6 }}
       component: "mixcoord"
-  minAvailable: 1
+   minAvailable: {{ default 1 .Values.mixCoordinator.pdb.minAvailable }}
 {{- end }}

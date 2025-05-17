@@ -13,5 +13,5 @@ spec:
     matchLabels:
 {{ include "milvus.matchLabels" . | indent 6 }}
       component: "proxy"
-  minAvailable: 1
+  minAvailable: {{ default 1 .Values.proxy.pdb.minAvailable }}
 {{- end }}
