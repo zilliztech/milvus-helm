@@ -11,7 +11,7 @@ cluster:
 image:
   all:
     repository: milvusdb/milvus
-    tag: v2.5.11
+    tag: v2.5.12
     pullPolicy: IfNotPresent
     ## Optionally specify an array of imagePullSecrets.
     ## Secrets must be manually created in the namespace.
@@ -908,8 +908,8 @@ pulsarv3:
         -XX:-ResizePLAB
         -XX:+ExitOnOutOfMemoryError
         -XX:+PerfDisableSharedMem
-      managedLedgerDefaultEnsembleSize: "3"
-      managedLedgerDefaultWriteQuorum: "3"
+      managedLedgerDefaultEnsembleSize: "2"
+      managedLedgerDefaultWriteQuorum: "2"
       managedLedgerDefaultAckQuorum: "2"
       maxMessageSize: "104857600"
       defaultRetentionTimeInMinutes: "10080"
@@ -917,7 +917,7 @@ pulsarv3:
       backlogQuotaDefaultLimitGB: "8"
       ttlDurationDefaultInSeconds: "259200"
       subscriptionExpirationTimeMinutes: "3"
-      backlogQuotaDefaultRetentionPolicy: producer_exception
+      backlogQuotaDefaultRetentionPolicy: producer_request_hold
 
   proxy:
     pdb:
