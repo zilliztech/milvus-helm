@@ -398,7 +398,7 @@ queryNode:
     minReplicas: 1
     maxReplicas: 5
     cpuUtilization: 40
-  terminationGracePeriodSeconds: 90
+  terminationGracePeriodSeconds: 30
 
 indexCoordinator:
   enabled: false
