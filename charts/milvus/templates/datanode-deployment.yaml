@@ -58,6 +58,14 @@ spec:
         - "cp -r /opt/heaptrack /milvus/tools"
         image: "{{ .Values.heaptrack.image.repository }}:{{ .Values.heaptrack.image.tag }}"
         imagePullPolicy: {{ .Values.heaptrack.image.pullPolicy }}
+        {{ if and (.Values.containerSecurityContext) (not .Values.dataNode.containerSecurityContext) }}
+        securityContext:
+          {{- toYaml .Values.containerSecurityContext | nindent 12 }}
+        {{ end }}
+        {{ if .Values.dataNode.containerSecurityContext }}
+        securityContext:
+          {{- toYaml .Values.dataNode.containerSecurityContext | nindent 12 }}
+        {{ end }}
         volumeMounts:
         - mountPath: /milvus/tools
           name: tools
@@ -66,6 +74,14 @@ spec:
       - name: datanode
         image: "{{ .Values.image.all.repository }}:{{ .Values.image.all.tag }}"
         imagePullPolicy: {{ .Values.image.all.pullPolicy }}
+        {{ if and (.Values.containerSecurityContext) (not .Values.dataNode.containerSecurityContext) }}
+        securityContext:
+          {{- toYaml .Values.containerSecurityContext | nindent 12 }}
+        {{ end }}
+        {{ if .Values.dataNode.containerSecurityContext }}
+        securityContext:
+          {{- toYaml .Values.dataNode.containerSecurityContext | nindent 12 }}
+        {{ end }}
         {{- if .Values.dataNode.heaptrack.enabled }}
         args: [ "/milvus/tools/heaptrack/bin/heaptrack", "milvus", "run", "datanode" ]
         {{- else }}
