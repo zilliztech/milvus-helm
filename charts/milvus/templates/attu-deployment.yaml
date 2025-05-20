@@ -41,6 +41,14 @@ spec:
       - name: attu
         image: {{ .Values.attu.image.repository }}:{{ .Values.attu.image.tag }}
         imagePullPolicy: {{ .Values.attu.image.pullPolicy }}
+        {{ if and (.Values.containerSecurityContext) (not .Values.attu.containerSecurityContext) }}
+        securityContext:
+          {{- toYaml .Values.containerSecurityContext | nindent 12 }}
+        {{ end }}
+        {{ if .Values.attu.containerSecurityContext }}
+        securityContext:
+          {{- toYaml .Values.attu.containerSecurityContext | nindent 12 }}
+        {{ end }}
         ports:
         - name: attu
           containerPort: 3000
