@@ -44,6 +44,7 @@ spec:
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
 {{ include "milvus.ud.annotations" . | indent 8 }}
     spec:
+      terminationGracePeriodSeconds: {{ .Values.queryNode.terminationGracePeriodSeconds | default 90 }}
       serviceAccountName: {{ include "milvus.serviceAccount" . }}
       {{- if .Values.image.all.pullSecrets }}
       imagePullSecrets:
