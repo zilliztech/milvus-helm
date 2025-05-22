@@ -65,6 +65,9 @@ spec:
         - mountPath: /milvus/tools
           name: tools
       {{- end }}
+      {{- if .Values.queryNode.extraInitContainers }}
+        {{- toYaml .Values.queryNode.extraInitContainers | nindent 6 }}
+      {{- end }}
       containers:
       - name: querynode
         image: "{{ .Values.image.all.repository }}:{{ .Values.image.all.tag }}"
@@ -121,6 +124,10 @@ spec:
           timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
           successThreshold: {{ .Values.readinessProbe.successThreshold }}
           failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+        {{- end }}
+        {{- if .Values.queryNode.customStartupProbe }}
+        startupProbe:
+          {{- toYaml .Values.queryNode.customStartupProbe | nindent 10 }}
         {{- end }}
         resources:
           {{- toYaml .Values.queryNode.resources | nindent 10 }}
