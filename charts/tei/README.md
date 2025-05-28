@@ -120,50 +120,82 @@ Milvus provides a text embedding function feature that allows you to generate ve
 1. Specify the embedding function when creating a collection:
 
 ```python
-from pymilvus import connections, Collection, FieldSchema, CollectionSchema, DataType
+from pymilvus import MilvusClient, DataType, Function, FunctionType
 
 # Connect to Milvus
-connections.connect(host="localhost", port="19530")
+client = MilvusClient(uri="http://localhost:19530")
 
-# Define collection schema
-fields = [
-    FieldSchema(name="id", dtype=DataType.INT64, is_primary=True),
-    FieldSchema(name="text", dtype=DataType.VARCHAR, max_length=1000),
-    FieldSchema(name="vector", dtype=DataType.FLOAT_VECTOR, dim=768)  # Dimension should match model output
-]
-schema = CollectionSchema(fields=fields, description="Text collection with embedding function")
+# 1. Create schema
+schema = client.create_schema()
 
-# Create collection and specify embedding function
-collection = Collection(
-    name="text_collection",
-    schema=schema,
-    embedding_field="text",  # Specify the field to embed
-    vector_field="vector",   # Specify the field to store embedding vectors
-    embedding_config={
-        "provider": "tei",
-        "model_id": "BAAI/bge-large-en-v1.5",
-        "endpoint": "http://tei-service:8080"
+# 2. Add fields
+schema.add_field("id", DataType.INT64, is_primary=True, auto_id=False)  # Primary key
+schema.add_field("text", DataType.VARCHAR, max_length=65535)             # Text field
+schema.add_field("embedding", DataType.FLOAT_VECTOR, dim=768)              # Vector field, dimension must match TEI model output
+
+# 3. Define TEI embedding function
+tei_embedding_function = Function(
+    name="tei_func",                            # Unique identifier for this embedding function
+    function_type=FunctionType.TEXTEMBEDDING,   # Indicates a text embedding function
+    input_field_names=["text"],                # Scalar field(s) containing text data to embed
+    output_field_names=["embedding"],             # Vector field(s) for storing embeddings
+    params={                                    # TEI specific parameters
+        "provider": "TEI",                   # Must be set to "TEI"
+        "endpoint": "http://tei-service:8080", # TEI service address
+        # Optional: "api_key": "your_secure_api_key",
+        # Optional: "truncate": "true",
+        # Optional: "truncation_direction": "right",
+        # Optional: "max_client_batch_size": 64,
+        # Optional: "ingestion_prompt": "passage: ",
+        # Optional: "search_prompt": "query: "
     }
 )
+schema.add_function(tei_embedding_function)
+
+# 4. Create collection with schema and index param
+index_params = client.prepare_index_params()
+index_params.add_index(
+    field_name="embedding",
+    index_name="embedding_index",
+    index_type="HNSW",
+    metric_type="COSINE",
+)
+client.create_collection(
+    name="test_collection",
+    schema=schema,
+    index_params=index_params
+)
+client.load_collection(
+    collection_name="test_collection"
+)
+
 ```
 
-2. Automatically generate embeddings when inserting data:
+2. Automatically generate embeddings when inserting data 
 
 ```python
 # Insert data, Milvus will automatically call the TEI service to generate embedding vectors
-collection.insert([
-    {"id": 1, "text": "This is a sample document about artificial intelligence."},
-    {"id": 2, "text": "Vector databases are designed to handle embeddings efficiently."}
-])
+client.insert(
+    collection_name="test_collection",
+    data=[
+        {"id": 1, "text": "This is a sample document about artificial intelligence."},
+        {"id": 2, "text": "Vector databases are designed to handle embeddings efficiently."}
+    ]
+)
 ```
 
 3. Automatically generate query embeddings when searching:
 
 ```python
 # Search directly using text, Milvus will automatically call the TEI service to generate query vectors
-results = collection.search(
-    query_texts=["Tell me about AI technology"],
-    embedding_field="text",
+results = client.search(
+    collection_name="test_collection",
+    data=["Tell me about AI technology"],
+    anns_field="embedding",
+    search_params={
+        "metric_type": "COSINE",
+        "params": {}
+    },
     limit=3
 )
 ```
