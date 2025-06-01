@@ -388,6 +388,8 @@ queryNode:
   # resources:
   #   limits:
   #     ephemeral-storage: 100Gi
+  # Set below when using other runtimes than default like nvidia for example
+  runtimeClassName: ""
   nodeSelector: {}
   affinity: {}
   tolerations: []
@@ -451,6 +453,8 @@ indexNode:
   # Set local storage size in resources
   # limits:
   #    ephemeral-storage: 100Gi
+  # Set below when using other runtimes than default like nvidia for example
+  runtimeClassName: ""
   nodeSelector: {}
   affinity: {}
   tolerations: []
