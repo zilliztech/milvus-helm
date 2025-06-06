@@ -56,13 +56,13 @@ spec:
           {{- toYaml .Values.resources | nindent 12 }}
         {{- if .Values.extraEnv }}
         env:
-          {{ toYaml .Values.extraEnv | indent 8 }}
+          {{ toYaml .Values.extraEnv | nindent 8 }}
         {{- end }}
         volumeMounts:
         - name: data-volume
           mountPath: {{ .Values.persistence.mountPath }}
         {{- if .Values.volumeMounts }}
-          {{ toYaml .Values.volumeMounts | indent 8 }}
+          {{ toYaml .Values.volumeMounts | nindent 8 }}
         {{- end }}
       volumes:
       {{- if not .Values.persistence.enabled }}
