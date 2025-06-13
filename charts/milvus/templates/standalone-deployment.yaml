@@ -10,6 +10,7 @@ metadata:
 {{ include "milvus.ud.labels" . | indent 4 }}
   annotations:
 {{ include "milvus.ud.annotations" . | indent 4 }}
+    milvus.io/message-queue: {{ template "milvus.standalone.messageQueue" . }}
 
 spec:
   replicas: 1
