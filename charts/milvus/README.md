@@ -268,7 +268,7 @@ The following table lists the configurable parameters of the Milvus Service and 
 |-------------------------------------------|-----------------------------------------------|---------------------------------------------------------|
 | `cluster.enabled`                         | Enable or disable Milvus Cluster mode         | `true`                                                 |
 | `image.all.repository`                    | Image repository                              | `milvusdb/milvus`                                       |
-| `image.all.tag`                           | Image tag                                     | `v2.5.6`                           |
+| `image.all.tag`                           | Image tag                                     | `v2.5.13`                           |
 | `image.all.pullPolicy`                    | Image pull policy                             | `IfNotPresent`                                          |
 | `image.all.pullSecrets`                   | Image pull secrets                            | `{}`                                                    |
 | `image.tools.repository`                  | Config image repository                       | `milvusdb/milvus-config-tool`                                       |
@@ -463,6 +463,7 @@ The following table lists the configurable parameters of the Milvus Query Node c
 | `queryNode.minReplicas` | Specify the minimum number of replicas | 1 |
 | `queryNode.maxReplicas` | Specify the maximum number of replicas | 5 |
 | `queryNode.cpuUtilization` | Specify the cpu auto-scaling value | 40 |
+| `queryNode.memoryUtilization` | Specify the memory auto-scaling value | 60 |
 
 ### Milvus Index Coordinator Deployment Configuration
 
@@ -583,6 +584,45 @@ The following table lists the configurable parameters of the Milvus Mixture Coor
 | `mixCoordinator.service.externalIPs`                 | Service external IP addresses                 | `[]`                                        |
 | `mixCoordinator.strategy`                       | Deployment strategy configuration |  RollingUpdate                                         |
 | `mixCoordinator.annotations`                    | Additional pod annotations | `{}` |
+
+
+### TEI Configuration
+
+The following table lists the configurable parameters of the Text Embeddings Inference (TEI) component and their default values.
+
+| Parameter                                 | Description                                             | Default                                     |
+|-------------------------------------------|---------------------------------------------------------|---------------------------------------------|
+| `tei.enabled`                             | Enable or disable TEI deployment                        | `false`                                     |
+| `tei.name`                                | Name of the TEI component                               | `text-embeddings-inference`                 |
+| `tei.image.repository`                    | TEI image repository                                    | `ghcr.io/huggingface/text-embeddings-inference` |
+| `tei.image.tag`                           | TEI image tag                                           | `cpu-1.6`                                   |
+| `tei.image.pullPolicy`                    | TEI image pull policy                                   | `IfNotPresent`                              |
+| `tei.service.type`                        | TEI service type                                        | `ClusterIP`                                 |
+| `tei.service.port`                        | TEI service port                                        | `8080`                                      |
+| `tei.service.annotations`                 | TEI service annotations                                 | `{}`                                        |
+| `tei.service.labels`                      | TEI service custom labels                               | `{}`                                        |
+| `tei.resources.requests.cpu`              | CPU resource requests for TEI pods                      | `4`                                         |
+| `tei.resources.requests.memory`           | Memory resource requests for TEI pods                   | `8Gi`                                       |
+| `tei.resources.limits.cpu`                | CPU resource limits for TEI pods                        | `8`                                         |
+| `tei.resources.limits.memory`             | Memory resource limits for TEI pods                     | `16Gi`                                      |
+| `tei.persistence.enabled`                 | Enable persistence for TEI                              | `true`                                      |
+| `tei.persistence.mountPath`               | Mount path for TEI persistence                          | `/data`                                     |
+| `tei.persistence.annotations`             | Annotations for TEI PVC                                 | `{}`                                        |
+| `tei.persistence.persistentVolumeClaim.existingClaim` | Existing PVC for TEI                       | `""`                                        |
+| `tei.persistence.persistentVolumeClaim.storageClass` | Storage class for TEI PVC                   | `""`                                        |
+| `tei.persistence.persistentVolumeClaim.accessModes` | Access modes for TEI PVC                     | `ReadWriteOnce`                             |
+| `tei.persistence.persistentVolumeClaim.size` | Size of TEI PVC                                     | `50Gi`                                      |
+| `tei.persistence.persistentVolumeClaim.subPath` | SubPath for TEI PVC                              | `""`                                        |
+| `tei.modelId`                             | Model ID for TEI                                        | `BAAI/bge-large-en-v1.5`                    |
+| `tei.extraArgs`                           | Additional arguments for TEI                            | `[]`                                        |
+| `tei.nodeSelector`                        | Node labels for TEI pods assignment                     | `{}`                                        |
+| `tei.affinity`                            | Affinity settings for TEI pods assignment               | `{}`                                        |
+| `tei.tolerations`                         | Toleration labels for TEI pods assignment               | `[]`                                        |
+| `tei.topologySpreadConstraints`           | Topology spread constraints for TEI pods                | `[]`                                        |
+| `tei.extraEnv`                            | Additional TEI container environment variables          | `[]`                                        |
+| `tei.replicas`                            | Number of TEI replicas                                  | `1`                                         |
+
+
 ### Pulsar Configuration
 
 This version of the chart includes the dependent Pulsar chart in the charts/ directory.
@@ -655,3 +695,15 @@ Continuous Profiling adds a dimension of time that allows you to understand your
 
 You can enable profiling with Pyroscope and you can find more information at:
 * [https://pyroscope.io/docs/kubernetes-helm-chart/](https://pyroscope.io/docs/kubernetes-helm-chart/)
+
+## Text Embeddings Inference (TEI) Integration Guide for Milvus
+
+Text Embeddings Inference (TEI) is a high-performance text embedding model inference service that converts text into vector representations. Milvus is a vector database that can store and retrieve these vectors. By combining the two, you can build powerful semantic search and retrieval systems.
+
+TEI is an open-source project developed by Hugging Face, available at [https://github.com/huggingface/text-embeddings-inference](https://github.com/huggingface/text-embeddings-inference).
+
+This guide provides two ways to use TEI:
+1. Deploy TEI service directly through the Milvus Helm Chart
+2. Use external TEI service with Milvus integration
+
+For detailed configuration and usage instructions, please refer to the [README-TEI.md](./README-TEI.md) document.

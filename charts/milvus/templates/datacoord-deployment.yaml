@@ -62,6 +62,14 @@ spec:
         - "cp -r /opt/heaptrack /milvus/tools"
         image: "{{ .Values.heaptrack.image.repository }}:{{ .Values.heaptrack.image.tag }}"
         imagePullPolicy: {{ .Values.heaptrack.image.pullPolicy }}
+        {{ if and (.Values.containerSecurityContext) (not .Values.dataCoordinator.containerSecurityContext) }}
+        securityContext:
+          {{- toYaml .Values.containerSecurityContext | nindent 12 }}
+        {{ end }}
+        {{ if .Values.dataCoordinator.containerSecurityContext }}
+        securityContext:
+          {{- toYaml .Values.dataCoordinator.containerSecurityContext | nindent 12 }}
+        {{ end }}
         volumeMounts:
         - mountPath: /milvus/tools
           name: tools
@@ -87,6 +95,14 @@ spec:
         {{- if .Values.dataCoordinator.extraEnv }}
           {{- toYaml .Values.dataCoordinator.extraEnv | nindent 8 }}
         {{- end }}
+        {{ if and (.Values.containerSecurityContext) (not .Values.dataCoordinator.containerSecurityContext) }}
+        securityContext:
+          {{- toYaml .Values.containerSecurityContext | nindent 12 }}
+        {{ end }}
+        {{ if .Values.dataCoordinator.containerSecurityContext }}
+        securityContext:
+          {{- toYaml .Values.dataCoordinator.containerSecurityContext | nindent 12 }}
+        {{ end }}
         ports:
           - name: datacoord
             containerPort: 13333
@@ -176,6 +192,14 @@ spec:
     {{- if .Values.dataCoordinator.topologySpreadConstraints }}
       topologySpreadConstraints:
 {{ toYaml .Values.dataCoordinator.topologySpreadConstraints | indent 8 }}
+    {{- end }}
+    {{- if and (.Values.securityContext) (not .Values.dataCoordinator.securityContext) }}
+      securityContext:
+{{ toYaml .Values.securityContext | indent 8 }}
+    {{- end }}
+    {{- if .Values.dataCoordinator.securityContext }}
+      securityContext:
+{{ toYaml .Values.dataCoordinator.securityContext | indent 8 }}
     {{- end }}
 
       volumes:

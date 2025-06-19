@@ -60,6 +60,14 @@ spec:
         - "cp -r /opt/heaptrack /milvus/tools"
         image: "{{ .Values.heaptrack.image.repository }}:{{ .Values.heaptrack.image.tag }}"
         imagePullPolicy: {{ .Values.heaptrack.image.pullPolicy }}
+        {{ if and (.Values.containerSecurityContext) (not .Values.queryNode.containerSecurityContext) }}
+        securityContext:
+          {{- toYaml .Values.containerSecurityContext | nindent 12 }}
+        {{ end }}
+        {{ if .Values.queryNode.containerSecurityContext }}
+        securityContext:
+          {{- toYaml .Values.queryNode.containerSecurityContext | nindent 12 }}
+        {{ end }}
         volumeMounts:
         - mountPath: /milvus/tools
           name: tools
@@ -68,6 +76,14 @@ spec:
       - name: querynode
         image: "{{ .Values.image.all.repository }}:{{ .Values.image.all.tag }}"
         imagePullPolicy: {{ .Values.image.all.pullPolicy }}
+        {{ if and (.Values.containerSecurityContext) (not .Values.queryNode.containerSecurityContext) }}
+        securityContext:
+          {{- toYaml .Values.containerSecurityContext | nindent 12 }}
+        {{ end }}
+        {{ if .Values.queryNode.containerSecurityContext }}
+        securityContext:
+          {{- toYaml .Values.queryNode.containerSecurityContext | nindent 12 }}
+        {{ end }}
         {{- if .Values.queryNode.heaptrack.enabled }}
         args: [ "/milvus/tools/heaptrack/bin/heaptrack", "milvus", "run", "querynode" ]
         {{- else }}
@@ -185,6 +201,14 @@ spec:
     {{- if .Values.queryNode.topologySpreadConstraints }}
       topologySpreadConstraints:
 {{ toYaml .Values.queryNode.topologySpreadConstraints | indent 8 }}
+    {{- end }}
+    {{- if and (.Values.securityContext) (not .Values.queryNode.securityContext) }}
+      securityContext:
+{{ toYaml .Values.securityContext | indent 8 }}
+    {{- end }}
+    {{- if .Values.queryNode.securityContext }}
+      securityContext:
+{{ toYaml .Values.queryNode.securityContext | indent 8 }}
     {{- end }}
 
       volumes:
