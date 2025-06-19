@@ -11,7 +11,7 @@ cluster:
 image:
   all:
     repository: milvusdb/milvus
-    tag: v2.5.6
+    tag: v2.5.13
     pullPolicy: IfNotPresent
     ## Optionally specify an array of imagePullSecrets.
     ## Secrets must be manually created in the namespace.
@@ -38,6 +38,16 @@ tolerations: []
 # If set, this will apply to all milvus components
 # Individual components can be set to a different affinity
 affinity: {}
+
+# Global securityContext
+# If set, this will apply to all milvus components
+# Individual components can be set to a different securityContext
+containerSecurityContext: {}
+securityContext: {}
+  # runAsUser: 1000
+  # runAsGroup: 1000
+  # fsGroup: 1000
+  # runAsNonRoot: true
 
 # Global topologySpreadConstraints
 # If set, this will apply to all milvus components
@@ -228,6 +238,8 @@ standalone:
   nodeSelector: {}
   affinity: {}
   tolerations: []
+  securityContext: {}
+  containerSecurityContext: {}
   topologySpreadConstraints: []  # Component specific topologySpreadConstraints
   extraEnv: []
   heaptrack:
@@ -240,7 +252,7 @@ standalone:
     enabled: false  # Enable live profiling
 
   ## Default message queue for milvus standalone
-  ## Supported value: rocksmq, natsmq, pulsar and kafka
+  ## Supported value: rocksmq, natsmq, pulsar, kafka and woodpecker
   messageQueue: rocksmq
   persistence:
     mountPath: "/var/lib/milvus"
@@ -271,6 +283,8 @@ proxy:
   nodeSelector: {}
   affinity: {}
   tolerations: []
+  securityContext: {}
+  containerSecurityContext: {}
   topologySpreadConstraints: []  # Component specific topologySpreadConstraints
   extraEnv: []
   heaptrack:
@@ -315,6 +329,8 @@ rootCoordinator:
   nodeSelector: {}
   affinity: {}
   tolerations: []
+  securityContext: {}
+  containerSecurityContext: {}
   topologySpreadConstraints: []  # Component specific topologySpreadConstraints
   extraEnv: []
   heaptrack:
@@ -342,6 +358,8 @@ queryCoordinator:
   nodeSelector: {}
   affinity: {}
   tolerations: []
+  securityContext: {}
+  containerSecurityContext: {}
   topologySpreadConstraints: []  # Component specific topologySpreadConstraints
   extraEnv: []
   heaptrack:
@@ -373,6 +391,8 @@ queryNode:
   nodeSelector: {}
   affinity: {}
   tolerations: []
+  securityContext: {}
+  containerSecurityContext: {}
   topologySpreadConstraints: []  # Component specific topologySpreadConstraints
   extraEnv: []
   heaptrack:
@@ -392,6 +412,7 @@ queryNode:
     minReplicas: 1
     maxReplicas: 5
     cpuUtilization: 40
+    memoryUtilization: 60
 
 indexCoordinator:
   enabled: false
@@ -401,6 +422,8 @@ indexCoordinator:
   nodeSelector: {}
   affinity: {}
   tolerations: []
+  securityContext: {}
+  containerSecurityContext: {}
   topologySpreadConstraints: []  # Component specific topologySpreadConstraints
   extraEnv: []
   heaptrack:
@@ -431,6 +454,8 @@ indexNode:
   nodeSelector: {}
   affinity: {}
   tolerations: []
+  securityContext: {}
+  containerSecurityContext: {}
   topologySpreadConstraints: []  # Component specific topologySpreadConstraints
   extraEnv: []
   heaptrack:
@@ -459,6 +484,8 @@ dataCoordinator:
   nodeSelector: {}
   affinity: {}
   tolerations: []
+  securityContext: {}
+  containerSecurityContext: {}
   topologySpreadConstraints: []  # Component specific topologySpreadConstraints
   extraEnv: []
   heaptrack:
@@ -486,6 +513,8 @@ dataNode:
   nodeSelector: {}
   affinity: {}
   tolerations: []
+  securityContext: {}
+  containerSecurityContext: {}
   topologySpreadConstraints: []  # Component specific topologySpreadConstraints
   extraEnv: []
   heaptrack:
@@ -512,6 +541,8 @@ mixCoordinator:
   nodeSelector: {}
   affinity: {}
   tolerations: []
+  securityContext: {}
+  containerSecurityContext: {}
   topologySpreadConstraints: []  # Component specific topologySpreadConstraints
   extraEnv: []
   heaptrack:
@@ -536,6 +567,8 @@ streamingNode:
   nodeSelector: {}
   affinity: {}
   tolerations: []
+  securityContext: {}
+  containerSecurityContext: {}
   extraEnv: []
   heaptrack:
     enabled: false
@@ -557,7 +590,10 @@ attu:
     port: 3000
     # loadBalancerIP: ""
   resources: {}
+  securityContext: {}
+  containerSecurityContext: {}
   podLabels: {}
+  annotations: {}
   ingress:
     enabled: false
     ingressClassName: ""
@@ -885,8 +921,8 @@ pulsarv3:
         -XX:-ResizePLAB
         -XX:+ExitOnOutOfMemoryError
         -XX:+PerfDisableSharedMem
-      managedLedgerDefaultEnsembleSize: "3"
-      managedLedgerDefaultWriteQuorum: "3"
+      managedLedgerDefaultEnsembleSize: "2"
+      managedLedgerDefaultWriteQuorum: "2"
       managedLedgerDefaultAckQuorum: "2"
       maxMessageSize: "104857600"
       defaultRetentionTimeInMinutes: "10080"
@@ -894,7 +930,7 @@ pulsarv3:
       backlogQuotaDefaultLimitGB: "8"
       ttlDurationDefaultInSeconds: "259200"
       subscriptionExpirationTimeMinutes: "3"
-      backlogQuotaDefaultRetentionPolicy: producer_exception
+      backlogQuotaDefaultRetentionPolicy: producer_request_hold
 
   proxy:
     pdb:
@@ -1224,6 +1260,13 @@ kafka:
     replicaCount: 3
 
 ###################################
+# Woodpecker
+# - these configs are used to enable Woodpecker message queue
+###################################
+woodpecker:
+  enabled: false
+
+###################################
 # External S3
 # - these configs are only used when `externalS3.enabled` is true
 ###################################
@@ -1298,3 +1341,46 @@ externalKafka:
     mechanisms: PLAIN
     username: ""
     password: ""
+
+###################################
+# Text Embeddings Inference (TEI)
+# - these configs are used to deploy TEI service
+###################################
+tei:
+  enabled: false
+  name: text-embeddings-inference
+  image:
+    repository: ghcr.io/huggingface/text-embeddings-inference
+    tag: cpu-1.6
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 8080
+    annotations: {}
+    labels: {}
+  resources:
+    requests:
+      cpu: "4"
+      memory: "8Gi"
+    limits:
+      cpu: "8"
+      memory: "16Gi"
+  persistence:
+    enabled: true
+    mountPath: "/data"
+    annotations: {}
+    persistentVolumeClaim:
+      existingClaim: ""
+      storageClass:
+      accessModes: ReadWriteOnce
+      size: 50Gi
+      subPath: ""
+  # TEI model configuration
+  modelId: "BAAI/bge-large-en-v1.5"
+  # Additional TEI configuration
+  extraArgs: []
+  nodeSelector: {}
+  affinity: {}
+  tolerations: []
+  topologySpreadConstraints: []
+  extraEnv: []

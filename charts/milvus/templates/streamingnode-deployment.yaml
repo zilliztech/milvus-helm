@@ -55,6 +55,14 @@ spec:
         - "cp -r /opt/heaptrack /milvus/tools"
         image: "{{ .Values.heaptrack.image.repository }}:{{ .Values.heaptrack.image.tag }}"
         imagePullPolicy: {{ .Values.heaptrack.image.pullPolicy }}
+        {{ if and (.Values.containerSecurityContext) (not .Values.streamingNode.containerSecurityContext) }}
+        securityContext:
+          {{- toYaml .Values.containerSecurityContext | nindent 12 }}
+        {{ end }}
+        {{ if .Values.streamingNode.containerSecurityContext }}
+        securityContext:
+          {{- toYaml .Values.streamingNode.containerSecurityContext | nindent 12 }}
+        {{ end }}
         volumeMounts:
         - mountPath: /milvus/tools
           name: tools
@@ -63,6 +71,14 @@ spec:
       - name: streamingnode
         image: "{{ .Values.image.all.repository }}:{{ .Values.image.all.tag }}"
         imagePullPolicy: {{ .Values.image.all.pullPolicy }}
+        {{ if and (.Values.containerSecurityContext) (not .Values.streamingNode.containerSecurityContext) }}
+        securityContext:
+          {{- toYaml .Values.containerSecurityContext | nindent 12 }}
+        {{ end }}
+        {{ if .Values.streamingNode.containerSecurityContext }}
+        securityContext:
+          {{- toYaml .Values.streamingNode.containerSecurityContext | nindent 12 }}
+        {{ end }}
         {{- if .Values.streamingNode.heaptrack.enabled }}
         args: [ "/milvus/tools/heaptrack/bin/heaptrack", "milvus", "run", "streamingnode" ]
         {{- else }}
@@ -131,6 +147,10 @@ spec:
         {{- end }}
         - mountPath: /milvus/tools
           name: tools
+        {{- if .Values.woodpecker.enabled }}
+        - mountPath: /var/lib/milvus
+          name: woodpecker
+        {{- end }}
         {{- if .Values.volumeMounts }}
           {{- toYaml .Values.volumeMounts | nindent 8 }}
         {{- end}}
@@ -167,6 +187,14 @@ spec:
       topologySpreadConstraints:
 {{ toYaml .Values.streamingNode.topologySpreadConstraints | indent 8 }}
     {{- end }}
+    {{- if and (.Values.securityContext) (not .Values.streamingNode.securityContext) }}
+      securityContext:
+{{ toYaml .Values.securityContext | indent 8 }}
+    {{- end }}
+    {{- if .Values.streamingNode.securityContext }}
+      securityContext:
+{{ toYaml .Values.streamingNode.securityContext | indent 8 }}
+    {{- end }}
       volumes:
       - name: milvus-config
         configMap:
@@ -182,6 +210,10 @@ spec:
       {{- end }}
       - name: tools
         emptyDir: {}
+      {{- if .Values.woodpecker.enabled }}
+      - name: woodpecker
+        emptyDir: {}
+      {{- end }}
       {{- if .Values.volumes }}
         {{- toYaml .Values.volumes | nindent 6 }}
       {{- end}}

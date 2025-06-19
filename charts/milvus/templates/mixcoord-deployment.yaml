@@ -62,6 +62,14 @@ spec:
         - "cp -r /opt/heaptrack /milvus/tools"
         image: "{{ .Values.heaptrack.image.repository }}:{{ .Values.heaptrack.image.tag }}"
         imagePullPolicy: {{ .Values.heaptrack.image.pullPolicy }}
+        {{ if and (.Values.containerSecurityContext) (not .Values.mixCoordinator.containerSecurityContext) }}
+        securityContext:
+          {{- toYaml .Values.containerSecurityContext | nindent 12 }}
+        {{ end }}
+        {{ if .Values.mixCoordinator.containerSecurityContext }}
+        securityContext:
+          {{- toYaml .Values.mixCoordinator.containerSecurityContext | nindent 12 }}
+        {{ end }}
         volumeMounts:
         - mountPath: /milvus/tools
           name: tools
@@ -70,6 +78,14 @@ spec:
       - name: mixcoord
         image: "{{ .Values.image.all.repository }}:{{ .Values.image.all.tag }}"
         imagePullPolicy: {{ .Values.image.all.pullPolicy }}
+        {{ if and (.Values.containerSecurityContext) (not .Values.mixCoordinator.containerSecurityContext) }}
+        securityContext:
+          {{- toYaml .Values.containerSecurityContext | nindent 12 }}
+        {{ end }}
+        {{ if .Values.mixCoordinator.containerSecurityContext }}
+        securityContext:
+          {{- toYaml .Values.mixCoordinator.containerSecurityContext | nindent 12 }}
+        {{ end }}
         {{- if .Values.mixCoordinator.heaptrack.enabled }}
         args: [ "/milvus/tools/heaptrack/bin/heaptrack", "milvus", "run", "mixture", "-rootcoord", "-querycoord", "-datacoord", "-indexcoord" ]
         {{- else }}
@@ -173,6 +189,14 @@ spec:
     {{- if .Values.mixCoordinator.topologySpreadConstraints }}
       topologySpreadConstraints:
 {{ toYaml .Values.mixCoordinator.topologySpreadConstraints | indent 8 }}
+    {{- end }}
+    {{- if and (.Values.securityContext) (not .Values.mixCoordinator.securityContext) }}
+      securityContext:
+{{ toYaml .Values.securityContext | indent 8 }}
+    {{- end }}
+    {{- if .Values.mixCoordinator.securityContext }}
+      securityContext:
+{{ toYaml .Values.mixCoordinator.securityContext | indent 8 }}
     {{- end }}
 
       volumes:

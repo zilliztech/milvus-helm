@@ -57,6 +57,14 @@ spec:
         - "cp -r /opt/heaptrack /milvus/tools"
         image: "{{ .Values.heaptrack.image.repository }}:{{ .Values.heaptrack.image.tag }}"
         imagePullPolicy: {{ .Values.heaptrack.image.pullPolicy }}
+        {{ if and (.Values.containerSecurityContext) (not .Values.indexNode.containerSecurityContext) }}
+        securityContext:
+          {{- toYaml .Values.containerSecurityContext | nindent 12 }}
+        {{ end }}
+        {{ if .Values.indexNode.containerSecurityContext }}
+        securityContext:
+          {{- toYaml .Values.indexNode.containerSecurityContext | nindent 12 }}
+        {{ end }}
         volumeMounts:
         - mountPath: /milvus/tools
           name: tools
@@ -65,6 +73,14 @@ spec:
       - name: indexnode
         image: "{{ .Values.image.all.repository }}:{{ .Values.image.all.tag }}"
         imagePullPolicy: {{ .Values.image.all.pullPolicy }}
+        {{ if and (.Values.containerSecurityContext) (not .Values.indexNode.containerSecurityContext) }}
+        securityContext:
+          {{- toYaml .Values.containerSecurityContext | nindent 12 }}
+        {{ end }}
+        {{ if .Values.indexNode.containerSecurityContext }}
+        securityContext:
+          {{- toYaml .Values.indexNode.containerSecurityContext | nindent 12 }}
+        {{ end }}
         {{- if .Values.indexNode.heaptrack.enabled }}
         args: [ "/milvus/tools/heaptrack/bin/heaptrack", "milvus", "run", "indexnode" ]
         {{- else }}
@@ -182,6 +198,14 @@ spec:
     {{- if .Values.indexNode.topologySpreadConstraints }}
       topologySpreadConstraints:
 {{ toYaml .Values.indexNode.topologySpreadConstraints | indent 8 }}
+    {{- end }}
+    {{- if and (.Values.securityContext) (not .Values.indexNode.securityContext) }}
+      securityContext:
+{{ toYaml .Values.securityContext | indent 8 }}
+    {{- end }}
+    {{- if .Values.indexNode.securityContext }}
+      securityContext:
+{{ toYaml .Values.indexNode.securityContext | indent 8 }}
     {{- end }}
 
       volumes:
