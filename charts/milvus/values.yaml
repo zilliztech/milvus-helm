@@ -607,6 +607,19 @@ attu:
     #  - secretName: chart-attu-tls
     #    hosts:
     #      - milvus-attu.local
+  
+  route:
+    enabled: false
+    host: ""
+    annotations: {}
+    labels: {}
+    tls:
+      termination: edge  # edge, passthrough, or reencrypt
+      insecureEdgeTerminationPolicy: Redirect  # None, Redirect, or Allow
+      # certificate: ""
+      # key: ""
+      # caCertificate: ""
+      # destinationCACertificate: ""
 
 
 ## Configuration values for the minio dependency
