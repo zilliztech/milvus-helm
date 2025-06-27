@@ -1248,7 +1248,7 @@ kafka:
     kafka:
       enabled: false
       image:
-        repository: bitnami/kafka-exporter-archived
+        repository: bitnami/kafka-exporter
         tag: 1.4.2-debian-10-r182
 
     ## Prometheus JMX exporter: exposes the majority of Kafkas metrics
