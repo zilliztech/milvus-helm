@@ -11,7 +11,7 @@ cluster:
 image:
   all:
     repository: milvusdb/milvus
-    tag: v2.5.12
+    tag: v2.5.14
     pullPolicy: IfNotPresent
     ## Optionally specify an array of imagePullSecrets.
     ## Secrets must be manually created in the namespace.
@@ -611,6 +611,19 @@ attu:
     #  - secretName: chart-attu-tls
     #    hosts:
     #      - milvus-attu.local
+  
+  route:
+    enabled: false
+    host: ""
+    annotations: {}
+    labels: {}
+    tls:
+      termination: edge  # edge, passthrough, or reencrypt
+      insecureEdgeTerminationPolicy: Redirect  # None, Redirect, or Allow
+      # certificate: ""
+      # key: ""
+      # caCertificate: ""
+      # destinationCACertificate: ""
 
 
 ## Configuration values for the minio dependency
@@ -1144,7 +1157,7 @@ pulsar:
       backlogQuotaDefaultLimitGB: "8"
       ttlDurationDefaultInSeconds: "259200"
       subscriptionExpirationTimeMinutes: "3"
-      backlogQuotaDefaultRetentionPolicy: producer_exception
+      backlogQuotaDefaultRetentionPolicy: producer_request_hold
     pdb:
       usePolicy: false
 
@@ -1239,7 +1252,7 @@ kafka:
     kafka:
       enabled: false
       image:
-        repository: bitnami/kafka-exporter
+        repository: bitnami/kafka-exporter-archived
         tag: 1.4.2-debian-10-r182
 
     ## Prometheus JMX exporter: exposes the majority of Kafkas metrics

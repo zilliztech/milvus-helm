@@ -267,8 +267,14 @@ The following table lists the configurable parameters of the Milvus Service and 
 | Parameter                                 | Description                                   | Default                                                 |
 |-------------------------------------------|-----------------------------------------------|---------------------------------------------------------|
 | `cluster.enabled`                         | Enable or disable Milvus Cluster mode         | `true`                                                 |
+| `route.enabled`                           | Enable OpenShift route                        | `false`                                                |
+| `route.hostname`                          | Hostname for the OpenShift route             | `""`                                                   |
+| `route.path`                             | Path for the OpenShift route                 | `""`                                                   |
+| `route.termination`                       | TLS termination for the route                | `edge`                                                 |
+| `route.annotations`                       | Route annotations                            | `{}`                                                   |
+| `route.labels`                           | Route labels                                 | `{}`                                                   |
 | `image.all.repository`                    | Image repository                              | `milvusdb/milvus`                                       |
-| `image.all.tag`                           | Image tag                                     | `v2.5.12`                           |
+| `image.all.tag`                           | Image tag                                     | `v2.5.14`                           |
 | `image.all.pullPolicy`                    | Image pull policy                             | `IfNotPresent`                                          |
 | `image.all.pullSecrets`                   | Image pull secrets                            | `{}`                                                    |
 | `image.tools.repository`                  | Config image repository                       | `milvusdb/milvus-config-tool`                                       |
