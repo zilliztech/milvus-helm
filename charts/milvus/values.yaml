@@ -699,7 +699,7 @@ etcd:
     create: false
   image:
     repository: "milvusdb/etcd"
-    tag: "3.5.18-r1"
+    tag: "3.5.21-r2"
     pullPolicy: IfNotPresent
 
   service:
