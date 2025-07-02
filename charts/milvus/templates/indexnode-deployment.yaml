@@ -42,6 +42,9 @@ spec:
 {{ include "milvus.ud.annotations" . | indent 8 }}
     spec:
       serviceAccountName: {{ include "milvus.serviceAccount" . }}
+      {{- if .Values.indexNode.runtimeClassName }}
+      runtimeClassName: {{ .Values.indexNode.runtimeClassName }}
+      {{- end }}
       {{- if .Values.image.all.pullSecrets }}
       imagePullSecrets:
       {{- range .Values.image.all.pullSecrets }}
