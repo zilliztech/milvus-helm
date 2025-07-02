@@ -3,6 +3,70 @@ entries:
   milvus:
   - apiVersion: v1
     appVersion: 2.5.14
+    created: "2025-07-02T07:05:42.417932499Z"
+    dependencies:
+    - condition: etcd.enabled
+      name: etcd
+      repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
+      tags:
+      - etcd
+      version: 6.3.3
+    - condition: minio.enabled
+      name: minio
+      repository: https://zilliztech.github.io/milvus-helm
+      tags:
+      - minio
+      version: 8.0.17
+    - alias: pulsar
+      condition: pulsar.enabled
+      name: pulsarv2
+      repository: https://zilliztech.github.io/milvus-helm
+      tags:
+      - pulsar
+      version: 2.7.8
+    - alias: pulsarv3
+      condition: pulsarv3.enabled
+      name: pulsar
+      repository: https://pulsar.apache.org/charts
+      tags:
+      - pulsarv3
+      version: 3.3.0
+    - condition: kafka.enabled
+      name: kafka
+      repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
+      tags:
+      - kafka
+      version: 15.5.1
+    - condition: tei.enabled
+      name: tei
+      repository: https://zilliztech.github.io/milvus-helm
+      tags:
+      - tei
+      version: 1.6.0
+    description: Milvus is an open-source vector database built to power AI applications
+      and vector similarity search.
+    digest: a28a88a37e6a6a1dd7d339b99a6ff327c26074c280956b8c9f0e484cee559daf
+    home: https://milvus.io/
+    icon: https://raw.githubusercontent.com/milvus-io/docs/master/v1.0.0/assets/milvus_logo.png
+    keywords:
+    - milvus
+    - elastic
+    - vector
+    - search
+    - deploy
+    kubeVersion: ^1.10.0-0
+    maintainers:
+    - email: contact@milvus.io
+      name: contact
+      url: milvus.io
+    name: milvus
+    sources:
+    - https://github.com/zilliztech/milvus
+    urls:
+    - https://github.com/zilliztech/milvus-helm/releases/download/milvus-4.2.55/milvus-4.2.55.tgz
+    version: 4.2.55
+  - apiVersion: v1
+    appVersion: 2.5.14
     created: "2025-06-28T05:15:33.946764606Z"
     dependencies:
     - condition: etcd.enabled
@@ -13993,6 +14057,26 @@ entries:
   minio:
   - apiVersion: v1
     appVersion: master
+    created: "2025-07-02T07:05:42.695600931Z"
+    description: High Performance, Kubernetes Native Object Storage
+    digest: dd00132f726eb8862309b96445a206daefcdccef6583b7d7fa9d6df23434db16
+    home: https://min.io
+    icon: https://min.io/resources/img/logo/MINIO_wordmark.png
+    keywords:
+    - storage
+    - object-storage
+    - S3
+    maintainers:
+    - email: contact@milvus.io
+      name: contact
+    name: minio
+    sources:
+    - https://github.com/minio/minio
+    urls:
+    - https://github.com/zilliztech/milvus-helm/releases/download/minio-8.0.19/minio-8.0.19.tgz
+    version: 8.0.19
+  - apiVersion: v1
+    appVersion: master
     created: "2025-06-27T11:21:37.753647438Z"
     description: High Performance, Kubernetes Native Object Storage
     digest: 68bff4cba32144569bf859881a5fbd152034ca0fda7dbb3d50e3abfdb2616f23
@@ -14209,4 +14293,4 @@ entries:
     urls:
     - https://github.com/zilliztech/milvus-helm/releases/download/tei-1.6.0/tei-1.6.0.tgz
     version: 1.6.0
-generated: "2025-06-28T05:15:33.950124951Z"
+generated: "2025-07-02T07:05:42.698089029Z"
