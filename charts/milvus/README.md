@@ -17,7 +17,7 @@ This chart bootstraps Milvus deployment on a Kubernetes cluster using the Helm p
 - **IMPORTANT** As of helm version 5.0.0, significant architectural changes have been introduced in Milvus v2.6.0:
   - Coordinator consolidation: Legacy separate coordinators (dataCoord, queryCoord, indexCoord) have been consolidated into a single mixCoord
   - New components: Introduction of Streaming Node for enhanced data processing
-  - Component removal: indexNode have been removed and consolidated
+  - Component removal: indexNode has been removed and consolidated
   - Milvus v2.6.0-rc1 is not compatible with v2.6.0. Direct upgrades from release candidates are not supported.
   - You must upgrade to v2.5.16 with mixCoordinator enabled before upgrading to v2.6.0.
 
@@ -49,7 +49,7 @@ Assume the release name is `my-release`:
 # Helm v3.x
 $ helm upgrade --install my-release --set cluster.enabled=false --set etcd.replicaCount=1 --set pulsarv3.enabled=false --set minio.mode=standalone zilliztech/milvus
 ```
-By default, milvus standalone uses `rocksmq` as message queue. You can also use `pulsar` or `kafka` as message queue:
+By default, milvus standalone uses `woodpecker` as message queue. You can also use `pulsar` or `kafka` as message queue:
 
 ```bash
 # Helm v3.x
@@ -147,8 +147,6 @@ helm repo add zilliztech https://zilliztech.github.io/milvus-helm
 helm repo update zilliztech
 ```
 
-> **Note:** The Milvus Helm Charts repo at `https://milvus-io.github.io/milvus-helm/` has been archived. Use the new repo `https://zilliztech.github.io/milvus-helm/` for chart versions 4.0.31 and later.
-
 **Step 2: Upgrade to v2.5.16 with mixCoordinator**
 
 Check if your cluster currently uses separate coordinators:
@@ -180,13 +178,6 @@ helm upgrade my-release zilliztech/milvus \
   --version=4.2.58
 ```
 
-Wait for the upgrade to complete:
-
-```bash
-# Verify all pods are ready
-kubectl get pods
-```
-
 **Step 3: Upgrade to v2.6.0**
 
 Once v2.5.16 is running successfully with mixCoordinator, upgrade to v2.6.0:
@@ -198,16 +189,6 @@ helm upgrade my-release zilliztech/milvus \
   --set indexNode.enabled=false \
   --reset-then-reuse-values \
   --version=5.0.0
-```
-
-**Verify the upgrade:**
-
-```bash
-# Check pod status
-kubectl get pods
-
-# Verify Helm release
-helm list
 ```
 
 ### Upgrade an existing Milvus cluster (General)
@@ -529,7 +510,7 @@ The following table lists the configurable parameters of the Milvus Data Node co
 | `dataNode.maxReplicas` | Specify the maximum number of replicas | 5 |
 | `dataNode.cpuUtilization` | Specify the cpu auto-scaling value | 40 |
 
-### Milvus Mixture Coordinator Deployment Configuration
+### Milvus Mix Coordinator Deployment Configuration
 
 The following table lists the configurable parameters of the Milvus Mix Coordinator component and their default values. The Mix Coordinator consolidates all coordinator functions (Root, Query, Index, and Data Coordinators) into a single component for improved efficiency and simplified deployment.
 
