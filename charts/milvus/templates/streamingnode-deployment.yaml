@@ -85,8 +85,6 @@ spec:
         args: [ "milvus", "run", "streamingnode" ]
         {{- end }}
         env:
-        - name: MILVUS_STREAMING_SERVICE_ENABLED
-          value: "1"
         {{- if .Values.streamingNode.heaptrack.enabled }}
         - name: LD_LIBRARY_PATH
           value: /milvus/tools/heaptrack/lib:/milvus/lib:/usr/lib

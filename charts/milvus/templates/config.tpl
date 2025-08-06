@@ -169,12 +169,12 @@ kafka:
 {{- end }}
 
 {{- if not .Values.cluster.enabled }}
-{{- if or (eq .Values.standalone.messageQueue "rocksmq") (eq .Values.standalone.messageQueue "natsmq")}}
+{{- if or (eq .Values.standalone.messageQueue "rocksmq") (eq .Values.standalone.messageQueue "natsmq") (eq .Values.standalone.messageQueue "woodpecker") }}
 
 mq:
-  type: {{ .Values.standalone.messageQueue }}
+  type: {{ include "milvus.standalone.messageQueue" . }}
 
-messageQueue: {{ .Values.standalone.messageQueue }}
+messageQueue: {{ include "milvus.standalone.messageQueue" . }}
 {{- end }}
 {{- end }}
 
