@@ -17,7 +17,7 @@ This chart bootstraps Milvus deployment on a Kubernetes cluster using the Helm p
 - **IMPORTANT** As of helm version 5.0.0, significant architectural changes have been introduced in Milvus v2.6.0:
   - Coordinator consolidation: Legacy separate coordinators (dataCoord, queryCoord, indexCoord) have been consolidated into a single mixCoord
   - New components: Introduction of Streaming Node for enhanced data processing
-  - Component removal: dataNode and indexNode have been removed and consolidated
+  - Component removal: indexNode have been removed and consolidated
   - Milvus v2.6.0-rc1 is not compatible with v2.6.0. Direct upgrades from release candidates are not supported.
   - You must upgrade to v2.5.16 with mixCoordinator enabled before upgrading to v2.6.0.
 
@@ -509,7 +509,7 @@ The following table lists the configurable parameters of the Milvus Query Node c
 
 ### Milvus Data Node Deployment Configuration
 
-**Note:** In Milvus v2.6.0, Data Node functionality has been consolidated and enhanced. The following table lists the configurable parameters of the Milvus Data Node component and their default values for backward compatibility.
+The following table lists the configurable parameters of the Milvus Data Node component and their default values.
 
 | Parameter                                 | Description                                   | Default                                                 |
 |-------------------------------------------|-----------------------------------------------|---------------------------------------------------------|
