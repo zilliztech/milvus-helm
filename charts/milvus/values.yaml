@@ -1206,8 +1206,8 @@ kafka:
   name: kafka
   replicaCount: 3
   image:
-    repository: bitnami/kafka
-    tag: 3.1.0-debian-10-r52
+    repository: bitnamilegacy/kafka
+    tag: 3.1.0
   ## Increase graceful termination for kafka graceful shutdown
   terminationGracePeriodSeconds: "90"
   pdb:
@@ -1248,15 +1248,15 @@ kafka:
     kafka:
       enabled: false
       image:
-        repository: bitnami/kafka-exporter-archived
-        tag: 1.4.2-debian-10-r182
+        repository: bitnamilegacy/kafka-exporter-archived
+        tag: 1.4.2
 
     ## Prometheus JMX exporter: exposes the majority of Kafkas metrics
     jmx:
       enabled: false
       image:
-        repository: bitnami/jmx-exporter
-        tag: 0.16.1-debian-10-r245
+        repository: bitnamilegacy/jmx-exporter
+        tag: 0.16.1
 
     ## To enable serviceMonitor, you must enable either kafka exporter or jmx exporter.
     ## And you can enable them both
@@ -1271,6 +1271,9 @@ kafka:
   zookeeper:
     enabled: true
     replicaCount: 3
+    image: 
+      repository: bitnamilegacy/zookeeper
+      tag: 3.7.0
 
 ###################################
 # Woodpecker
