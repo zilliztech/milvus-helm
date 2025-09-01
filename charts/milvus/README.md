@@ -18,8 +18,8 @@ This chart bootstraps Milvus deployment on a Kubernetes cluster using the Helm p
   - Coordinator consolidation: Legacy separate coordinators (dataCoord, queryCoord, indexCoord) have been consolidated into a single mixCoord
   - New components: Introduction of Streaming Node for enhanced data processing
   - Component removal: indexNode has been removed and consolidated
-  - Milvus v2.6.0-rc1 is not compatible with v2.6.0. Direct upgrades from release candidates are not supported.
-  - You must upgrade to v2.5.16 with mixCoordinator enabled before upgrading to v2.6.0.
+  - Milvus v2.6.0-rc1 is not compatible with v2.6.x. Direct upgrades from release candidates are not supported.
+  - You must upgrade to v2.5.16 with mixCoordinator enabled before upgrading to v2.6.x.
 
 - **IMPORTANT** For users using pulsar2. Please don't use version 4.2.21～4.2.29 for upgrading, there're some known issues. 4.2.30 or later version is recommended. Remember to add `--set pulsar.enabled=true,pulsarv3.enabled=false` or set them in your values file when upgrading.
 
@@ -118,11 +118,11 @@ By default, milvus cluster uses `pulsar` as message queue. You can also use `kaf
 $ helm upgrade --install my-release zilliztech/milvus --set pulsarv3.enabled=false --set kafka.enabled=true
 ```
 
-By default, milvus cluster uses `mixCoordinator` which contains all coordinators. This is the recommended deployment approach for Milvus v2.6.0 and later versions.
+By default, milvus cluster uses `mixCoordinator` which contains all coordinators. This is the recommended deployment approach for Milvus v2.6.x and later versions.
 
-### Upgrading from Milvus v2.5.x to v2.6.0
+### Upgrading from Milvus v2.5.x to v2.6.x
 
-Upgrading from Milvus 2.5.x to 2.6.0 involves significant architectural changes. Please follow these steps carefully:
+Upgrading from Milvus 2.5.x to 2.6.x involves significant architectural changes. Please follow these steps carefully:
 
 #### Requirements
 
@@ -132,9 +132,9 @@ Upgrading from Milvus 2.5.x to 2.6.0 involves significant architectural changes.
 - Milvus cluster deployed via Helm Chart
 
 **Compatibility requirements:**
-- Milvus v2.6.0-rc1 is not compatible with v2.6.0. Direct upgrades from release candidates are not supported.
+- Milvus v2.6.0-rc1 is not compatible with v2.6.x. Direct upgrades from release candidates are not supported.
 - If you are currently running v2.6.0-rc1 and need to preserve your data, please refer to community guides for migration assistance.
-- You must upgrade to v2.5.16 with mixCoordinator enabled before upgrading to v2.6.0.
+- You must upgrade to v2.5.16 with mixCoordinator enabled before upgrading to v2.6.x.
 
 #### Upgrade Process
 
@@ -178,13 +178,13 @@ helm upgrade my-release zilliztech/milvus \
   --version=4.2.58
 ```
 
-**Step 3: Upgrade to v2.6.0**
+**Step 3: Upgrade to v2.6.x**
 
-Once v2.5.16 is running successfully with mixCoordinator, upgrade to v2.6.0:
+Once v2.5.16 is running successfully with mixCoordinator, upgrade to v2.6.x:
 
 ```bash
 helm upgrade my-release zilliztech/milvus \
-  --set image.all.tag="v2.6.0" \
+  --set image.all.tag="v2.6.x" \
   --set streaming.enabled=true \
   --set indexNode.enabled=false \
   --reset-then-reuse-values \
@@ -335,7 +335,7 @@ The following table lists the configurable parameters of the Milvus Service and 
 | `route.annotations`                       | Route annotations                            | `{}`                                                   |
 | `route.labels`                           | Route labels                                 | `{}`                                                   |
 | `image.all.repository`                    | Image repository                              | `milvusdb/milvus`                                       |
-| `image.all.tag`                           | Image tag                                     | `v2.6.0`                           |
+| `image.all.tag`                           | Image tag                                     | `v2.6.1`                           |
 | `image.all.pullPolicy`                    | Image pull policy                             | `IfNotPresent`                                          |
 | `image.all.pullSecrets`                   | Image pull secrets                            | `{}`                                                    |
 | `image.tools.repository`                  | Config image repository                       | `milvusdb/milvus-config-tool`                                       |
@@ -538,7 +538,7 @@ The following table lists the configurable parameters of the Milvus Mix Coordina
 
 ### Milvus Streaming Node Deployment Configuration
 
-The following table lists the configurable parameters of the Milvus Streaming Node component and their default values. The Streaming Node is a new component introduced in Milvus v2.6.0 for enhanced data processing and streaming operations.
+The following table lists the configurable parameters of the Milvus Streaming Node component and their default values. The Streaming Node is a new component introduced in Milvus v2.6.x for enhanced data processing and streaming operations.
 
 | Parameter                                 | Description                                             | Default       |
 |-------------------------------------------|---------------------------------------------------------|---------------|
