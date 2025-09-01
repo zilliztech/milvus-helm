@@ -14,7 +14,7 @@ This chart bootstraps Milvus deployment on a Kubernetes cluster using the Helm p
 
 ## Compatibility Notice
 
-- **IMPORTANT** As of helm version 5.0.0, significant architectural changes have been introduced in Milvus v2.6.x:
+- **IMPORTANT** As of helm version 5.0.0, significant architectural changes have been introduced in Milvus v2.6.0:
   - Coordinator consolidation: Legacy separate coordinators (dataCoord, queryCoord, indexCoord) have been consolidated into a single mixCoord
   - New components: Introduction of Streaming Node for enhanced data processing
   - Component removal: indexNode has been removed and consolidated
