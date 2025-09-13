@@ -224,3 +224,25 @@ true
 false
 {{- end -}}
 {{- end -}}
+
+{{/* define milvus.standalone.messageQueue */}}
+{{- define "milvus.standalone.messageQueue" -}}
+{{/* first time deploy or specified non default mq in values, use it directly */}}
+{{- $inputStandaloneMQ := .Values.standalone.messageQueue -}}
+{{- if or (ne "woodpecker" $inputStandaloneMQ) (eq .Release.Revision 1) -}}
+{{ $inputStandaloneMQ }}
+{{- else -}}
+    {{- $standaloneDeployName := include "milvus.standalone.fullname" . -}}
+    {{- $standaloneDeploy := (lookup "apps/v1" "Deployment" .Release.Namespace $standaloneDeployName) -}}
+    {{- if not $standaloneDeploy -}}
+      {{ $inputStandaloneMQ }}
+    {{- else -}}
+      {{- $standaloneMQAnnotation := get $standaloneDeploy.metadata.annotations "milvus.io/message-queue" -}}
+      {{- if and $standaloneMQAnnotation (ne "" $standaloneMQAnnotation) -}}
+        {{ $standaloneMQAnnotation }}
+      {{- else -}}
+        "rocksmq"
+      {{- end -}}
+    {{- end -}}
+{{- end -}}
+{{- end -}}

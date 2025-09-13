@@ -12,7 +12,7 @@ kubectl apply -f https://github.com/minio/operator/blob/master/examples/tenant.y
 
 [MinIO](https://min.io) is a High Performance Object Storage released under Apache License v2.0. It is API compatible with Amazon S3 cloud storage service. Use MinIO to build high performance infrastructure for machine learning, analytics and application data workloads.
 
-MinIO supports [distributed mode](https://docs.minio.io/docs/distributed-minio-quickstart-guide). In distributed mode, you can pool multiple drives (even on different machines) into a single object storage server.
+MinIO supports distributed mode. In distributed mode, you can pool multiple drives (even on different machines) into a single object storage server.
 
 For more detailed documentation please visit [here](https://docs.minio.io/)
 
@@ -260,7 +260,7 @@ $ helm install --name my-release -f values.yaml minio/minio
 Distributed MinIO
 -----------
 
-This chart provisions a MinIO server in standalone mode, by default. To provision MinIO server in [distributed mode](https://docs.minio.io/docs/distributed-minio-quickstart-guide), set the `mode` field to `distributed`,
+This chart provisions a MinIO server in standalone mode, by default. To provision MinIO server in distributed mode, set the `mode` field to `distributed`,
 
 ```bash
 $ helm install --set mode=distributed minio/minio
