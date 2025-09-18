@@ -68,10 +68,8 @@ annotations: {}
 volumes: []
 volumeMounts: []
 
-# Experimental feature: streaming node
-# Only support standalone mode with rocksmq and pulsar message queue,
-# cluster mode with pulsar message queue.
-# Experimental feature, not recommended for production.
+# Streaming node
+# Default config for 2.6.0 or later.
 streaming:
   enabled: true
 
