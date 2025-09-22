@@ -1,0 +1,45 @@
+replicaCount: 4
+image:
+  repository: milvusdb/woodpecker
+  tag: latest
+  pullPolicy: IfNotPresent
+imagePullSecrets: []
+clusterName: woodpecker-cluster
+resourceGroup: rg-primary
+availabilityZone: az-1
+ports:
+  service: 18080
+  gossip: 17946
+service:
+  type: ClusterIP
+  port: 18080
+persistence:
+  enabled: true
+  accessModes:
+    - ReadWriteOnce
+  size: 30Gi
+  storageClass: ""
+minio:
+  address: ""
+  port: 9000
+  accessKey: minioadmin
+  secretKey: minioadmin
+  bucketName: "milvus-bucket"
+readiness:
+  enabled: true
+  initialDelaySeconds: 30
+  periodSeconds: 15
+logging:
+  level: info
+resources:
+  limits:
+    cpu: "1"
+    memory: 1Gi
+  requests:
+    cpu: 500m
+    memory: 512Mi
+extraEnv: []
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
