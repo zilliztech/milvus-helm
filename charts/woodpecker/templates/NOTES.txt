@@ -1,0 +1,9 @@
+Woodpecker cluster installed.
+
+Verify pod status:
+  kubectl get pods -l app.kubernetes.io/instance={{ .Release.Name }}
+
+This chart expects external dependencies:
+  * MinIO reachable at {{ include "woodpecker.minioAddress" . }}:{{ .Values.minio.port }} (bucket {{ .Values.minio.bucketName }})
+
+Update minio values or supply extraEnv if credentials are stored in secrets.
