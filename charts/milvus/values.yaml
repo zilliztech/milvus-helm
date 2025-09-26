@@ -1279,6 +1279,110 @@ kafka:
 ###################################
 woodpecker:
   enabled: false
+  replicaCount: 4
+  image:
+    repository: milvusdb/woodpecker
+    tag: latest
+    pullPolicy: IfNotPresent
+
+  # Woodpecker cluster configuration
+  clusterName: woodpecker-cluster
+  resourceGroup: rg-primary
+
+  # Network configuration
+  ports:
+    service: 18080
+    gossip: 17946
+
+  # Service configuration
+  service:
+    type: ClusterIP
+    port: 18080
+
+  # Pod management policy
+  podManagementPolicy: Parallel
+
+  # Persistence configuration
+  persistence:
+    enabled: true
+    accessModes:
+      - ReadWriteOnce
+    size: 30Gi
+    storageClass: ""
+
+  # MinIO configuration
+  minio:
+    address: ""    # If empty, will use minio.address or default
+    port: 9000
+    accessKey: ""  # If empty, will use minio.auth.rootUser or default
+    secretKey: ""  # If empty, will use minio.auth.rootPassword or default
+    bucketName: "" # If empty, will use minio.bucketName or default
+
+  # Health probes
+  livenessProbe:
+    enabled: false
+    tcpSocket:
+      port: service
+    initialDelaySeconds: 30
+    periodSeconds: 30
+    timeoutSeconds: 10
+    failureThreshold: 3
+
+  readinessProbe:
+    enabled: true
+    tcpSocket:
+      port: service
+    initialDelaySeconds: 30
+    periodSeconds: 15
+    timeoutSeconds: 10
+    failureThreshold: 3
+
+  startupProbe:
+    enabled: false
+    tcpSocket:
+      port: service
+    initialDelaySeconds: 60
+    periodSeconds: 10
+    timeoutSeconds: 10
+    failureThreshold: 30
+
+  # Logging configuration
+  logging:
+    level: info
+
+  # Resource configuration
+  resources:
+    limits:
+      cpu: "1"
+      memory: 1Gi
+    requests:
+      cpu: 500m
+      memory: 512Mi
+
+  # Additional environment variables
+  extraEnv: []
+
+  # Node selector - inherits global if not specified
+  nodeSelector: {}
+
+  # Tolerations - inherits global if not specified
+  tolerations: []
+
+  # Affinity - inherits global if not specified
+  affinity: {}
+
+  # Topology spread constraints - inherits global if not specified
+  topologySpreadConstraints: []
+
+  # Security context - inherits global if not specified
+  securityContext: {}
+  containerSecurityContext: {}
+
+  # Additional containers and volumes
+  extraContainers: []
+  initContainers: []
+  extraVolumes: []
+  extraVolumeMounts: []
 
 ###################################
 # External S3

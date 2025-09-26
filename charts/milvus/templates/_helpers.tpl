@@ -246,3 +246,29 @@ false
     {{- end -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Create a default fully qualified Woodpecker name.
+We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+*/}}
+{{- define "milvus.woodpecker.fullname" -}}
+{{ template "milvus.fullname" . }}-woodpecker
+{{- end -}}
+
+{{/*
+Woodpecker headless service name
+*/}}
+{{- define "milvus.woodpecker.headlessServiceName" -}}
+{{ include "milvus.woodpecker.fullname" . }}-headless
+{{- end -}}
+
+{{/*
+Woodpecker MinIO address
+*/}}
+{{- define "milvus.woodpecker.minioAddress" -}}
+{{- if .Values.woodpecker.minio.address -}}
+{{- .Values.woodpecker.minio.address -}}
+{{- else -}}
+{{- printf "%s-minio.%s.svc.cluster.local" .Release.Name .Release.Namespace -}}
+{{- end -}}
+{{- end -}}

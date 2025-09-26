@@ -627,6 +627,41 @@ This version of the chart includes the dependent Kafka chart in the charts/ dire
 You can find more information at:
 * [https://artifacthub.io/packages/helm/bitnami/kafka](https://artifacthub.io/packages/helm/bitnami/kafka)
 
+### Woodpecker Configuration
+
+Woodpecker is the new message queue for Milvus. It is a distributed message queue that is designed to be more efficient and reliable than the previous message queues.
+
+- `woodpecker-svc.yaml` - Contains the headless service and regular service definitions
+- `woodpecker-statefulset.yaml` - Contains the StatefulSet configuration for Woodpecker pods
+
+The following table lists the configurable parameters of the Woodpecker component and their default values.
+
+| Parameter                                 | Description                                             | Default       |
+|-------------------------------------------|---------------------------------------------------------|---------------|
+| `woodpecker.enabled`                      | Enable or disable Woodpecker deployment                | `true`        |
+| `woodpecker.replicaCount`                 | Number of Woodpecker replicas                          | `1`           |
+| `woodpecker.image.repository`             | Woodpecker image repository                             | `milvusdb/woodpecker` |
+| `woodpecker.image.tag`                    | Woodpecker image tag                                    | `latest`      |
+| `woodpecker.image.pullPolicy`             | Image pull policy                                       | `IfNotPresent` |
+| `woodpecker.service.type`                 | Woodpecker service type                                 | `ClusterIP`   |
+| `woodpecker.service.port`                 | Woodpecker service port                                 | `19530`       |
+| `woodpecker.ports.service`                | Container service port                                  | `8080`        |
+| `woodpecker.ports.gossip`                 | Container gossip port                                   | `9090`        |
+| `woodpecker.resources`                    | Resource requests/limits for Woodpecker pods           | `{}`          |
+| `woodpecker.nodeSelector`                 | Node labels for Woodpecker pods assignment             | `{}`          |
+| `woodpecker.affinity`                     | Affinity settings for Woodpecker pods assignment       | `{}`          |
+| `woodpecker.tolerations`                  | Toleration labels for Woodpecker pods assignment       | `[]`          |
+| `woodpecker.persistence.enabled`          | Enable persistence for Woodpecker                      | `false`       |
+| `woodpecker.persistence.size`             | Size of persistent volume                               | `5Gi`         |
+| `woodpecker.persistence.storageClass`     | Storage class for persistent volume                     | `""`          |
+| `woodpecker.podManagementPolicy`          | Pod management policy for StatefulSet                  | `Parallel`    |
+| `woodpecker.clusterName`                  | Cluster name for Woodpecker                            | `milvus`      |
+| `woodpecker.resourceGroup`                | Resource group for Woodpecker                          | `default`     |
+| `woodpecker.logging.level`                | Log level for Woodpecker                               | `info`        |
+| `woodpecker.minio.port`                   | MinIO port for object storage                          | `9000`        |
+| `woodpecker.minio.accessKey`              | MinIO access key                                        | `minioadmin`  |
+| `woodpecker.minio.secretKey`              | MinIO secret key                                        | `minioadmin`  |
+| `woodpecker.minio.bucketName`             | MinIO bucket name                                       | `milvus-bucket` |
 
 ### Node Selector, Affinity and Tolerations Configuration Guide
 

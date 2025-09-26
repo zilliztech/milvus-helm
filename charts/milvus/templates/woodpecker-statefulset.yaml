@@ -1,0 +1,215 @@
+{{- if and .Values.woodpecker.enabled }}
+{{- $replicas := int .Values.woodpecker.replicaCount }}
+{{- $headless := include "milvus.woodpecker.headlessServiceName" . }}
+{{- $fullname := include "milvus.woodpecker.fullname" . }}
+{{- $gossipPort := int .Values.woodpecker.ports.gossip }}
+{{- $seedList := "" -}}
+{{- range $i, $_ := until $replicas }}
+  {{- if eq $seedList "" -}}
+    {{- $seedList = printf "%s-%d.%s:%d" $fullname $i $headless $gossipPort -}}
+  {{- else -}}
+    {{- $seedList = printf "%s,%s-%d.%s:%d" $seedList $fullname $i $headless $gossipPort -}}
+  {{- end -}}
+{{- end }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "milvus.woodpecker.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "milvus.labels" . | indent 4 }}
+    component: "querynode"
+{{ include "milvus.ud.labels" . | indent 4 }}
+  annotations:
+{{ include "milvus.ud.annotations" . | indent 4 }}
+spec:
+  serviceName: {{ $headless }}
+  replicas: {{ $replicas }}
+  podManagementPolicy: {{ .Values.woodpecker.podManagementPolicy }}
+  selector:
+    matchLabels:
+{{ include "milvus.matchLabels" . | indent 6 }}
+      component: "woodpecker"
+  template:
+    metadata:
+      labels:
+{{ include "milvus.matchLabels" . | indent 8 }}
+        component: "woodpecker"
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        {{- if .Values.podAnnotations }}
+        {{- toYaml .Values.podAnnotations | nindent 8 }}
+        {{- end }}
+        {{- if .Values.woodpecker.podAnnotations }}
+        {{- toYaml .Values.woodpecker.podAnnotations | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- if .Values.image.all.pullSecrets }}
+      imagePullSecrets:
+      {{- range .Values.image.all.pullSecrets }}
+        - name: {{ . }}
+      {{- end }}
+      {{- end }}
+      {{- if .Values.serviceAccount.name }}
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      {{- end }}
+      {{- with (default .Values.nodeSelector .Values.woodpecker.nodeSelector) }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with (default .Values.affinity .Values.woodpecker.affinity) }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with (default .Values.tolerations .Values.woodpecker.tolerations) }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with (default .Values.topologySpreadConstraints .Values.woodpecker.topologySpreadConstraints) }}
+      topologySpreadConstraints:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with (default .Values.securityContext .Values.woodpecker.securityContext) }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: woodpecker
+          image: "{{ .Values.woodpecker.image.repository }}:{{ .Values.woodpecker.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.woodpecker.image.pullPolicy }}
+          {{- with (default .Values.containerSecurityContext .Values.woodpecker.containerSecurityContext) }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: GOSSIP_PORT
+              value: "{{ .Values.woodpecker.ports.gossip }}"
+            - name: SERVICE_PORT
+              value: "{{ .Values.woodpecker.ports.service }}"
+            - name: ADVERTISE_GOSSIP_ADDR
+              value: "$(POD_NAME).{{ $headless }}:{{ .Values.woodpecker.ports.gossip }}"
+            - name: ADVERTISE_SERVICE_ADDR
+              value: "$(POD_NAME).{{ $headless }}:{{ .Values.woodpecker.ports.service }}"
+            - name: SEEDS
+              value: "{{ $seedList }}"
+            - name: CLUSTER_NAME
+              value: {{ .Values.woodpecker.clusterName | quote }}
+            - name: RESOURCE_GROUP
+              value: {{ .Values.woodpecker.resourceGroup | quote }}
+            - name: AVAILABILITY_ZONE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['topology.kubernetes.io/zone']
+            - name: MINIO_ADDRESS
+              value: {{ include "milvus.woodpecker.minioAddress" . }}
+            - name: MINIO_PORT
+              value: "{{ .Values.woodpecker.minio.port }}"
+            - name: MINIO_ACCESS_KEY
+              {{- if .Values.woodpecker.minio.accessKey }}
+              value: {{ .Values.woodpecker.minio.accessKey | quote }}
+              {{- else if .Values.minio.accessKey }}
+              value: {{ .Values.minio.accessKey | quote }}
+              {{- else }}
+              value: "minioadmin"
+              {{- end }}
+            - name: MINIO_SECRET_KEY
+              {{- if .Values.woodpecker.minio.secretKey }}
+              value: {{ .Values.woodpecker.minio.secretKey | quote }}
+              {{- else if .Values.minio.secretKey }}
+              value: {{ .Values.minio.secretKey | quote }}
+              {{- else }}
+              value: "minioadmin"
+              {{- end }}
+            - name: MINIO_BUCKET
+              {{- if .Values.woodpecker.minio.bucketName }}
+              value: {{ .Values.woodpecker.minio.bucketName | quote }}
+              {{- else if .Values.minio.bucketName }}
+              value: {{ .Values.minio.bucketName | quote }}
+              {{- else }}
+              value: "milvus-bucket"
+              {{- end }}
+            - name: STORAGE_TYPE
+              value: service
+            - name: LOG_LEVEL
+              value: {{ .Values.woodpecker.logging.level | quote }}
+          {{- with .Values.woodpecker.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          ports:
+            - name: service
+              containerPort: {{ .Values.woodpecker.ports.service }}
+              protocol: TCP
+            - name: gossip
+              containerPort: {{ .Values.woodpecker.ports.gossip }}
+              protocol: TCP
+          {{- if .Values.woodpecker.livenessProbe.enabled }}
+          livenessProbe:
+            {{- toYaml (omit .Values.woodpecker.livenessProbe "enabled") | nindent 12 }}
+          {{- end }}
+          {{- if .Values.woodpecker.readinessProbe.enabled }}
+          readinessProbe:
+            {{- toYaml (omit .Values.woodpecker.readinessProbe "enabled") | nindent 12 }}
+          {{- end }}
+          {{- if .Values.woodpecker.startupProbe.enabled }}
+          startupProbe:
+            {{- toYaml (omit .Values.woodpecker.startupProbe "enabled") | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: woodpecker-storage
+              mountPath: /woodpecker/data
+              subPath: data
+            - name: woodpecker-storage
+              mountPath: /woodpecker/logs
+              subPath: logs
+            {{- if .Values.woodpecker.extraVolumeMounts }}
+            {{- toYaml .Values.woodpecker.extraVolumeMounts | nindent 12 }}
+            {{- end }}
+          resources:
+            {{- toYaml .Values.woodpecker.resources | nindent 12 }}
+      {{- if .Values.woodpecker.extraContainers }}
+      {{- toYaml .Values.woodpecker.extraContainers | nindent 8 }}
+      {{- end }}
+      {{- if .Values.woodpecker.initContainers }}
+      initContainers:
+        {{- toYaml .Values.woodpecker.initContainers | nindent 8 }}
+      {{- end }}
+      {{- if not .Values.woodpecker.persistence.enabled }}
+      volumes:
+        - name: woodpecker-storage
+          emptyDir: {}
+        {{- if .Values.woodpecker.extraVolumes }}
+        {{- toYaml .Values.woodpecker.extraVolumes | nindent 8 }}
+        {{- end }}
+      {{- else }}
+      {{- if .Values.woodpecker.extraVolumes }}
+      volumes:
+        {{- toYaml .Values.woodpecker.extraVolumes | nindent 8 }}
+      {{- end }}
+      {{- end }}
+  {{- if .Values.woodpecker.persistence.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        name: woodpecker-storage
+      spec:
+        accessModes:
+          {{- toYaml .Values.woodpecker.persistence.accessModes | nindent 10 }}
+        {{- if .Values.woodpecker.persistence.storageClass }}
+        {{- if eq "-" .Values.woodpecker.persistence.storageClass }}
+        storageClassName: ""
+        {{- else }}
+        storageClassName: {{ .Values.woodpecker.persistence.storageClass | quote }}
+        {{- end }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.woodpecker.persistence.size }}
+  {{- end }}
+{{- end }}
