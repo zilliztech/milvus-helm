@@ -268,7 +268,13 @@ Woodpecker MinIO address
 {{- define "milvus.woodpecker.minioAddress" -}}
 {{- if .Values.woodpecker.minio.address -}}
 {{- .Values.woodpecker.minio.address -}}
+{{- else if .Values.externalS3.enabled -}}
+{{- .Values.externalS3.host -}}
+{{- else if .Values.minio.enabled -}}
+{{- if contains .Values.minio.name .Release.Name -}}
+{{- printf "%s.%s.svc.cluster.local" .Release.Name .Release.Namespace -}}
 {{- else -}}
-{{- printf "%s-minio.%s.svc.cluster.local" .Release.Name .Release.Namespace -}}
+{{- printf "%s-%s.%s.svc.cluster.local" .Release.Name .Values.minio.name .Release.Namespace -}}
+{{- end -}}
 {{- end -}}
 {{- end -}}
