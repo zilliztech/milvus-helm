@@ -659,7 +659,6 @@ The following table lists the configurable parameters of the Woodpecker componen
 | `woodpecker.persistence.size`             | Size of persistent volume                               | `5Gi`         |
 | `woodpecker.persistence.storageClass`     | Storage class for persistent volume                     | `""`          |
 | `woodpecker.podManagementPolicy`          | Pod management policy for StatefulSet                  | `Parallel`    |
-| `woodpecker.clusterName`                  | Cluster name for Woodpecker                            | `milvus`      |
 | `woodpecker.resourceGroup`                | Resource group for Woodpecker                          | `default`     |
 | `woodpecker.logging.level`                | Log level for Woodpecker                               | `info`        |
 | `woodpecker.minio.port`                   | MinIO port for object storage                          | `9000`        |

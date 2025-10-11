@@ -100,8 +100,6 @@ spec:
               value: "$(POD_NAME).{{ $headless }}:{{ .Values.woodpecker.ports.service }}"
             - name: SEEDS
               value: "{{ $seedList }}"
-            - name: CLUSTER_NAME
-              value: {{ .Values.woodpecker.clusterName | quote }}
             - name: RESOURCE_GROUP
               value: {{ .Values.woodpecker.resourceGroup | quote }}
             - name: AVAILABILITY_ZONE
