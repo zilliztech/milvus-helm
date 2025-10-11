@@ -629,7 +629,11 @@ You can find more information at:
 
 ### Woodpecker Configuration
 
-Woodpecker is the new message queue for Milvus. It is a distributed message queue that is designed to be more efficient and reliable than the previous message queues.
+**Woodpecker** is a cloud-native **Write-Ahead Log (WAL) storage** implementation that serves as the default message queue for Milvus standalone deployments. It's designed specifically for cloud environments, leveraging object storage as the durable storage layer while ensuring scalability and cost-effectiveness.
+
+Woodpecker provides high-throughput writes optimized for cloud storage, efficient log reads with memory management and prefetching strategies, and guarantees strict sequential ordering for log persistence. It can be deployed as a standalone service or integrated as an embedded library in your application.
+
+For more information about Woodpecker, visit the project repository: [https://github.com/zilliztech/woodpecker](https://github.com/zilliztech/woodpecker)
 
 - `woodpecker-svc.yaml` - Contains the headless service and regular service definitions
 - `woodpecker-statefulset.yaml` - Contains the StatefulSet configuration for Woodpecker pods
