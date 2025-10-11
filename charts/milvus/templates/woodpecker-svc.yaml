@@ -37,22 +37,4 @@ spec:
       port: {{ .Values.woodpecker.ports.gossip }}
       protocol: UDP
       targetPort: gossip      
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ include "milvus.woodpecker.fullname" . }}
-  namespace: {{ .Release.Namespace }}
-  labels:
-{{ include "milvus.labels" . | indent 4 }}
-    component: "woodpecker"
-spec:
-  type: {{ .Values.woodpecker.service.type }}
-  selector:
-{{ include "milvus.matchLabels" . | indent 4 }}
-    component: "woodpecker"   
-  ports:
-    - name: service
-      port: {{ .Values.woodpecker.service.port }}
-      targetPort: service
 {{- end }}
