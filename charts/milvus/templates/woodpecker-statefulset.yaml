@@ -82,10 +82,6 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           env:
-            - name: POD_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.name
             - name: NODE_NAME
               valueFrom:
                 fieldRef:
@@ -163,10 +159,6 @@ spec:
           volumeMounts:
             - name: woodpecker-storage
               mountPath: /woodpecker/data
-              subPath: data
-            - name: woodpecker-storage
-              mountPath: /woodpecker/logs
-              subPath: logs
             {{- if .Values.woodpecker.extraVolumeMounts }}
             {{- toYaml .Values.woodpecker.extraVolumeMounts | nindent 12 }}
             {{- end }}
