@@ -120,6 +120,17 @@ $ helm upgrade --install my-release zilliztech/milvus --set pulsarv3.enabled=fal
 
 By default, milvus cluster uses `mixCoordinator` which contains all coordinators. This is the recommended deployment approach for Milvus v2.6.x and later versions.
 
+### Use external S3 as object storage and store aksk in secret
+1. Create a secret with name `s3-credentials` or use existing aksk secret
+```bash
+$ kubectl create secret generic s3-credentials --from-literal=accessKey=YOUR_ACCESS_KEY --from-literal=secretKey=YOUR_SECRET_KEY
+```
+2. Helm upgrade with this secret
+```bash
+# Helm v3.x
+$ helm upgrade --install my-release --set cluster.enabled=false --set etcd.replicaCount=1 --set pulsarv3.enabled=false --set minio.enabled=false --set externalS3.enabled=true --set externalS3.existingSecret.enabled=true --set externalS3.existingSecret.name=s3-credentials --set externalS3.existingSecret.accessKey=accessKey --set externalS3.existingSecret.secretKey=secretKey --set externalS3.host=YOUR_S3_HOST --set externalS3.port=YOUR_S3_PORT --set externalS3.bucketName=milvus-bucket zilliztech/milvus
+```
+
 ### Upgrading from Milvus v2.5.x to v2.6.x
 
 Upgrading from Milvus 2.5.x to 2.6.x involves significant architectural changes. Please follow these steps carefully:

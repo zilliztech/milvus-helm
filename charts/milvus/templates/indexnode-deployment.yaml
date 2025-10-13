@@ -108,6 +108,18 @@ spec:
         {{- if .Values.indexNode.extraEnv }}
           {{- toYaml .Values.indexNode.extraEnv | nindent 8 }}
         {{- end }}
+        {{- if and .Values.externalS3.enabled .Values.externalS3.existingSecret.enabled }}
+        - name: MINIO_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.externalS3.existingSecretKeys.name }}
+              key: {{ .Values.externalS3.existingSecretKeys.accessKey }}
+        - name: MINIO_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.externalS3.existingSecretKeys.name }}
+              key: {{ .Values.externalS3.existingSecretKeys.secretKey }}
+        {{- end }}
         ports:
           - name: indexnode
             containerPort: 21121
