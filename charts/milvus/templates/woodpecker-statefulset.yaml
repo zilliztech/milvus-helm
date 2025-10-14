@@ -107,29 +107,11 @@ spec:
             - name: MINIO_PORT
               value: "{{ .Values.woodpecker.minio.port }}"
             - name: MINIO_ACCESS_KEY
-              {{- if .Values.woodpecker.minio.accessKey }}
-              value: {{ .Values.woodpecker.minio.accessKey | quote }}
-              {{- else if .Values.minio.accessKey }}
-              value: {{ .Values.minio.accessKey | quote }}
-              {{- else }}
-              value: "minioadmin"
-              {{- end }}
+              value: {{ include "milvus.woodpecker.minioAccessKey" . | quote }}
             - name: MINIO_SECRET_KEY
-              {{- if .Values.woodpecker.minio.secretKey }}
-              value: {{ .Values.woodpecker.minio.secretKey | quote }}
-              {{- else if .Values.minio.secretKey }}
-              value: {{ .Values.minio.secretKey | quote }}
-              {{- else }}
-              value: "minioadmin"
-              {{- end }}
+              value: {{ include "milvus.woodpecker.minioSecretKey" . | quote }}
             - name: MINIO_BUCKET
-              {{- if .Values.woodpecker.minio.bucketName }}
-              value: {{ .Values.woodpecker.minio.bucketName | quote }}
-              {{- else if .Values.minio.bucketName }}
-              value: {{ .Values.minio.bucketName | quote }}
-              {{- else }}
-              value: "milvus-bucket"
-              {{- end }}
+              value: {{ include "milvus.woodpecker.minioBucketName" . | quote }}
             - name: STORAGE_TYPE
               value: service
             - name: LOG_LEVEL

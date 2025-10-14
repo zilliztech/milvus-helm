@@ -278,3 +278,48 @@ Woodpecker MinIO address
 {{- end -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Woodpecker MinIO access key
+*/}}
+{{- define "milvus.woodpecker.minioAccessKey" -}}
+{{- if .Values.woodpecker.minio.accessKey -}}
+{{- .Values.woodpecker.minio.accessKey -}}
+{{- else if .Values.externalS3.enabled -}}
+{{- .Values.externalS3.accessKey -}}
+{{- else if .Values.minio.accessKey -}}
+{{- .Values.minio.accessKey -}}
+{{- else -}}
+minioadmin
+{{- end -}}
+{{- end -}}
+
+{{/*
+Woodpecker MinIO secret key
+*/}}
+{{- define "milvus.woodpecker.minioSecretKey" -}}
+{{- if .Values.woodpecker.minio.secretKey -}}
+{{- .Values.woodpecker.minio.secretKey -}}
+{{- else if .Values.externalS3.enabled -}}
+{{- .Values.externalS3.secretKey -}}
+{{- else if .Values.minio.secretKey -}}
+{{- .Values.minio.secretKey -}}
+{{- else -}}
+minioadmin
+{{- end -}}
+{{- end -}}
+
+{{/*
+Woodpecker MinIO bucket name
+*/}}
+{{- define "milvus.woodpecker.minioBucketName" -}}
+{{- if .Values.woodpecker.minio.bucketName -}}
+{{- .Values.woodpecker.minio.bucketName -}}
+{{- else if .Values.externalS3.enabled -}}
+{{- .Values.externalS3.bucketName -}}
+{{- else if .Values.minio.bucketName -}}
+{{- .Values.minio.bucketName -}}
+{{- else -}}
+milvus-bucket
+{{- end -}}
+{{- end -}}
