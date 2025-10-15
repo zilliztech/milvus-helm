@@ -91,9 +91,9 @@ spec:
             - name: SERVICE_PORT
               value: "{{ .Values.woodpecker.ports.service }}"
             - name: ADVERTISE_GOSSIP_ADDR
-              value: "$(POD_NAME).{{ $headless }}:{{ .Values.woodpecker.ports.gossip }}"
+              value: "$(NODE_NAME).{{ $headless }}:{{ .Values.woodpecker.ports.gossip }}"
             - name: ADVERTISE_SERVICE_ADDR
-              value: "$(POD_NAME).{{ $headless }}:{{ .Values.woodpecker.ports.service }}"
+              value: "$(NODE_NAME).{{ $headless }}:{{ .Values.woodpecker.ports.service }}"
             - name: SEEDS
               value: "{{ $seedList }}"
             - name: RESOURCE_GROUP
