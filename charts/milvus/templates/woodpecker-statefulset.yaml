@@ -141,40 +141,20 @@ spec:
           volumeMounts:
             - name: woodpecker-storage
               mountPath: /woodpecker/data
-            {{- if .Values.customConfigMap }}
-            - name: woodpecker-config
-              mountPath: /woodpecker/configs/user.yaml
-              subPath: woodpecker.yaml
-              readOnly: true
-            {{- else }}
             - name: woodpecker-config
               mountPath: /woodpecker/configs/user.yaml
               subPath: user.yaml
               readOnly: true
-            {{- end }}
           resources:
             {{- toYaml .Values.woodpecker.resources | nindent 12 }}
-      {{- if not .Values.woodpecker.persistence.enabled }}
       volumes:
+        {{- if not .Values.woodpecker.persistence.enabled }}
         - name: woodpecker-storage
           emptyDir: {}
+        {{- end }}
         - name: woodpecker-config
           configMap:
-            {{- if .Values.customConfigMap }}
-            name: {{ .Values.customConfigMap }}
-            {{- else }}
             name: {{ template "milvus.fullname" . }}
-            {{- end }}
-      {{- else }}
-      volumes:
-        - name: woodpecker-config
-          configMap:
-            {{- if .Values.customConfigMap }}
-            name: {{ .Values.customConfigMap }}
-            {{- else }}
-            name: {{ template "milvus.fullname" . }}
-            {{- end }}
-      {{- end }}
   {{- if .Values.woodpecker.persistence.enabled }}
   volumeClaimTemplates:
     - metadata:
