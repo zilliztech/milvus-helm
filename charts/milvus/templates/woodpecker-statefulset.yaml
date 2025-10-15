@@ -152,18 +152,8 @@ spec:
               subPath: user.yaml
               readOnly: true
             {{- end }}
-            {{- if .Values.woodpecker.extraVolumeMounts }}
-            {{- toYaml .Values.woodpecker.extraVolumeMounts | nindent 12 }}
-            {{- end }}
           resources:
             {{- toYaml .Values.woodpecker.resources | nindent 12 }}
-      {{- if .Values.woodpecker.extraContainers }}
-      {{- toYaml .Values.woodpecker.extraContainers | nindent 8 }}
-      {{- end }}
-      {{- if .Values.woodpecker.initContainers }}
-      initContainers:
-        {{- toYaml .Values.woodpecker.initContainers | nindent 8 }}
-      {{- end }}
       {{- if not .Values.woodpecker.persistence.enabled }}
       volumes:
         - name: woodpecker-storage
@@ -175,9 +165,6 @@ spec:
             {{- else }}
             name: {{ template "milvus.fullname" . }}
             {{- end }}
-        {{- if .Values.woodpecker.extraVolumes }}
-        {{- toYaml .Values.woodpecker.extraVolumes | nindent 8 }}
-        {{- end }}
       {{- else }}
       volumes:
         - name: woodpecker-config
@@ -187,9 +174,6 @@ spec:
             {{- else }}
             name: {{ template "milvus.fullname" . }}
             {{- end }}
-      {{- if .Values.woodpecker.extraVolumes }}
-        {{- toYaml .Values.woodpecker.extraVolumes | nindent 8 }}
-      {{- end }}
       {{- end }}
   {{- if .Values.woodpecker.persistence.enabled }}
   volumeClaimTemplates:

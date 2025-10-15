@@ -1374,12 +1374,6 @@ woodpecker:
   securityContext: {}
   containerSecurityContext: {}
 
-  # Additional containers and volumes
-  extraContainers: []
-  initContainers: []
-  extraVolumes: []
-  extraVolumeMounts: []
-
 ###################################
 # External S3
 # - these configs are only used when `externalS3.enabled` is true
