@@ -1292,7 +1292,12 @@ externalS3:
   host: ""
   port: ""
   accessKey: ""
-  secretKey: ""
+  secretKey: ""    
+  existingSecret:
+    enabled: false
+    name: "s3-credentials"
+    accessKey: "accessKey"
+    secretKey: "secretKey"
   useSSL: false
   bucketName: ""
   rootPath: ""
