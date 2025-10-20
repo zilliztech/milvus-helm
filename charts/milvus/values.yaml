@@ -704,6 +704,9 @@ etcd:
   auth:
     rbac:
       enabled: false
+      create: false
+    token:
+      enabled: false
 
   persistence:
     enabled: true
