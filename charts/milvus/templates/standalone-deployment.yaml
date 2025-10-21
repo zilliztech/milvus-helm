@@ -199,6 +199,12 @@ spec:
       securityContext:
 {{ toYaml .Values.standalone.securityContext | indent 8 }}
     {{- end }}
+    {{- if and (.Values.terminationGracePeriodSeconds) (not .Values.standalone.terminationGracePeriodSeconds) }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+    {{- end }}
+    {{- if .Values.standalone.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ .Values.standalone.terminationGracePeriodSeconds }}
+    {{- end }}
 
       volumes:
       - emptyDir: {}

@@ -430,6 +430,7 @@ The following table lists the configurable parameters of the Milvus Standalone c
 | `standalone.persistence.persistentVolumeClaim.accessModes` | The Milvus standalone data Persistence access modes | `ReadWriteOnce`                  |
 | `standalone.persistence.persistentVolumeClaim.size` | The size of Milvus standalone data Persistent Volume Storage Class | `5Gi`                    |
 | `standalone.persistence.persistentVolumeClaim.subPath` | SubPath for Milvus standalone data mount | `unset`                                         |
+| `standalone.terminationGracePeriodSeconds`  | Deployment terminationGracePeriodSeconds | `` |
 
 ### Milvus Proxy Deployment Configuration
 
@@ -452,6 +453,7 @@ The following table lists the configurable parameters of the Milvus Proxy compon
 | `proxy.http.debugMode.enabled`            | Enable debug mode for rest api                          | `false`       |
 | `proxy.tls.enabled`                       | Enable porxy tls connection                             | `false`       |
 | `proxy.strategy`                          | Deployment strategy configuration                       | RollingUpdate |
+| `proxy.terminationGracePeriodSeconds`     | Deployment terminationGracePeriodSeconds                | ``            |
 | `proxy.annotations`                       | Additional pod annotations                              | `{}`          |
 | `proxy.hpa` | Enable hpa for proxy node | false |
 | `proxy.minReplicas` | Specify the minimum number of replicas | 1 |
@@ -477,6 +479,7 @@ The following table lists the configurable parameters of the Milvus Query Node c
 | `queryNode.profiling.enabled`             | Whether to enable live profiling                   | `false`                                          |
 | `queryNode.extraEnv`                      | Additional Milvus Query Node container environment variables | `[]`                                     |
 | `queryNode.strategy`                      | Deployment strategy configuration |  RollingUpdate                                         |
+| `queryNode.terminationGracePeriodSeconds`  | Deployment terminationGracePeriodSeconds | `` |
 | `queryNode.annotations`                    | Additional pod annotations | `{}` |
 | `queryNode.hpa` | Enable hpa for query node | false |
 | `queryNode.minReplicas` | Specify the minimum number of replicas | 1 |
@@ -504,6 +507,7 @@ The following table lists the configurable parameters of the Milvus Data Node co
 | `dataNode.profiling.enabled`              | Whether to enable live profiling                   | `false`                                          |
 | `dataNode.extraEnv`                       | Additional Milvus Data Node container environment variables | `[]`                                      |
 | `dataNode.strategy`                       | Deployment strategy configuration |  RollingUpdate                                         |
+| `dataNode.terminationGracePeriodSeconds`  | Deployment terminationGracePeriodSeconds | `` |
 | `dataNode.annotations`                    | Additional pod annotations | `{}` |
 | `dataNode.hpa` | Enable hpa for data node | false |
 | `dataNode.minReplicas` | Specify the minimum number of replicas | 1 |
@@ -534,6 +538,7 @@ The following table lists the configurable parameters of the Milvus Mix Coordina
 | `mixCoordinator.service.loadBalancerSourceRanges`    | List of IP CIDRs allowed access to lb (if supported) | `[]`                                 |
 | `mixCoordinator.service.externalIPs`                 | Service external IP addresses                 | `[]`                                        |
 | `mixCoordinator.strategy`                       | Deployment strategy configuration |  RollingUpdate                                         |
+| `mixCoordinator.terminationGracePeriodSeconds`  | Deployment terminationGracePeriodSeconds | `` |
 | `mixCoordinator.annotations`                    | Additional pod annotations | `{}` |
 
 ### Milvus Streaming Node Deployment Configuration
@@ -554,7 +559,7 @@ The following table lists the configurable parameters of the Milvus Streaming No
 | `streamingNode.profiling.enabled`         | Whether to enable live profiling                       | `false`       |
 | `streamingNode.extraEnv`                  | Additional Milvus Streaming Node container environment variables | `[]`  |
 | `streamingNode.strategy`                  | Deployment strategy configuration                       | `{}`          |
-
+| `streamingNode.terminationGracePeriodSeconds`  | Deployment terminationGracePeriodSeconds | `` |
 
 ### TEI Configuration
 

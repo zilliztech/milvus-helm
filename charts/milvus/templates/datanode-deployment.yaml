@@ -192,6 +192,12 @@ spec:
       securityContext:
 {{ toYaml .Values.dataNode.securityContext | indent 8 }}
     {{- end }}
+    {{- if and (.Values.terminationGracePeriodSeconds) (not .Values.dataNode.terminationGracePeriodSeconds) }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+    {{- end }}
+    {{- if .Values.dataNode.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ .Values.dataNode.terminationGracePeriodSeconds }}
+    {{- end }}
       volumes:
       - name: milvus-config
         configMap:
