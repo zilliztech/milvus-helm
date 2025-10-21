@@ -72,6 +72,10 @@ volumeMounts: []
 # Default config for 2.6.0 or later.
 streaming:
   enabled: true
+  woodpecker:
+    embedded: true
+    storage:
+      type: minio
 
 ##
 ## If set, the whole config will be mounted from this custom ConfigMap.
@@ -1285,8 +1289,6 @@ woodpecker:
     tag: latest
     pullPolicy: IfNotPresent
 
-  # Woodpecker cluster configuration
-  clusterName: woodpecker-cluster
   resourceGroup: rg-primary
 
   # Network configuration

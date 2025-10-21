@@ -1,16 +1,8 @@
-{{- if and .Values.woodpecker.enabled }}
+{{- if eq (include "milvus.woodpecker.external.enabled" .) "true" }}
 {{- $replicas := int .Values.woodpecker.replicaCount }}
 {{- $headless := include "milvus.woodpecker.headlessServiceName" . }}
-{{- $fullname := include "milvus.woodpecker.fullname" . }}
-{{- $gossipPort := int .Values.woodpecker.ports.gossip }}
-{{- $seedList := "" -}}
-{{- range $i, $_ := until $replicas }}
-  {{- if eq $seedList "" -}}
-    {{- $seedList = printf "%s-%d.%s:%d" $fullname $i $headless $gossipPort -}}
-  {{- else -}}
-    {{- $seedList = printf "%s,%s-%d.%s:%d" $seedList $fullname $i $headless $gossipPort -}}
-  {{- end -}}
-{{- end }}
+{{- $seedList := include "milvus.woodpecker.seedList"  (merge (dict "port" .Values.woodpecker.ports.gossip) .)  -}}
+{{- $serviceSeedList := include "milvus.woodpecker.seedList"  (merge (dict "port" .Values.woodpecker.ports.service) .)  -}}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -96,6 +88,8 @@ spec:
               value: "$(NODE_NAME).{{ $headless }}:{{ .Values.woodpecker.ports.service }}"
             - name: SEEDS
               value: "{{ $seedList }}"
+            - name: SERVICE_SEEDS
+              value: "{{ $serviceSeedList }}"
             - name: RESOURCE_GROUP
               value: {{ .Values.woodpecker.resourceGroup | quote }}
             - name: AVAILABILITY_ZONE
@@ -144,6 +138,10 @@ spec:
             - name: woodpecker-config
               mountPath: /woodpecker/configs/user.yaml
               subPath: user.yaml
+              readOnly: true
+            - name: woodpecker-config
+              mountPath: /woodpecker/configs/default.yaml
+              subPath: default.yaml
               readOnly: true
           resources:
             {{- toYaml .Values.woodpecker.resources | nindent 12 }}
