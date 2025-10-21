@@ -257,7 +257,7 @@ woodpecker:
     quorum:
       quorumBufferPools:
         - name: default
-          seeds: [{{ include "milvus.woodpecker.seedList" . }}]
+          seeds: [{{ include "milvus.woodpecker.seedList"  (merge (dict "port" .Values.woodpecker.ports.service) .)  }}]
   storage:
 {{- if and (eq (default true .Values.streaming.woodpecker.embedded) false) (.Values.woodpecker.enabled) }}
     type: service

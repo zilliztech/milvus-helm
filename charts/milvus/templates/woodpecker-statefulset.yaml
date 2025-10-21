@@ -1,7 +1,7 @@
 {{- if and .Values.woodpecker.enabled }}
 {{- $replicas := int .Values.woodpecker.replicaCount }}
 {{- $headless := include "milvus.woodpecker.headlessServiceName" . }}
-{{- $seedList := include "milvus.woodpecker.seedList" . -}}
+{{- $seedList := include "milvus.woodpecker.seedList"  (merge (dict "port" .Values.woodpecker.ports.gossip) .)  -}}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:

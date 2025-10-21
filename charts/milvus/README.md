@@ -538,7 +538,7 @@ The following table lists the configurable parameters of the Milvus Mix Coordina
 
 ### Milvus Streaming Node Deployment Configuration
 
-The following table lists the configurable parameters of the Milvus Streaming Node component and their default values. The Streaming Node is a new component introduced in Milvus v2.6.x for enhanced data processing and streaming operations.
+The following table lists the configurable parameters of the Milvus Streaming Node component and their default values. The Streaming Node, introduced in Milvus v2.6.x, improves data processing and streaming workloads.
 
 | Parameter                                 | Description                                             | Default       |
 |-------------------------------------------|---------------------------------------------------------|---------------|
@@ -554,6 +554,8 @@ The following table lists the configurable parameters of the Milvus Streaming No
 | `streamingNode.profiling.enabled`         | Whether to enable live profiling                       | `false`       |
 | `streamingNode.extraEnv`                  | Additional Milvus Streaming Node container environment variables | `[]`  |
 | `streamingNode.strategy`                  | Deployment strategy configuration                       | `{}`          |
+| `streamingNode.woodpecker.embedded`       | Whether to use embedded Woodpecker in Streaming Node. When `false`, external Woodpecker is used and `woodpecker.enabled` must be set to `true` | `true`        |
+| `streamingNode.woodpecker.storage.type`   | Woodpecker storage type. Valid values: `minio`, `local`. Only applies when `embedded` is `true` | `minio`       |
 
 
 ### TEI Configuration
@@ -642,8 +644,8 @@ The following table lists the configurable parameters of the Woodpecker componen
 
 | Parameter                                 | Description                                             | Default       |
 |-------------------------------------------|---------------------------------------------------------|---------------|
-| `woodpecker.enabled`                      | Enable or disable Woodpecker deployment                | `true`        |
-| `woodpecker.replicaCount`                 | Number of Woodpecker replicas                          | `1`           |
+| `woodpecker.enabled`                      | Enable or disable Woodpecker deployment                | `false`        |
+| `woodpecker.replicaCount`                 | Number of Woodpecker replicas                          | `4`           |
 | `woodpecker.image.repository`             | Woodpecker image repository                             | `milvusdb/woodpecker` |
 | `woodpecker.image.tag`                    | Woodpecker image tag                                    | `latest`      |
 | `woodpecker.image.pullPolicy`             | Image pull policy                                       | `IfNotPresent` |

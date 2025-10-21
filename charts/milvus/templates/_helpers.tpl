@@ -263,19 +263,32 @@ Woodpecker headless service name
 {{- end -}}
 
 {{/*
-Woodpecker seed list
+Woodpecker seed list - Generate a comma-separated list of woodpecker seed addresses
+Parameters:
+  - port (required): The port number to use for the seed list
+    - Use .Values.woodpecker.ports.gossip for gossip/cluster communication
+    - Use .Values.woodpecker.ports.service for client connections
+Usage examples:
+  - For gossip communication (cluster membership):
+    {{ include "milvus.woodpecker.seedList" (merge (dict "port" .Values.woodpecker.ports.gossip) .) }}
+  - For service/client connections:
+    {{ include "milvus.woodpecker.seedList" (merge (dict "port" .Values.woodpecker.ports.service) .) }}
+  - With custom port:
+    {{ include "milvus.woodpecker.seedList" (merge (dict "port" 8080) .) }}
+Output format:
+  woodpecker-0.woodpecker-headless:PORT,woodpecker-1.woodpecker-headless:PORT,...
 */}}
 {{- define "milvus.woodpecker.seedList" -}}
 {{- $replicas := int .Values.woodpecker.replicaCount -}}
 {{- $headless := include "milvus.woodpecker.headlessServiceName" . -}}
 {{- $fullname := include "milvus.woodpecker.fullname" . -}}
-{{- $gossipPort := int .Values.woodpecker.ports.gossip -}}
+{{- $port := int .port -}}
 {{- $seedList := "" -}}
 {{- range $i, $_ := until $replicas }}
   {{- if eq $seedList "" -}}
-    {{- $seedList = printf "%s-%d.%s:%d" $fullname $i $headless $gossipPort -}}
+    {{- $seedList = printf "%s-%d.%s:%d" $fullname $i $headless $port -}}
   {{- else -}}
-    {{- $seedList = printf "%s,%s-%d.%s:%d" $seedList $fullname $i $headless $gossipPort -}}
+    {{- $seedList = printf "%s,%s-%d.%s:%d" $seedList $fullname $i $headless $port -}}
   {{- end -}}
 {{- end -}}
 {{- $seedList -}}
