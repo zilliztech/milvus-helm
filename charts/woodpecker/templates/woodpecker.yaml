@@ -1,0 +1,184 @@
+{{- $replicas := int .Values.replicaCount }}
+{{- $headless := include "woodpecker.headlessServiceName" (list . "woodpecker") }}
+{{- $fullname := include "woodpecker.fullname" . }}
+{{- $gossipPort := int .Values.ports.gossip }}
+{{- $seedList := "" -}}
+{{- range $i, $_ := until $replicas }}
+  {{- if eq $seedList "" -}}
+    {{- $seedList = printf "%s-%d.%s:%d" $fullname $i $headless $gossipPort -}}
+  {{- else -}}
+    {{- $seedList = printf "%s,%s-%d.%s:%d" $seedList $fullname $i $headless $gossipPort -}}
+  {{- end -}}
+{{- end }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $headless }}
+  labels:
+    {{- include "woodpecker.labels" . | nindent 4 }}
+    app.kubernetes.io/component: woodpecker
+spec:
+  clusterIP: None
+  publishNotReadyAddresses: true
+  selector:
+    {{- include "woodpecker.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: woodpecker
+  ports:
+    - name: service
+      port: {{ .Values.ports.service }}
+      targetPort: service
+    - name: gossip
+      port: {{ .Values.ports.gossip }}
+      targetPort: gossip
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "woodpecker.fullname" . }}
+  labels:
+    {{- include "woodpecker.labels" . | nindent 4 }}
+    app.kubernetes.io/component: woodpecker
+spec:
+  type: {{ .Values.service.type }}
+  selector:
+    {{- include "woodpecker.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: woodpecker
+  ports:
+    - name: service
+      port: {{ .Values.service.port }}
+      targetPort: service
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "woodpecker.fullname" . }}
+  labels:
+    {{- include "woodpecker.labels" . | nindent 4 }}
+    app.kubernetes.io/component: woodpecker
+spec:
+  serviceName: {{ $headless }}
+  replicas: {{ $replicas }}
+  podManagementPolicy: Parallel
+  selector:
+    matchLabels:
+      {{- include "woodpecker.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: woodpecker
+  template:
+    metadata:
+      labels:
+        {{- include "woodpecker.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: woodpecker
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: woodpecker
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: PORT
+              value: "{{ .Values.ports.gossip }}"
+            - name: SERVICE_PORT
+              value: "{{ .Values.ports.service }}"
+            - name: ADVERTISE_ADDR
+              value: "$(POD_NAME).{{ $headless }}"
+            - name: ADVERTISE_PORT
+              value: "{{ .Values.ports.gossip }}"
+            - name: ADVERTISE_SERVICE_ADDR
+              value: "$(POD_NAME).{{ $headless }}"
+            - name: ADVERTISE_SERVICE_PORT
+              value: "{{ .Values.ports.service }}"
+            - name: SEEDS
+              value: "{{ $seedList }}"
+            - name: CLUSTER_NAME
+              value: {{ .Values.clusterName | quote }}
+            - name: RESOURCE_GROUP
+              value: {{ .Values.resourceGroup | quote }}
+            - name: AVAILABILITY_ZONE
+              value: {{ .Values.availabilityZone | quote }}
+            - name: MINIO_ADDRESS
+              value: {{ include "woodpecker.minioAddress" . }}
+            - name: MINIO_PORT
+              value: "{{ .Values.minio.port }}"
+            - name: MINIO_ACCESS_KEY
+              value: {{ .Values.minio.accessKey | quote }}
+            - name: MINIO_SECRET_KEY
+              value: {{ .Values.minio.secretKey | quote }}
+            - name: MINIO_BUCKET
+              value: {{ .Values.minio.bucketName | quote }}
+            - name: STORAGE_TYPE
+              value: service
+            - name: LOG_LEVEL
+              value: {{ .Values.logging.level | quote }}
+            - name: WAIT_FOR_DEPS
+              value: "true"
+            - name: DEP_TIMEOUT
+              value: "120"
+          {{- with .Values.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          ports:
+            - name: service
+              containerPort: {{ .Values.ports.service }}
+            - name: gossip
+              containerPort: {{ .Values.ports.gossip }}
+          {{- if .Values.readiness.enabled }}
+          readinessProbe:
+            tcpSocket:
+              port: service
+            initialDelaySeconds: {{ .Values.readiness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readiness.periodSeconds }}
+          {{- end }}
+          volumeMounts:
+            - name: woodpecker-storage
+              mountPath: /woodpecker/data
+              subPath: data
+            - name: woodpecker-storage
+              mountPath: /woodpecker/logs
+              subPath: logs
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- if not .Values.persistence.enabled }}
+      volumes:
+        - name: woodpecker-storage
+          emptyDir: {}
+      {{- end }}
+  {{- if .Values.persistence.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        name: woodpecker-storage
+        labels:
+          {{- include "woodpecker.labels" . | nindent 10 }}
+          app.kubernetes.io/component: woodpecker
+      spec:
+        accessModes:
+          {{- toYaml .Values.persistence.accessModes | nindent 10 }}
+        {{- if .Values.persistence.storageClass }}
+        storageClassName: {{ .Values.persistence.storageClass | quote }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.persistence.size }}
+  {{- end }}

@@ -1,0 +1,16 @@
+apiVersion: v2
+name: woodpecker
+description: A Helm chart for Woodpecker - A Cloud-Native WAL Storage Implementation for Milvus
+type: application
+version: 0.1.0
+appVersion: "latest"
+home: https://zilliztech.github.io/woodpecker
+sources:
+  - https://github.com/zilliztech/woodpecker
+keywords:
+  - milvus
+  - woodpecker
+  - wal
+maintainers:
+  - name: Milvus Team
+    email: milvus-team@zilliz.com
