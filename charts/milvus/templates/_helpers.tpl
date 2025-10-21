@@ -263,6 +263,25 @@ Woodpecker headless service name
 {{- end -}}
 
 {{/*
+Woodpecker seed list
+*/}}
+{{- define "milvus.woodpecker.seedList" -}}
+{{- $replicas := int .Values.woodpecker.replicaCount -}}
+{{- $headless := include "milvus.woodpecker.headlessServiceName" . -}}
+{{- $fullname := include "milvus.woodpecker.fullname" . -}}
+{{- $gossipPort := int .Values.woodpecker.ports.gossip -}}
+{{- $seedList := "" -}}
+{{- range $i, $_ := until $replicas }}
+  {{- if eq $seedList "" -}}
+    {{- $seedList = printf "%s-%d.%s:%d" $fullname $i $headless $gossipPort -}}
+  {{- else -}}
+    {{- $seedList = printf "%s,%s-%d.%s:%d" $seedList $fullname $i $headless $gossipPort -}}
+  {{- end -}}
+{{- end -}}
+{{- $seedList -}}
+{{- end -}}
+
+{{/*
 Woodpecker MinIO address
 */}}
 {{- define "milvus.woodpecker.minioAddress" -}}

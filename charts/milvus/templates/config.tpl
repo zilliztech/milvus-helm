@@ -252,4 +252,17 @@ log:
     maxBackups: {{ .Values.log.file.maxBackups }}
   format: {{ .Values.log.format }}
 
+woodpecker:
+  client:
+    quorum:
+      quorumBufferPools:
+        - name: default
+          seeds: [{{ include "milvus.woodpecker.seedList" . }}]
+  storage:
+{{- if and (eq (default true .Values.streaming.woodpecker.embedded) false) (.Values.woodpecker.enabled) }}
+    type: service
+{{- else }}
+    type: {{ .Values.streaming.woodpecker.storage.type }}
+{{- end }}
+
 {{- end }}
