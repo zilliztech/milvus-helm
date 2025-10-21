@@ -1,16 +1,8 @@
-{{- if and .Values.woodpecker.enabled }}
+{{- if eq (include "milvus.woodpecker.external.enabled" .) "true" }}
 {{- $replicas := int .Values.woodpecker.replicaCount }}
 {{- $headless := include "milvus.woodpecker.headlessServiceName" . }}
-{{- $fullname := include "milvus.woodpecker.fullname" . }}
-{{- $gossipPort := int .Values.woodpecker.ports.gossip }}
-{{- $seedList := "" -}}
-{{- range $i, $_ := until $replicas }}
-  {{- if eq $seedList "" -}}
-    {{- $seedList = printf "%s-%d.%s:%d" $fullname $i $headless $gossipPort -}}
-  {{- else -}}
-    {{- $seedList = printf "%s,%s-%d.%s:%d" $seedList $fullname $i $headless $gossipPort -}}
-  {{- end -}}
-{{- end }}
+{{- $seedList := include "milvus.woodpecker.seedList"  (merge (dict "port" .Values.woodpecker.ports.gossip) .)  -}}
+{{- $serviceSeedList := include "milvus.woodpecker.seedList"  (merge (dict "port" .Values.woodpecker.ports.service) .)  -}}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -36,13 +28,15 @@ spec:
 {{ include "milvus.matchLabels" . | indent 8 }}
         component: "woodpecker"
       annotations:
-        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
-        {{- if .Values.podAnnotations }}
-        {{- toYaml .Values.podAnnotations | nindent 8 }}
-        {{- end }}
-        {{- if .Values.woodpecker.podAnnotations }}
+      {{- if .Values.woodpecker.profiling.enabled }}
+        pyroscope.io/scrape: "true"
+        pyroscope.io/application-name: {{ include "milvus.woodpecker.fullname" . }}
+        pyroscope.io/port: "9091"
+      {{- end }}
+      {{- if .Values.woodpecker.podAnnotations }}
         {{- toYaml .Values.woodpecker.podAnnotations | nindent 8 }}
-        {{- end }}
+      {{- end }}
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
     spec:
       {{- if .Values.image.all.pullSecrets }}
       imagePullSecrets:
@@ -96,6 +90,8 @@ spec:
               value: "$(NODE_NAME).{{ $headless }}:{{ .Values.woodpecker.ports.service }}"
             - name: SEEDS
               value: "{{ $seedList }}"
+            - name: SERVICE_SEEDS
+              value: "{{ $serviceSeedList }}"
             - name: RESOURCE_GROUP
               value: {{ .Values.woodpecker.resourceGroup | quote }}
             - name: AVAILABILITY_ZONE
@@ -126,6 +122,9 @@ spec:
             - name: gossip
               containerPort: {{ .Values.woodpecker.ports.gossip }}
               protocol: TCP
+            - name: metrics
+              containerPort: 9091
+              protocol: TCP
           {{- if .Values.woodpecker.livenessProbe.enabled }}
           livenessProbe:
             {{- toYaml (omit .Values.woodpecker.livenessProbe "enabled") | nindent 12 }}
@@ -144,6 +143,10 @@ spec:
             - name: woodpecker-config
               mountPath: /woodpecker/configs/user.yaml
               subPath: user.yaml
+              readOnly: true
+            - name: woodpecker-config
+              mountPath: /woodpecker/configs/default.yaml
+              subPath: default.yaml
               readOnly: true
           resources:
             {{- toYaml .Values.woodpecker.resources | nindent 12 }}

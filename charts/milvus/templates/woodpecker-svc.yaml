@@ -1,4 +1,4 @@
-{{- if and .Values.woodpecker.enabled }}
+{{- if eq (include "milvus.woodpecker.external.enabled" .) "true" }}
 {{- $replicas := int .Values.woodpecker.replicaCount }}
 {{- $headless := include "milvus.woodpecker.headlessServiceName" . }}
 {{- $fullname := include "milvus.woodpecker.fullname" . }}
@@ -36,5 +36,8 @@ spec:
     - name: gossip-udp
       port: {{ .Values.woodpecker.ports.gossip }}
       protocol: UDP
-      targetPort: gossip      
+      targetPort: gossip
+    - name: metrics
+      port: 9091
+      targetPort: metrics
 {{- end }}

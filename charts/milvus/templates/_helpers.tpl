@@ -263,6 +263,36 @@ Woodpecker headless service name
 {{- end -}}
 
 {{/*
+Woodpecker seed list - Generate a comma-separated list of woodpecker seed addresses
+Parameters:
+  - port (required): The port number to use for the seed list
+    - Use .Values.woodpecker.ports.gossip for gossip/cluster communication
+    - Use .Values.woodpecker.ports.service for client connections
+Usage examples:
+  - For gossip communication (cluster membership):
+    {{ include "milvus.woodpecker.seedList" (merge (dict "port" .Values.woodpecker.ports.gossip) .) }}
+  - For service/client connections:
+    {{ include "milvus.woodpecker.seedList" (merge (dict "port" .Values.woodpecker.ports.service) .) }}
+Output format:
+  woodpecker-0.woodpecker-headless:PORT,woodpecker-1.woodpecker-headless:PORT,...
+*/}}
+{{- define "milvus.woodpecker.seedList" -}}
+{{- $replicas := int .Values.woodpecker.replicaCount -}}
+{{- $headless := include "milvus.woodpecker.headlessServiceName" . -}}
+{{- $fullname := include "milvus.woodpecker.fullname" . -}}
+{{- $port := int .port -}}
+{{- $seedList := "" -}}
+{{- range $i, $_ := until $replicas }}
+  {{- if eq $seedList "" -}}
+    {{- $seedList = printf "%s-%d.%s:%d" $fullname $i $headless $port -}}
+  {{- else -}}
+    {{- $seedList = printf "%s,%s-%d.%s:%d" $seedList $fullname $i $headless $port -}}
+  {{- end -}}
+{{- end -}}
+{{- $seedList -}}
+{{- end -}}
+
+{{/*
 Woodpecker MinIO address
 */}}
 {{- define "milvus.woodpecker.minioAddress" -}}
@@ -321,5 +351,17 @@ Woodpecker MinIO bucket name
 {{- .Values.minio.bucketName -}}
 {{- else -}}
 milvus-bucket
+{{- end -}}
+{{- end -}}
+
+{{/*
+Check if external (non-embedded) Woodpecker is enabled
+Returns "true" if woodpecker is enabled and not embedded, "false" otherwise
+*/}}
+{{- define "milvus.woodpecker.external.enabled" -}}
+{{- if and (eq (.Values.streaming.woodpecker.embedded) false) (.Values.woodpecker.enabled) -}}
+true
+{{- else -}}
+false
 {{- end -}}
 {{- end -}}
