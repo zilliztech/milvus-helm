@@ -253,7 +253,7 @@ log:
   format: {{ .Values.log.format }}
 
 woodpecker:
-{{- $useExternalWoodpecker := and (eq (.Values.streaming.woodpecker.embedded) false) (.Values.woodpecker.enabled) -}}
+{{- $useExternalWoodpecker := eq (include "milvus.woodpecker.external.enabled" .) "true" -}}
 {{- if $useExternalWoodpecker }}
   client:
     quorum:

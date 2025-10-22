@@ -355,3 +355,15 @@ Woodpecker MinIO bucket name
 milvus-bucket
 {{- end -}}
 {{- end -}}
+
+{{/*
+Check if external (non-embedded) Woodpecker is enabled
+Returns "true" if woodpecker is enabled and not embedded, "false" otherwise
+*/}}
+{{- define "milvus.woodpecker.external.enabled" -}}
+{{- if and (eq (.Values.streaming.woodpecker.embedded) false) (.Values.woodpecker.enabled) -}}
+true
+{{- else -}}
+false
+{{- end -}}
+{{- end -}}
