@@ -1,4 +1,4 @@
-{{- if and .Values.woodpecker.enabled }}
+{{- if and (eq (.Values.streaming.woodpecker.embedded) false) (.Values.woodpecker.enabled) }}
 {{- $replicas := int .Values.woodpecker.replicaCount }}
 {{- $headless := include "milvus.woodpecker.headlessServiceName" . }}
 {{- $fullname := include "milvus.woodpecker.fullname" . }}
