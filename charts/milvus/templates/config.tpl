@@ -253,16 +253,20 @@ log:
   format: {{ .Values.log.format }}
 
 woodpecker:
+{{- $useExternalWoodpecker := and (eq (.Values.streaming.woodpecker.embedded) false) (.Values.woodpecker.enabled) -}}
+{{- if $useExternalWoodpecker }}
   client:
     quorum:
       quorumBufferPools:
         - name: default
           seeds: [{{ include "milvus.woodpecker.seedList"  (merge (dict "port" .Values.woodpecker.ports.service) .)  }}]
+{{- end }}
   storage:
-{{- if and (eq (default true .Values.streaming.woodpecker.embedded) false) (.Values.woodpecker.enabled) }}
+{{- if $useExternalWoodpecker }}
     type: service
 {{- else }}
     type: {{ .Values.streaming.woodpecker.storage.type }}
 {{- end }}
+    rootPath: /woodpecker/data
 
 {{- end }}

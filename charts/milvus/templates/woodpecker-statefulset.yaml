@@ -2,6 +2,7 @@
 {{- $replicas := int .Values.woodpecker.replicaCount }}
 {{- $headless := include "milvus.woodpecker.headlessServiceName" . }}
 {{- $seedList := include "milvus.woodpecker.seedList"  (merge (dict "port" .Values.woodpecker.ports.gossip) .)  -}}
+{{- $serviceSeedList := include "milvus.woodpecker.seedList"  (merge (dict "port" .Values.woodpecker.ports.service) .)  -}}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -87,6 +88,8 @@ spec:
               value: "$(NODE_NAME).{{ $headless }}:{{ .Values.woodpecker.ports.service }}"
             - name: SEEDS
               value: "{{ $seedList }}"
+            - name: SERVICE_SEEDS
+              value: "{{ $serviceSeedList }}"
             - name: RESOURCE_GROUP
               value: {{ .Values.woodpecker.resourceGroup | quote }}
             - name: AVAILABILITY_ZONE
