@@ -139,6 +139,10 @@ spec:
               mountPath: /woodpecker/configs/user.yaml
               subPath: user.yaml
               readOnly: true
+            - name: woodpecker-config
+              mountPath: /woodpecker/configs/default.yaml
+              subPath: default.yaml
+              readOnly: true
           resources:
             {{- toYaml .Values.woodpecker.resources | nindent 12 }}
       volumes:
