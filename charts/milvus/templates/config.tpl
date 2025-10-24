@@ -267,6 +267,9 @@ woodpecker:
 {{- else }}
     type: {{ .Values.streaming.woodpecker.storage.type }}
 {{- end }}
+{{- if .Values.cluster.enabled }}
     rootPath: /woodpecker/data
-
+{{- else }}
+    rootPath: /var/lib/milvus/wp
+{{- end }}
 {{- end }}
