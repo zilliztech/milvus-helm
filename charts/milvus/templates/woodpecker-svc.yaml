@@ -36,5 +36,8 @@ spec:
     - name: gossip-udp
       port: {{ .Values.woodpecker.ports.gossip }}
       protocol: UDP
-      targetPort: gossip      
+      targetPort: gossip
+    - name: metrics
+      port: 9091
+      targetPort: metrics
 {{- end }}

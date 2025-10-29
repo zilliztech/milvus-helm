@@ -1296,7 +1296,6 @@ woodpecker:
     service: 18080
     gossip: 17946
 
-
   # Pod management policy
   podManagementPolicy: Parallel
 
@@ -1315,6 +1314,9 @@ woodpecker:
     accessKey: ""  # If empty, will use minio.auth.rootUser or default
     secretKey: ""  # If empty, will use minio.auth.rootPassword or default
     bucketName: "" # If empty, will use minio.bucketName or default
+
+  profiling:
+    enabled: false
 
   # Health probes
   livenessProbe:

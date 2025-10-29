@@ -28,13 +28,15 @@ spec:
 {{ include "milvus.matchLabels" . | indent 8 }}
         component: "woodpecker"
       annotations:
-        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
-        {{- if .Values.podAnnotations }}
-        {{- toYaml .Values.podAnnotations | nindent 8 }}
-        {{- end }}
-        {{- if .Values.woodpecker.podAnnotations }}
+      {{- if .Values.woodpecker.profiling.enabled }}
+        pyroscope.io/scrape: "true"
+        pyroscope.io/application-name: {{ include "milvus.woodpecker.fullname" . }}
+        pyroscope.io/port: "9091"
+      {{- end }}
+      {{- if .Values.woodpecker.podAnnotations }}
         {{- toYaml .Values.woodpecker.podAnnotations | nindent 8 }}
-        {{- end }}
+      {{- end }}
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
     spec:
       {{- if .Values.image.all.pullSecrets }}
       imagePullSecrets:
@@ -119,6 +121,9 @@ spec:
               protocol: TCP
             - name: gossip
               containerPort: {{ .Values.woodpecker.ports.gossip }}
+              protocol: TCP
+            - name: metrics
+              containerPort: 9091
               protocol: TCP
           {{- if .Values.woodpecker.livenessProbe.enabled }}
           livenessProbe:
