@@ -1318,34 +1318,6 @@ woodpecker:
   profiling:
     enabled: false
 
-  # Health probes
-  livenessProbe:
-    enabled: false
-    tcpSocket:
-      port: service
-    initialDelaySeconds: 30
-    periodSeconds: 30
-    timeoutSeconds: 10
-    failureThreshold: 3
-
-  readinessProbe:
-    enabled: true
-    tcpSocket:
-      port: service
-    initialDelaySeconds: 30
-    periodSeconds: 15
-    timeoutSeconds: 10
-    failureThreshold: 3
-
-  startupProbe:
-    enabled: false
-    tcpSocket:
-      port: service
-    initialDelaySeconds: 60
-    periodSeconds: 10
-    timeoutSeconds: 10
-    failureThreshold: 30
-
   # Logging configuration
   logging:
     level: info
