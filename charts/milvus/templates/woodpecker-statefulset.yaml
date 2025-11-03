@@ -125,17 +125,26 @@ spec:
             - name: metrics
               containerPort: 9091
               protocol: TCP
-          {{- if .Values.woodpecker.livenessProbe.enabled }}
+          {{- if .Values.livenessProbe.enabled }}
           livenessProbe:
-            {{- toYaml (omit .Values.woodpecker.livenessProbe "enabled") | nindent 12 }}
+            tcpSocket:
+              port: metrics
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.livenessProbe.successThreshold }}
+            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
           {{- end }}
-          {{- if .Values.woodpecker.readinessProbe.enabled }}
+          {{- if .Values.readinessProbe.enabled }}
           readinessProbe:
-            {{- toYaml (omit .Values.woodpecker.readinessProbe "enabled") | nindent 12 }}
-          {{- end }}
-          {{- if .Values.woodpecker.startupProbe.enabled }}
-          startupProbe:
-            {{- toYaml (omit .Values.woodpecker.startupProbe "enabled") | nindent 12 }}
+            httpGet:
+              path: /healthz
+              port: metrics
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.readinessProbe.successThreshold }}
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
           {{- end }}
           volumeMounts:
             - name: woodpecker-storage
