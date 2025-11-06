@@ -555,6 +555,28 @@ The following table lists the configurable parameters of the Milvus Streaming No
 | `streamingNode.extraEnv`                  | Additional Milvus Streaming Node container environment variables | `[]`  |
 | `streamingNode.strategy`                  | Deployment strategy configuration                       | `{}`          |
 
+### Milvus CDC Deployment Configuration
+
+The following table lists the configurable parameters of the Milvus CDC (Change Data Capture) component and their default values. CDC is a new component introduced in Milvus v2.6.5+ that captures and replicates data changes within Milvus.
+
+| Parameter                                 | Description                                             | Default       |
+|-------------------------------------------|---------------------------------------------------------|---------------|
+| `cdc.enabled`                             | Enable or disable CDC component                         | `false`       |
+| `cdc.replicas`                            | Desired number of CDC pods                              | `1`           |
+| `cdc.resources`                           | Resource requests/limits for the Milvus CDC pods       | `{}`          |
+| `cdc.nodeSelector`                        | Node labels for Milvus CDC pods assignment             | `{}`          |
+| `cdc.affinity`                             | Affinity settings for Milvus CDC pods assignment        | `{}`          |
+| `cdc.tolerations`                          | Toleration labels for Milvus CDC pods assignment       | `[]`          |
+| `cdc.securityContext`                      | Security context for CDC pods                          | `{}`          |
+| `cdc.containerSecurityContext`            | Container security context for CDC                      | `{}`          |
+| `cdc.topologySpreadConstraints`           | Topology spread constraints for CDC pods                | `[]`          |
+| `cdc.heaptrack.enabled`                   | Whether to enable heaptrack                             | `false`       |
+| `cdc.profiling.enabled`                   | Whether to enable live profiling                        | `false`       |
+| `cdc.extraEnv`                             | Additional Milvus CDC container environment variables   | `[]`          |
+| `cdc.strategy`                             | Deployment strategy configuration                       | `{}`          |
+| `cdc.annotations`                          | Additional pod annotations                              | `{}`          |
+
+> **Note**: Currently, CDC only supports one replica. Setting `cdc.replicas` to a value greater than 1 is not recommended.
 
 ### TEI Configuration
 

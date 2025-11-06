@@ -574,6 +574,24 @@ streamingNode:
     enabled: false  # Enable live profiling
   strategy: {}
 
+cdc:
+  enabled: false
+  replicas: 1   # Currently, CDC only supports one replica
+  resources: {}
+  nodeSelector: {}
+  affinity: {}
+  tolerations: []
+  securityContext: {}
+  containerSecurityContext: {}
+  topologySpreadConstraints: []  # Component specific topologySpreadConstraints
+  extraEnv: []
+  heaptrack:
+    enabled: false
+  profiling:
+    enabled: false  # Enable live profiling
+  strategy: {}
+  annotations: {}
+
 attu:
   enabled: false
   name: attu
