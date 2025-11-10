@@ -246,3 +246,122 @@ false
     {{- end -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Create a default fully qualified Woodpecker name.
+We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+*/}}
+{{- define "milvus.woodpecker.fullname" -}}
+{{ template "milvus.fullname" . }}-woodpecker
+{{- end -}}
+
+{{/*
+Woodpecker headless service name
+*/}}
+{{- define "milvus.woodpecker.headlessServiceName" -}}
+{{ include "milvus.woodpecker.fullname" . }}-headless
+{{- end -}}
+
+{{/*
+Woodpecker seed list - Generate a comma-separated list of woodpecker seed addresses
+Parameters:
+  - port (required): The port number to use for the seed list
+    - Use .Values.woodpecker.ports.gossip for gossip/cluster communication
+    - Use .Values.woodpecker.ports.service for client connections
+Usage examples:
+  - For gossip communication (cluster membership):
+    {{ include "milvus.woodpecker.seedList" (merge (dict "port" .Values.woodpecker.ports.gossip) .) }}
+  - For service/client connections:
+    {{ include "milvus.woodpecker.seedList" (merge (dict "port" .Values.woodpecker.ports.service) .) }}
+Output format:
+  woodpecker-0.woodpecker-headless:PORT,woodpecker-1.woodpecker-headless:PORT,...
+*/}}
+{{- define "milvus.woodpecker.seedList" -}}
+{{- $replicas := int .Values.woodpecker.replicaCount -}}
+{{- $headless := include "milvus.woodpecker.headlessServiceName" . -}}
+{{- $fullname := include "milvus.woodpecker.fullname" . -}}
+{{- $port := int .port -}}
+{{- $seedList := "" -}}
+{{- range $i, $_ := until $replicas }}
+  {{- if eq $seedList "" -}}
+    {{- $seedList = printf "%s-%d.%s:%d" $fullname $i $headless $port -}}
+  {{- else -}}
+    {{- $seedList = printf "%s,%s-%d.%s:%d" $seedList $fullname $i $headless $port -}}
+  {{- end -}}
+{{- end -}}
+{{- $seedList -}}
+{{- end -}}
+
+{{/*
+Woodpecker MinIO address
+*/}}
+{{- define "milvus.woodpecker.minioAddress" -}}
+{{- if .Values.woodpecker.minio.address -}}
+{{- .Values.woodpecker.minio.address -}}
+{{- else if .Values.externalS3.enabled -}}
+{{- .Values.externalS3.host -}}
+{{- else if .Values.minio.enabled -}}
+{{- if contains .Values.minio.name .Release.Name -}}
+{{- printf "%s.%s.svc.cluster.local" .Release.Name .Release.Namespace -}}
+{{- else -}}
+{{- printf "%s-%s.%s.svc.cluster.local" .Release.Name .Values.minio.name .Release.Namespace -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Woodpecker MinIO access key
+*/}}
+{{- define "milvus.woodpecker.minioAccessKey" -}}
+{{- if .Values.woodpecker.minio.accessKey -}}
+{{- .Values.woodpecker.minio.accessKey -}}
+{{- else if .Values.externalS3.enabled -}}
+{{- .Values.externalS3.accessKey -}}
+{{- else if .Values.minio.accessKey -}}
+{{- .Values.minio.accessKey -}}
+{{- else -}}
+minioadmin
+{{- end -}}
+{{- end -}}
+
+{{/*
+Woodpecker MinIO secret key
+*/}}
+{{- define "milvus.woodpecker.minioSecretKey" -}}
+{{- if .Values.woodpecker.minio.secretKey -}}
+{{- .Values.woodpecker.minio.secretKey -}}
+{{- else if .Values.externalS3.enabled -}}
+{{- .Values.externalS3.secretKey -}}
+{{- else if .Values.minio.secretKey -}}
+{{- .Values.minio.secretKey -}}
+{{- else -}}
+minioadmin
+{{- end -}}
+{{- end -}}
+
+{{/*
+Woodpecker MinIO bucket name
+*/}}
+{{- define "milvus.woodpecker.minioBucketName" -}}
+{{- if .Values.woodpecker.minio.bucketName -}}
+{{- .Values.woodpecker.minio.bucketName -}}
+{{- else if .Values.externalS3.enabled -}}
+{{- .Values.externalS3.bucketName -}}
+{{- else if .Values.minio.bucketName -}}
+{{- .Values.minio.bucketName -}}
+{{- else -}}
+milvus-bucket
+{{- end -}}
+{{- end -}}
+
+{{/*
+Check if external (non-embedded) Woodpecker is enabled
+Returns "true" if woodpecker is enabled and not embedded, "false" otherwise
+*/}}
+{{- define "milvus.woodpecker.external.enabled" -}}
+{{- if and (eq (.Values.streaming.woodpecker.embedded) false) (.Values.woodpecker.enabled) -}}
+true
+{{- else -}}
+false
+{{- end -}}
+{{- end -}}

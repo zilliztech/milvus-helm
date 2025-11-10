@@ -554,6 +554,8 @@ The following table lists the configurable parameters of the Milvus Streaming No
 | `streamingNode.profiling.enabled`         | Whether to enable live profiling                       | `false`       |
 | `streamingNode.extraEnv`                  | Additional Milvus Streaming Node container environment variables | `[]`  |
 | `streamingNode.strategy`                  | Deployment strategy configuration                       | `{}`          |
+| `streamingNode.woodpecker.embedded`       | Whether to use embedded Woodpecker in Streaming Node. When `false`, external Woodpecker is used and `woodpecker.enabled` must be set to `true` | `true`        |
+| `streamingNode.woodpecker.storage.type`   | Woodpecker storage type. Valid values: `minio`, `local`. Only applies when `embedded` is `true` | `minio`       |
 
 
 ### TEI Configuration
@@ -627,6 +629,44 @@ This version of the chart includes the dependent Kafka chart in the charts/ dire
 You can find more information at:
 * [https://artifacthub.io/packages/helm/bitnami/kafka](https://artifacthub.io/packages/helm/bitnami/kafka)
 
+### Woodpecker Configuration
+
+**Woodpecker** is a cloud-native **Write-Ahead Log (WAL) storage** implementation that serves as the default message queue for Milvus standalone deployments. It's designed specifically for cloud environments, leveraging object storage as the durable storage layer while ensuring scalability and cost-effectiveness.
+
+Woodpecker provides high-throughput writes optimized for cloud storage, efficient log reads with memory management and prefetching strategies, and guarantees strict sequential ordering for log persistence. It can be deployed as a standalone service or integrated as an embedded library in your application.
+
+For more information about Woodpecker, visit the project repository: [https://github.com/zilliztech/woodpecker](https://github.com/zilliztech/woodpecker)
+
+- `woodpecker-svc.yaml` - Contains the headless service and regular service definitions
+- `woodpecker-statefulset.yaml` - Contains the StatefulSet configuration for Woodpecker pods
+
+The following table lists the configurable parameters of the Woodpecker component and their default values.
+
+| Parameter                                 | Description                                             | Default       |
+|-------------------------------------------|---------------------------------------------------------|---------------|
+| `woodpecker.enabled`                      | Enable or disable Woodpecker deployment                | `false`        |
+| `woodpecker.replicaCount`                 | Number of Woodpecker replicas                          | `4`           |
+| `woodpecker.image.repository`             | Woodpecker image repository                             | `milvusdb/woodpecker` |
+| `woodpecker.image.tag`                    | Woodpecker image tag                                    | `latest`      |
+| `woodpecker.image.pullPolicy`             | Image pull policy                                       | `IfNotPresent` |
+| `woodpecker.service.type`                 | Woodpecker service type                                 | `ClusterIP`   |
+| `woodpecker.service.port`                 | Woodpecker service port                                 | `19530`       |
+| `woodpecker.ports.service`                | Container service port                                  | `8080`        |
+| `woodpecker.ports.gossip`                 | Container gossip port                                   | `9090`        |
+| `woodpecker.resources`                    | Resource requests/limits for Woodpecker pods           | `{}`          |
+| `woodpecker.nodeSelector`                 | Node labels for Woodpecker pods assignment             | `{}`          |
+| `woodpecker.affinity`                     | Affinity settings for Woodpecker pods assignment       | `{}`          |
+| `woodpecker.tolerations`                  | Toleration labels for Woodpecker pods assignment       | `[]`          |
+| `woodpecker.persistence.enabled`          | Enable persistence for Woodpecker                      | `false`       |
+| `woodpecker.persistence.size`             | Size of persistent volume                               | `5Gi`         |
+| `woodpecker.persistence.storageClass`     | Storage class for persistent volume                     | `""`          |
+| `woodpecker.podManagementPolicy`          | Pod management policy for StatefulSet                  | `Parallel`    |
+| `woodpecker.resourceGroup`                | Resource group for Woodpecker                          | `default`     |
+| `woodpecker.logging.level`                | Log level for Woodpecker                               | `info`        |
+| `woodpecker.minio.port`                   | MinIO port for object storage                          | `9000`        |
+| `woodpecker.minio.accessKey`              | MinIO access key                                        | `minioadmin`  |
+| `woodpecker.minio.secretKey`              | MinIO secret key                                        | `minioadmin`  |
+| `woodpecker.minio.bucketName`             | MinIO bucket name                                       | `milvus-bucket` |
 
 ### Node Selector, Affinity and Tolerations Configuration Guide
 

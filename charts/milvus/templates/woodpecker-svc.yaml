@@ -1,0 +1,43 @@
+{{- if eq (include "milvus.woodpecker.external.enabled" .) "true" }}
+{{- $replicas := int .Values.woodpecker.replicaCount }}
+{{- $headless := include "milvus.woodpecker.headlessServiceName" . }}
+{{- $fullname := include "milvus.woodpecker.fullname" . }}
+{{- $gossipPort := int .Values.woodpecker.ports.gossip }}
+{{- $seedList := "" -}}
+{{- range $i, $_ := until $replicas }}
+  {{- if eq $seedList "" -}}
+    {{- $seedList = printf "%s-%d.%s:%d" $fullname $i $headless $gossipPort -}}
+  {{- else -}}
+    {{- $seedList = printf "%s,%s-%d.%s:%d" $seedList $fullname $i $headless $gossipPort -}}
+  {{- end -}}
+{{- end }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $headless }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "milvus.labels" . | indent 4 }}
+    component: "woodpecker"
+spec:
+  clusterIP: None
+  publishNotReadyAddresses: true
+  selector:
+{{ include "milvus.matchLabels" . | indent 4 }}
+    component: "woodpecker"
+  ports:
+    - name: service
+      port: {{ .Values.woodpecker.ports.service }}
+      targetPort: service
+    - name: gossip-tcp
+      port: {{ .Values.woodpecker.ports.gossip }}
+      protocol: TCP
+      targetPort: gossip
+    - name: gossip-udp
+      port: {{ .Values.woodpecker.ports.gossip }}
+      protocol: UDP
+      targetPort: gossip
+    - name: metrics
+      port: 9091
+      targetPort: metrics
+{{- end }}
