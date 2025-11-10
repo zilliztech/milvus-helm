@@ -252,4 +252,24 @@ log:
     maxBackups: {{ .Values.log.file.maxBackups }}
   format: {{ .Values.log.format }}
 
+woodpecker:
+{{- $useExternalWoodpecker := eq (include "milvus.woodpecker.external.enabled" .) "true" -}}
+{{- if $useExternalWoodpecker }}
+  client:
+    quorum:
+      quorumBufferPools:
+        - name: default
+          seeds: [{{ include "milvus.woodpecker.seedList"  (merge (dict "port" .Values.woodpecker.ports.service) .)  }}]
+{{- end }}
+  storage:
+{{- if $useExternalWoodpecker }}
+    type: service
+{{- else }}
+    type: {{ .Values.streaming.woodpecker.storage.type }}
+{{- end }}
+{{- if .Values.cluster.enabled }}
+    rootPath: /woodpecker/data
+{{- else }}
+    rootPath: /var/lib/milvus/wp
+{{- end }}
 {{- end }}

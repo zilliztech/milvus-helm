@@ -72,6 +72,10 @@ volumeMounts: []
 # Default config for 2.6.0 or later.
 streaming:
   enabled: true
+  woodpecker:
+    embedded: true
+    storage:
+      type: minio
 
 ##
 ## If set, the whole config will be mounted from this custom ConfigMap.
@@ -1282,6 +1286,72 @@ kafka:
 ###################################
 woodpecker:
   enabled: false
+  replicaCount: 4
+  image:
+    repository: milvusdb/woodpecker
+    tag: latest
+    pullPolicy: IfNotPresent
+
+  resourceGroup: rg-primary
+
+  # Network configuration
+  ports:
+    service: 18080
+    gossip: 17946
+
+  # Pod management policy
+  podManagementPolicy: Parallel
+
+  # Persistence configuration
+  persistence:
+    enabled: true
+    accessModes:
+      - ReadWriteOnce
+    size: 30Gi
+    storageClass: ""
+
+  # MinIO configuration
+  minio:
+    address: ""    # If empty, will use minio.address or default
+    port: 9000
+    accessKey: ""  # If empty, will use minio.auth.rootUser or default
+    secretKey: ""  # If empty, will use minio.auth.rootPassword or default
+    bucketName: "" # If empty, will use minio.bucketName or default
+
+  profiling:
+    enabled: false
+
+  # Logging configuration
+  logging:
+    level: info
+
+  # Resource configuration
+  resources:
+    limits:
+      cpu: "1"
+      memory: 1Gi
+    requests:
+      cpu: 500m
+      memory: 512Mi
+
+  # Additional environment variables
+  extraEnv: []
+
+  # Node selector - inherits global if not specified
+  nodeSelector: {}
+
+  # Tolerations - inherits global if not specified
+  tolerations: []
+
+  # Affinity - inherits global if not specified
+  affinity: {}
+
+  # Topology spread constraints - inherits global if not specified
+  topologySpreadConstraints: []
+
+  # Security context - inherits global if not specified
+  securityContext: {}
+  containerSecurityContext: {}
 
 ###################################
 # External S3
