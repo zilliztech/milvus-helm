@@ -1,0 +1,208 @@
+{{- if .Values.cdc.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "milvus.cdc.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "milvus.labels" . | indent 4 }}
+    component: "cdc"
+{{ include "milvus.ud.labels" . | indent 4 }}
+  annotations:
+{{ include "milvus.ud.annotations" . | indent 4 }}
+
+spec:
+  {{- if ge (int .Values.cdc.replicas) 0 }}
+  replicas: {{ .Values.cdc.replicas }}
+  {{- end }}
+  {{- with .Values.cdc.strategy }}
+  strategy:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  selector:
+    matchLabels:
+{{ include "milvus.matchLabels" . | indent 6 }}
+      component: "cdc"
+  template:
+    metadata:
+      labels:
+{{ include "milvus.matchLabels" . | indent 8 }}
+        component: "cdc"
+{{ include "milvus.ud.labels" . | indent 8 }}
+      annotations:
+      {{- if .Values.cdc.profiling.enabled }}
+        pyroscope.io/scrape: "true"
+        pyroscope.io/application-name: {{ template "milvus.cdc.fullname" . }}
+        pyroscope.io/port: "9091"
+      {{- end }}
+      {{- if .Values.cdc.annotations }}
+        {{- toYaml .Values.cdc.annotations | nindent 8 }}
+      {{- end }}
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+{{ include "milvus.ud.annotations" . | indent 8 }}
+    spec:
+      serviceAccountName: {{ include "milvus.serviceAccount" . }}
+      {{- if .Values.image.all.pullSecrets }}
+      imagePullSecrets:
+      {{- range .Values.image.all.pullSecrets }}
+        - name: {{ . }}
+      {{- end }}
+      {{- end }}
+      initContainers:
+      {{- if .Values.cdc.heaptrack.enabled }}
+      - name: heaptrack
+        command:
+        - /bin/bash
+        - -c
+        - "cp -r /opt/heaptrack /milvus/tools"
+        image: "{{ .Values.heaptrack.image.repository }}:{{ .Values.heaptrack.image.tag }}"
+        imagePullPolicy: {{ .Values.heaptrack.image.pullPolicy }}
+        {{ if and (.Values.containerSecurityContext) (not .Values.cdc.containerSecurityContext) }}
+        securityContext:
+          {{- toYaml .Values.containerSecurityContext | nindent 12 }}
+        {{ end }}
+        {{ if .Values.cdc.containerSecurityContext }}
+        securityContext:
+          {{- toYaml .Values.cdc.containerSecurityContext | nindent 12 }}
+        {{ end }}
+        volumeMounts:
+        - mountPath: /milvus/tools
+          name: tools
+      {{- end }}
+      containers:
+      - name: cdc
+        image: "{{ .Values.image.all.repository }}:{{ .Values.image.all.tag }}"
+        imagePullPolicy: {{ .Values.image.all.pullPolicy }}
+        {{ if and (.Values.containerSecurityContext) (not .Values.cdc.containerSecurityContext) }}
+        securityContext:
+          {{- toYaml .Values.containerSecurityContext | nindent 12 }}
+        {{ end }}
+        {{ if .Values.cdc.containerSecurityContext }}
+        securityContext:
+          {{- toYaml .Values.cdc.containerSecurityContext | nindent 12 }}
+        {{ end }}
+        {{- if .Values.cdc.heaptrack.enabled }}
+        args: [ "/milvus/tools/heaptrack/bin/heaptrack", "milvus", "run", "cdc" ]
+        {{- else }}
+        args: [ "milvus", "run", "cdc" ]
+        {{- end }}
+        env:
+        {{- if .Values.cdc.heaptrack.enabled }}
+        - name: LD_LIBRARY_PATH
+          value: /milvus/tools/heaptrack/lib:/milvus/lib:/usr/lib
+        {{- end }}
+        ports:
+          - name: metrics
+            containerPort: 9091
+            protocol: TCP
+        {{- if .Values.livenessProbe.enabled }}
+        livenessProbe:
+          tcpSocket:
+            port: metrics
+          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.livenessProbe.successThreshold }}
+          failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+        {{- end }}
+        {{- if .Values.readinessProbe.enabled }}
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: metrics
+          initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.readinessProbe.successThreshold }}
+          failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+        {{- end }}
+        resources:
+          {{- toYaml .Values.cdc.resources | nindent 10 }}
+        volumeMounts:
+        {{- if .Values.customConfigMap }}
+        - name: milvus-config
+          mountPath: /milvus/configs/user.yaml
+          subPath: milvus.yaml
+          readOnly: true
+        {{- else }}
+        - name: milvus-config
+          mountPath: /milvus/configs/default.yaml
+          subPath: default.yaml
+          readOnly: true
+        - name: milvus-config
+          mountPath: /milvus/configs/user.yaml
+          subPath: user.yaml
+          readOnly: true
+        {{- end }}
+        {{- if .Values.log.persistence.enabled }}
+        - name: milvus-logs-disk
+          mountPath: {{ .Values.log.persistence.mountPath | quote }}
+          subPath: {{ .Values.log.persistence.persistentVolumeClaim.subPath | default "" }}
+        {{- end }}
+        - mountPath: /milvus/tools
+          name: tools
+        {{- if .Values.volumeMounts }}
+          {{- toYaml .Values.volumeMounts | nindent 8 }}
+        {{- end}}
+
+    {{- if and (.Values.nodeSelector) (not .Values.cdc.nodeSelector) }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+    {{- end }}
+    {{- if .Values.cdc.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.cdc.nodeSelector | indent 8 }}
+    {{- end }}
+    {{- if and (.Values.affinity) (not .Values.cdc.affinity) }}
+      affinity:
+{{ toYaml .Values.affinity | indent 8 }}
+    {{- end }}
+    {{- if .Values.cdc.affinity }}
+      affinity:
+{{ toYaml .Values.cdc.affinity | indent 8 }}
+    {{- end }}
+    {{- if and (.Values.tolerations) (not .Values.cdc.tolerations) }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 8 }}
+    {{- end }}
+    {{- if .Values.cdc.tolerations }}
+      tolerations:
+{{ toYaml .Values.cdc.tolerations | indent 8 }}
+    {{- end }}
+
+    {{- if and (.Values.topologySpreadConstraints) (not .Values.cdc.topologySpreadConstraints) }}
+      topologySpreadConstraints:
+{{ toYaml .Values.topologySpreadConstraints | indent 8 }}
+    {{- end }}
+    {{- if .Values.cdc.topologySpreadConstraints }}
+      topologySpreadConstraints:
+{{ toYaml .Values.cdc.topologySpreadConstraints | indent 8 }}
+    {{- end }}
+    {{- if and (.Values.securityContext) (not .Values.cdc.securityContext) }}
+      securityContext:
+{{ toYaml .Values.securityContext | indent 8 }}
+    {{- end }}
+    {{- if .Values.cdc.securityContext }}
+      securityContext:
+{{ toYaml .Values.cdc.securityContext | indent 8 }}
+    {{- end }}
+
+      volumes:
+      - name: milvus-config
+        configMap:
+          {{- if .Values.customConfigMap }}
+          name: {{ .Values.customConfigMap }}
+          {{- else }}
+          name: {{ template "milvus.fullname" . }}
+          {{- end }}
+      {{- if .Values.log.persistence.enabled }}
+      - name: milvus-logs-disk
+        persistentVolumeClaim:
+          claimName: {{ .Values.log.persistence.persistentVolumeClaim.existingClaim | default (printf "%s-logs" (include "milvus.fullname" . | trunc 58)) }}
+      {{- end }}
+      - name: tools
+        emptyDir: {}
+      {{- if .Values.volumes }}
+        {{- toYaml .Values.volumes | nindent 6 }}
+      {{- end}}
+{{- end }}
