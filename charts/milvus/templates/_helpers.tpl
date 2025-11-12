@@ -113,6 +113,14 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 
 {{/*
+Create a default fully qualified CDC name.
+We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+*/}}
+{{- define "milvus.cdc.fullname" -}}
+{{ template "milvus.fullname" . }}-cdc
+{{- end -}}
+
+{{/*
 Create a default fully qualified pulsar name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
