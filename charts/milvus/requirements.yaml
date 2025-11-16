@@ -20,7 +20,7 @@ dependencies:
     - pulsar
 - name: pulsar
   alias: pulsarv3
-  version: 3.3.0
+  version: 3.6.0
   repository: https://pulsar.apache.org/charts
   condition: pulsarv3.enabled
   tags:
