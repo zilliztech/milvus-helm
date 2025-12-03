@@ -559,7 +559,7 @@ The following table lists the configurable parameters of the Milvus Streaming No
 
 ### Milvus CDC Deployment Configuration
 
-The following table lists the configurable parameters of the Milvus CDC (Change Data Capture) component and their default values. CDC is a new component introduced in Milvus v2.6.7+ that captures and replicates data changes within Milvus.
+The following table lists the configurable parameters of the Milvus CDC (Change Data Capture) component and their default values. CDC is a new component introduced in Milvus v2.6.6+ that captures and replicates data changes within Milvus.
 
 | Parameter                                 | Description                                             | Default       |
 |-------------------------------------------|---------------------------------------------------------|---------------|
