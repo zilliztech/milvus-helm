@@ -335,7 +335,7 @@ The following table lists the configurable parameters of the Milvus Service and 
 | `route.annotations`                       | Route annotations                            | `{}`                                                   |
 | `route.labels`                           | Route labels                                 | `{}`                                                   |
 | `image.all.repository`                    | Image repository                              | `milvusdb/milvus`                                       |
-| `image.all.tag`                           | Image tag                                     | `v2.6.6`                           |
+| `image.all.tag`                           | Image tag                                     | `v2.6.7`                           |
 | `image.all.pullPolicy`                    | Image pull policy                             | `IfNotPresent`                                          |
 | `image.all.pullSecrets`                   | Image pull secrets                            | `{}`                                                    |
 | `image.tools.repository`                  | Config image repository                       | `milvusdb/milvus-config-tool`                                       |
@@ -559,7 +559,7 @@ The following table lists the configurable parameters of the Milvus Streaming No
 
 ### Milvus CDC Deployment Configuration
 
-The following table lists the configurable parameters of the Milvus CDC (Change Data Capture) component and their default values. CDC is a new component introduced in Milvus v2.6.6+ that captures and replicates data changes within Milvus.
+The following table lists the configurable parameters of the Milvus CDC (Change Data Capture) component and their default values. CDC is a new component introduced in Milvus v2.6.7+ that captures and replicates data changes within Milvus.
 
 | Parameter                                 | Description                                             | Default       |
 |-------------------------------------------|---------------------------------------------------------|---------------|
