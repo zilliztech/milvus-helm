@@ -2,6 +2,70 @@ apiVersion: v1
 entries:
   milvus:
   - apiVersion: v1
+    appVersion: 2.6.9
+    created: "2026-01-16T10:20:29.851737296Z"
+    dependencies:
+    - condition: etcd.enabled
+      name: etcd
+      repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
+      tags:
+      - etcd
+      version: 8.12.0
+    - condition: minio.enabled
+      name: minio
+      repository: https://zilliztech.github.io/milvus-helm
+      tags:
+      - minio
+      version: 8.0.17
+    - alias: pulsar
+      condition: pulsar.enabled
+      name: pulsarv2
+      repository: https://zilliztech.github.io/milvus-helm
+      tags:
+      - pulsar
+      version: 2.7.8
+    - alias: pulsarv3
+      condition: pulsarv3.enabled
+      name: pulsar
+      repository: https://pulsar.apache.org/charts
+      tags:
+      - pulsarv3
+      version: 3.3.0
+    - condition: kafka.enabled
+      name: kafka
+      repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
+      tags:
+      - kafka
+      version: 15.5.1
+    - condition: tei.enabled
+      name: tei
+      repository: https://zilliztech.github.io/milvus-helm
+      tags:
+      - tei
+      version: 1.6.0
+    description: Milvus is an open-source vector database built to power AI applications
+      and vector similarity search.
+    digest: 92cba2bcb4b2ac557590aa2f443d10b73de400a99c4bc5637ccfc50b79f4991c
+    home: https://milvus.io/
+    icon: https://raw.githubusercontent.com/milvus-io/docs/master/v1.0.0/assets/milvus_logo.png
+    keywords:
+    - milvus
+    - elastic
+    - vector
+    - search
+    - deploy
+    kubeVersion: ^1.10.0-0
+    maintainers:
+    - email: contact@milvus.io
+      name: contact
+      url: milvus.io
+    name: milvus
+    sources:
+    - https://github.com/zilliztech/milvus
+    urls:
+    - https://github.com/zilliztech/milvus-helm/releases/download/milvus-5.0.12/milvus-5.0.12.tgz
+    version: 5.0.12
+  - apiVersion: v1
     appVersion: 2.6.8
     created: "2026-01-01T02:58:19.475024307Z"
     dependencies:
@@ -15253,4 +15317,4 @@ entries:
     urls:
     - https://github.com/zilliztech/milvus-helm/releases/download/tei-1.6.0/tei-1.6.0.tgz
     version: 1.6.0
-generated: "2026-01-01T02:58:19.47764368Z"
+generated: "2026-01-16T10:20:29.854485542Z"
