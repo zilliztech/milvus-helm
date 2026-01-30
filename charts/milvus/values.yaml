@@ -11,7 +11,7 @@ cluster:
 image:
   all:
     repository: milvusdb/milvus
-    tag: v2.6.9
+    tag: v2.6.10
     pullPolicy: IfNotPresent
     ## Optionally specify an array of imagePullSecrets.
     ## Secrets must be manually created in the namespace.
