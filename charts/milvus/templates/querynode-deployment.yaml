@@ -1,12 +1,16 @@
-{{- if and .Values.queryNode.enabled .Values.cluster.enabled }}
+{{/* Querynode deployment template. Accepts merged context with optional .rg for resource group. */}}
+{{- define "milvus.querynode.deployment" -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "milvus.querynode.fullname" . }}
+  name: {{ template "milvus.querynode.fullname" . }}{{- if .rg }}-{{ .rg }}{{- end }}
   namespace: {{ .Release.Namespace }}
   labels:
 {{ include "milvus.labels" . | indent 4 }}
     component: "querynode"
+{{- if .rg }}
+    milvus.io/resource-group: {{ .rg | quote }}
+{{- end }}
 {{ include "milvus.ud.labels" . | indent 4 }}
   annotations:
 {{ include "milvus.ud.annotations" . | indent 4 }}
@@ -23,16 +27,22 @@ spec:
     matchLabels:
 {{ include "milvus.matchLabels" . | indent 6 }}
       component: "querynode"
+{{- if .rg }}
+      milvus.io/resource-group: {{ .rg | quote }}
+{{- end }}
   template:
     metadata:
       labels:
 {{ include "milvus.matchLabels" . | indent 8 }}
         component: "querynode"
+{{- if .rg }}
+        milvus.io/resource-group: {{ .rg | quote }}
+{{- end }}
 {{ include "milvus.ud.labels" . | indent 8 }}
       annotations:
       {{- if .Values.queryNode.profiling.enabled }}
         pyroscope.io/scrape: "true"
-        pyroscope.io/application-name: {{ template "milvus.querynode.fullname" . }}
+        pyroscope.io/application-name: {{ template "milvus.querynode.fullname" . }}{{- if .rg }}-{{ .rg }}{{- end }}
         pyroscope.io/port: "9091"
       {{- end }}
       {{- if .Values.queryNode.annotations }}
@@ -100,6 +110,10 @@ spec:
             resourceFieldRef:
               divisor: 1Gi
               resource: limits.ephemeral-storage
+        {{- end }}
+        {{- if .rg }}
+        - name: MILVUS_SERVER_LABEL_RESOURCE_GROUP
+          value: {{ .rg | quote }}
         {{- end }}
         {{- if .Values.queryNode.extraEnv }}
           {{- toYaml .Values.queryNode.extraEnv | nindent 8 }}
@@ -229,4 +243,15 @@ spec:
       {{- if .Values.volumes }}
         {{- toYaml .Values.volumes | nindent 6 }}
       {{- end}}
+{{- end -}}
+
+{{- if and .Values.queryNode.enabled .Values.cluster.enabled }}
+{{- if .Values.replicaResourceGroups }}
+{{- range $rg := .Values.replicaResourceGroups }}
+---
+{{ include "milvus.querynode.deployment" (merge (dict "rg" $rg) $) }}
+{{- end }}
+{{- else }}
+{{ include "milvus.querynode.deployment" (merge (dict "rg" "") .) }}
+{{- end }}
 {{- end }}
