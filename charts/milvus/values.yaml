@@ -8,6 +8,12 @@ fullnameOverride: ""
 cluster:
   enabled: true
 
+## Resource group isolation for multi-replica mode (cluster mode only).
+## List of resource group names (e.g., ["rg1", "rg2"]).
+## When set, creates per-RG querynode and streamingnode deployments,
+## and auto-configures cluster-level multi-replica settings.
+replicaResourceGroups: []
+
 image:
   all:
     repository: milvusdb/milvus
