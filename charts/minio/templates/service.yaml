@@ -34,6 +34,9 @@ spec:
     port: {{ .port }}
     protocol: TCP
     targetPort: {{ .targetPort }}
+    {{- if (and (eq .Values.service.type "NodePort") (not (empty .nodePort))) }}
+    nodePort: {{ .nodePort }}
+    {{- end }}
 {{- end }}
 {{- if .Values.service.externalIPs }}
   externalIPs:
