@@ -28,15 +28,13 @@ spec:
 {{- else }}
   type: {{ .Values.service.type }}
 {{- end }}
-  ports:
-    - name: {{ $scheme }}
-      port: {{ .Values.service.port }}
-      protocol: TCP
-{{- if (and (eq .Values.service.type "NodePort") ( .Values.service.nodePort)) }}
-      nodePort: {{ .Values.service.nodePort }}
-{{- else }}
-      targetPort: 9000
-{{- end}}
+# loop to add all ports from .Values.service.ports
+{{- range .Values.service.ports }}
+  - name: {{ .name }}
+    port: {{ .port }}
+    protocol: TCP
+    targetPort: {{ .targetPort }}
+{{- end }}
 {{- if .Values.service.externalIPs }}
   externalIPs:
 {{- range $i , $ip := .Values.service.externalIPs }}
