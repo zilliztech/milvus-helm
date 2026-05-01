@@ -200,6 +200,10 @@ queryCoord:
   port: {{ .Values.queryCoordinator.service.port }}
 
   enableActiveStandby: {{ template "milvus.querycoord.activeStandby" . }}  # Enable querycoord active-standby
+{{- if and .Values.cluster.enabled .Values.replicaResourceGroups }}
+  clusterLevelLoadReplicaNumber: {{ len .Values.replicaResourceGroups }}
+  clusterLevelLoadResourceGroups: {{ join "," .Values.replicaResourceGroups }}
+{{- end }}
 
 queryNode:
   port: 21123
@@ -271,5 +275,12 @@ woodpecker:
     rootPath: /woodpecker/data
 {{- else }}
     rootPath: /var/lib/milvus/wp
+{{- end }}
+
+{{- if and .Values.cluster.enabled .Values.replicaResourceGroups }}
+streaming:
+  primaryResourceGroup: {{ index .Values.replicaResourceGroups 0 }}
+  strictResourceGroupIsolation:
+    enabled: true
 {{- end }}
 {{- end }}
