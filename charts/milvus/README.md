@@ -620,12 +620,17 @@ The following table lists the configurable parameters of the Text Embeddings Inf
 ### Pulsar Configuration
 
 This version of the chart includes the dependent Pulsar chart in the charts/ directory.
+- `pulsar-v4.6.0` is used for Pulsar v4 (Pulsar 4.0 LTS)
 - `pulsar-v3.3.0` is used for Pulsar v3
 - `pulsar-v2.7.8` is used for Pulsar v2
 
-Since milvus chart version 4.2.21, pulsar v3 is supported, but pulsar v2 will be still used by default until the release of Milvus v2.5.0. 
+Since milvus chart version 4.2.21, pulsar v3 is supported, but pulsar v2 will be still used by default until the release of Milvus v2.5.0.
 
-We recommend creating new instances with pulsar v3 to avoid security vulnerabilities & some bugs in pulsar v2. To use pulsar v3, set `pulsarv3.enabled` to `true` and `pulsar.enabled` to `false`. Set other values for pulsar v3 under `pulsarv3` field.
+Pulsar v3 (`pulsarv3.enabled=true`) is the current default. Pulsar v4 support was added as an opt-in option; the default has not changed, so existing deployments are unaffected.
+
+Both Apache Pulsar v2 and v3 have reached end-of-life upstream. New deployments may opt in to pulsar v4 (Pulsar 4.0 LTS). To use pulsar v4, set `pulsarv4.enabled` to `true` and disable the other pulsar variants (`pulsar.enabled=false` and `pulsarv3.enabled=false`). Configure pulsar v4 under the `pulsarv4` field.
+
+To stay on pulsar v3 (the default), leave `pulsarv3.enabled=true` and keep `pulsar.enabled=false` and `pulsarv4.enabled=false`. Configure pulsar v3 under the `pulsarv3` field.
 
 You can find more information at:
 * [https://pulsar.apache.org/charts](https://pulsar.apache.org/charts)
