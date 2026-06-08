@@ -246,3 +246,78 @@ false
     {{- end -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+milvus.logVolume renders the pod volume entry for milvus log storage.
+Precedence:
+  1. existingClaim set -> reference that PVC (user-managed).
+  2. ephemeral: true   -> generic ephemeral volume (inline PVC bound to
+     the pod lifecycle, K8s >= 1.21).
+  3. default           -> named PersistentVolumeClaim from pvc.yaml.
+*/}}
+{{- define "milvus.logVolume" -}}
+{{- $pvc := .Values.log.persistence.persistentVolumeClaim -}}
+- name: milvus-logs-disk
+{{- if and $pvc.ephemeral (not $pvc.existingClaim) }}
+  ephemeral:
+    volumeClaimTemplate:
+      metadata:
+        labels:
+          {{- include "milvus.matchLabels" . | nindent 10 }}
+      spec:
+        accessModes:
+          - {{ $pvc.accessModes | quote }}
+        {{- if $pvc.storageClass }}
+        {{- if eq "-" $pvc.storageClass }}
+        storageClassName: ""
+        {{- else }}
+        storageClassName: {{ $pvc.storageClass }}
+        {{- end }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ $pvc.size }}
+{{- else }}
+  persistentVolumeClaim:
+    claimName: {{ $pvc.existingClaim | default (printf "%s-logs" (include "milvus.fullname" . | trunc 58)) }}
+{{- end }}
+{{- end -}}
+
+{{/*
+milvus.standaloneDataVolume renders the pod volume entry for the
+standalone milvus data disk.
+Precedence:
+  1. persistence disabled -> emptyDir (preserves existing behavior).
+  2. existingClaim set    -> reference that PVC.
+  3. ephemeral: true      -> generic ephemeral volume.
+  4. default              -> named PersistentVolumeClaim from pvc.yaml.
+*/}}
+{{- define "milvus.standaloneDataVolume" -}}
+{{- $pvc := .Values.standalone.persistence.persistentVolumeClaim -}}
+- name: milvus-data-disk
+{{- if not .Values.standalone.persistence.enabled }}
+  emptyDir: {}
+{{- else if and $pvc.ephemeral (not $pvc.existingClaim) }}
+  ephemeral:
+    volumeClaimTemplate:
+      metadata:
+        labels:
+          {{- include "milvus.matchLabels" . | nindent 10 }}
+      spec:
+        accessModes:
+          - {{ $pvc.accessModes | quote }}
+        {{- if $pvc.storageClass }}
+        {{- if eq "-" $pvc.storageClass }}
+        storageClassName: ""
+        {{- else }}
+        storageClassName: {{ $pvc.storageClass }}
+        {{- end }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ $pvc.size }}
+{{- else }}
+  persistentVolumeClaim:
+    claimName: {{ $pvc.existingClaim | default (printf "%s" (include "milvus.fullname" . | trunc 58)) }}
+{{- end }}
+{{- end -}}

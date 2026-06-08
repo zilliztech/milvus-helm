@@ -201,9 +201,7 @@ spec:
           name: {{ template "milvus.fullname" . }}
           {{- end }}
       {{- if .Values.log.persistence.enabled }}
-      - name: milvus-logs-disk
-        persistentVolumeClaim:
-          claimName: {{ .Values.log.persistence.persistentVolumeClaim.existingClaim | default (printf "%s-logs" (include "milvus.fullname" . | trunc 58)) }}
+      {{- include "milvus.logVolume" . | nindent 6 }}
       {{- end }}
       - name: tools
         emptyDir: {}

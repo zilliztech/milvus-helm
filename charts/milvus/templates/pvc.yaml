@@ -1,6 +1,6 @@
 {{- if not .Values.cluster.enabled }}
 {{- $pvc := .Values.standalone.persistence.persistentVolumeClaim -}}
-{{- if and .Values.standalone.persistence.enabled (not $pvc.existingClaim) }}
+{{- if and .Values.standalone.persistence.enabled (not $pvc.existingClaim) (not $pvc.ephemeral) }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -29,7 +29,7 @@ spec:
 {{- end }}
 
 {{- $pvc := .Values.log.persistence.persistentVolumeClaim -}}
-{{- if and .Values.log.persistence.enabled (not $pvc.existingClaim)}}
+{{- if and .Values.log.persistence.enabled (not $pvc.existingClaim) (not $pvc.ephemeral) }}
 
 ---
 
