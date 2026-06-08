@@ -210,17 +210,9 @@ spec:
           {{- else }}
           name: {{ template "milvus.fullname" . }}
           {{- end }}
-      - name: milvus-data-disk
-        {{- if .Values.standalone.persistence.enabled }}
-        persistentVolumeClaim:
-          claimName: {{ .Values.standalone.persistence.persistentVolumeClaim.existingClaim | default (printf "%s" (include "milvus.fullname" . | trunc 58)) }}
-        {{- else }}
-        emptyDir: {}
-        {{- end }}
+      {{- include "milvus.standaloneDataVolume" . | nindent 6 }}
       {{- if .Values.log.persistence.enabled }}
-      - name: milvus-logs-disk
-        persistentVolumeClaim:
-          claimName: {{ .Values.log.persistence.persistentVolumeClaim.existingClaim | default (printf "%s-logs" (include "milvus.fullname" . | trunc 58)) }}
+      {{- include "milvus.logVolume" . | nindent 6 }}
       {{- end }}
       {{- if .Values.standalone.disk.enabled }}
       - name: disk

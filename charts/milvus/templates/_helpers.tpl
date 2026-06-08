@@ -246,3 +246,74 @@ false
     {{- end -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+milvus.logVolume renders the pod volume entry for milvus log storage.
+When log.persistence.persistentVolumeClaim.ephemeral is true, a generic
+ephemeral volume (inline PVC bound to the pod lifecycle) is emitted.
+Otherwise the existing named PersistentVolumeClaim path is used.
+*/}}
+{{- define "milvus.logVolume" -}}
+{{- $pvc := .Values.log.persistence.persistentVolumeClaim -}}
+- name: milvus-logs-disk
+{{- if $pvc.ephemeral }}
+  ephemeral:
+    volumeClaimTemplate:
+      metadata:
+        labels:
+          {{- include "milvus.matchLabels" . | nindent 10 }}
+      spec:
+        accessModes:
+          - {{ $pvc.accessModes | quote }}
+        {{- if $pvc.storageClass }}
+        {{- if eq "-" $pvc.storageClass }}
+        storageClassName: ""
+        {{- else }}
+        storageClassName: {{ $pvc.storageClass }}
+        {{- end }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ $pvc.size }}
+{{- else }}
+  persistentVolumeClaim:
+    claimName: {{ $pvc.existingClaim | default (printf "%s-logs" (include "milvus.fullname" . | trunc 58)) }}
+{{- end }}
+{{- end -}}
+
+{{/*
+milvus.standaloneDataVolume renders the pod volume entry for the
+standalone data disk. Selects between:
+  - emptyDir (persistence disabled)
+  - generic ephemeral PVC (persistence enabled, ephemeral true)
+  - named PVC (persistence enabled, ephemeral false; existing behavior)
+*/}}
+{{- define "milvus.standaloneDataVolume" -}}
+{{- $pvc := .Values.standalone.persistence.persistentVolumeClaim -}}
+- name: milvus-data-disk
+{{- if not .Values.standalone.persistence.enabled }}
+  emptyDir: {}
+{{- else if $pvc.ephemeral }}
+  ephemeral:
+    volumeClaimTemplate:
+      metadata:
+        labels:
+          {{- include "milvus.matchLabels" . | nindent 10 }}
+      spec:
+        accessModes:
+          - {{ $pvc.accessModes | quote }}
+        {{- if $pvc.storageClass }}
+        {{- if eq "-" $pvc.storageClass }}
+        storageClassName: ""
+        {{- else }}
+        storageClassName: {{ $pvc.storageClass }}
+        {{- end }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ $pvc.size }}
+{{- else }}
+  persistentVolumeClaim:
+    claimName: {{ $pvc.existingClaim | default (printf "%s" (include "milvus.fullname" . | trunc 58)) }}
+{{- end }}
+{{- end -}}

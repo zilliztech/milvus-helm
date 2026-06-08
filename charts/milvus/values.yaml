@@ -203,6 +203,13 @@ log:
       helm.sh/resource-policy: keep
     persistentVolumeClaim:
       existingClaim: ""
+      ## If true, use a generic ephemeral volume (inline PVC bound to the pod
+      ## lifecycle) instead of a named PersistentVolumeClaim. The volume is
+      ## dynamically provisioned when the pod starts and deleted with the pod.
+      ## Requires Kubernetes >= 1.21 (GA in 1.23). Ignored when existingClaim
+      ## is set.
+      ##
+      ephemeral: false
       ## Milvus Logs Persistent Volume Storage Class
       ## If defined, storageClassName: <storageClass>
       ## If set to "-", storageClassName: "", which disables dynamic provisioning
@@ -260,6 +267,13 @@ standalone:
       helm.sh/resource-policy: keep
     persistentVolumeClaim:
       existingClaim: ""
+      ## If true, use a generic ephemeral volume (inline PVC bound to the pod
+      ## lifecycle) instead of a named PersistentVolumeClaim. The volume is
+      ## dynamically provisioned when the pod starts and deleted with the pod.
+      ## Requires Kubernetes >= 1.21 (GA in 1.23). Ignored when existingClaim
+      ## is set.
+      ##
+      ephemeral: false
       ## Milvus Persistent Volume Storage Class
       ## If defined, storageClassName: <storageClass>
       ## If set to "-", storageClassName: "", which disables dynamic provisioning
