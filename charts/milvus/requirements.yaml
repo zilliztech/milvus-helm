@@ -25,6 +25,13 @@ dependencies:
   condition: pulsarv3.enabled
   tags:
     - pulsarv3
+- name: pulsar
+  alias: pulsarv4
+  version: 4.6.0
+  repository: https://pulsar.apache.org/charts
+  condition: pulsarv4.enabled
+  tags:
+    - pulsarv4
 - name: kafka
   version: 15.5.1
   repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
