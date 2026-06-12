@@ -111,6 +111,26 @@ pulsar:
   port: {{ .Values.pulsar.proxy.ports.pulsar }}
   maxMessageSize: {{ .Values.pulsar.maxMessageSize }}
 
+{{- else if .Values.externalWoodpecker.enabled }}
+
+mq:
+  type: woodpecker
+messageQueue: woodpecker
+
+woodpecker:
+  client:
+    quorum:
+      quorumBufferPools:
+        - name: default
+          seeds: [{{ join "," .Values.externalWoodpecker.seeds }}]
+  storage:
+    type: service
+{{- if .Values.cluster.enabled }}
+    rootPath: /woodpecker/data
+{{- else }}
+    rootPath: /var/lib/milvus/wp
+{{- end }}
+
 {{- else if .Values.woodpecker.enabled }}
 
 mq:
