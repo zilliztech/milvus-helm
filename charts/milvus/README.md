@@ -400,6 +400,9 @@ The following table lists the configurable parameters of the Milvus Service and 
 | `externalPulsar.namespace`                | The namespace of the external Pulsar          | `default`                                                  |
 | `externalPulsar.authPlugin`               | The authPlugin of the external Pulsar         | `""`                                                  |
 | `externalPulsar.authParams`               | The authParams of the external Pulsar         | `""`                                                  |
+| `externalWoodpecker.enabled`              | Enable or disable external Woodpecker        | `false`                                                 |
+| `externalWoodpecker.poolName`             | The quorum buffer pool name of the external Woodpecker | `default`                                     |
+| `externalWoodpecker.seeds`                | The seed endpoints of the external Woodpecker service | `[woodpecker-0.woodpecker-headless.default.svc.cluster.local:18080, ...]` |
 | `externalKafka.enabled`                   | Enable or disable external Kafka             | `false`                                                 |
 | `externalKafka.brokerList`                | The brokerList of the external Kafka separated by comma               | `localhost:9092`                                             |
 | `externalKafka.securityProtocol`          | The securityProtocol used for kafka authentication                    | `SASL_SSL`                                                   |
