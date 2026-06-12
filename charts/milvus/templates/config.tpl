@@ -118,6 +118,26 @@ mq:
 
 messageQueue: woodpecker
 
+woodpecker:
+{{- $useExternalWoodpecker := eq (include "milvus.woodpecker.external.enabled" .) "true" -}}
+{{- if $useExternalWoodpecker }}
+  client:
+    quorum:
+      quorumBufferPools:
+        - name: default
+          seeds: [{{ include "milvus.woodpecker.seedList"  (merge (dict "port" .Values.woodpecker.ports.service) .)  }}]
+{{- end }}
+  storage:
+{{- if $useExternalWoodpecker }}
+    type: service
+{{- else }}
+    type: {{ .Values.streaming.woodpecker.storage.type }}
+{{- end }}
+{{- if .Values.cluster.enabled }}
+    rootPath: /woodpecker/data
+{{- else }}
+    rootPath: /var/lib/milvus/wp
+{{- end }}
 
 {{- else if .Values.pulsarv3.enabled }}
 
@@ -256,25 +276,16 @@ log:
     maxBackups: {{ .Values.log.file.maxBackups }}
   format: {{ .Values.log.format }}
 
+{{- if and .Values.streaming.woodpecker.embedded (not .Values.externalWoodpecker.enabled) (not .Values.woodpecker.enabled) }}
+
 woodpecker:
-{{- $useExternalWoodpecker := eq (include "milvus.woodpecker.external.enabled" .) "true" -}}
-{{- if $useExternalWoodpecker }}
-  client:
-    quorum:
-      quorumBufferPools:
-        - name: default
-          seeds: [{{ include "milvus.woodpecker.seedList"  (merge (dict "port" .Values.woodpecker.ports.service) .)  }}]
-{{- end }}
   storage:
-{{- if $useExternalWoodpecker }}
-    type: service
-{{- else }}
     type: {{ .Values.streaming.woodpecker.storage.type }}
-{{- end }}
 {{- if .Values.cluster.enabled }}
     rootPath: /woodpecker/data
 {{- else }}
     rootPath: /var/lib/milvus/wp
+{{- end }}
 {{- end }}
 
 {{- if and .Values.cluster.enabled .Values.replicaResourceGroups }}
