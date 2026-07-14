@@ -439,6 +439,7 @@ The following table lists the configurable parameters of the Milvus Proxy compon
 |-------------------------------------------|---------------------------------------------------------|---------------|
 | `proxy.enabled`                           | Enable or disable Milvus Proxy Deployment               | `true`        |
 | `proxy.replicas`                          | Desired number of Milvus Proxy pods                     | `1`           |
+| `proxy.groups`                            | Optional deployment groups for rendering multiple Proxy Deployments | `[]` |
 | `proxy.resources`                         | Resource requests/limits for the Milvus Proxy pods      | `{}`          |
 | `proxy.nodeSelector`                      | Node labels for Milvus Proxy pods assignment            | `{}`          |
 | `proxy.affinity`                          | Affinity settings for Milvus Proxy pods assignment      | `{}`          |
@@ -468,6 +469,7 @@ The following table lists the configurable parameters of the Milvus Query Node c
 |-------------------------------------------|-----------------------------------------------|---------------------------------------------------------|
 | `queryNode.enabled`                       | Enable or disable Milvus Query Node component | `true`                                                  |
 | `queryNode.replicas`                      | Desired number of Milvus Query Node pods | `1`                                                          |
+| `queryNode.groups`                        | Optional deployment groups for rendering multiple Query Node Deployments | `[]` |
 | `queryNode.resources`                     | Resource requests/limits for the Milvus Query Node pods | `{}`                                          |
 | `queryNode.nodeSelector`                  | Node labels for Milvus Query Node pods assignment | `{}`                                                |
 | `queryNode.affinity`                      | Affinity settings for Milvus Query Node pods assignment | `{}`                                          |
@@ -496,6 +498,7 @@ The following table lists the configurable parameters of the Milvus Data Node co
 |-------------------------------------------|-----------------------------------------------|---------------------------------------------------------|
 | `dataNode.enabled`                        | Enable or disable Data Node component         | `true`                                                  |
 | `dataNode.replicas`                       | Desired number of Data Node pods               | `1`                                                    |
+| `dataNode.groups`                         | Optional deployment groups for rendering multiple Data Node Deployments | `[]` |
 | `dataNode.resources`                      | Resource requests/limits for the Milvus Data Node pods | `{}`                                           |
 | `dataNode.nodeSelector`                   | Node labels for Milvus Data Node pods assignment | `{}`                                                 |
 | `dataNode.affinity`                       | Affinity settings for Milvus Data Node pods assignment | `{}`                                           |
@@ -518,6 +521,7 @@ The following table lists the configurable parameters of the Milvus Mix Coordina
 |-------------------------------------------|-----------------------------------------------|---------------------------------------------------------|
 | `mixCoordinator.enabled`                 | Enable or disable Mix Coordinator component  | `true`                                                  |
 | `mixCoordinator.replicas`                | Desired number of Mix Coordinator pods       | `1`                                                     |
+| `mixCoordinator.labels`                  | Additional labels for the single Mix Coordinator Deployment and pods | `{}` |
 | `mixCoordinator.resources`               | Resource requests/limits for the Milvus Mix Coordinator pods | `{}`                                    |
 | `mixCoordinator.nodeSelector`            | Node labels for Milvus Mix Coordinator pods assignment | `{}`                                          |
 | `mixCoordinator.affinity`                | Affinity settings for Milvus Mix Coordinator pods assignment  | `{}`                                   |
@@ -544,6 +548,7 @@ The following table lists the configurable parameters of the Milvus Streaming No
 |-------------------------------------------|---------------------------------------------------------|---------------|
 | `streamingNode.enabled`                   | Enable or disable Streaming Node component             | `true`        |
 | `streamingNode.replicas`                  | Desired number of Streaming Node pods                  | `1`           |
+| `streamingNode.groups`                    | Optional deployment groups for rendering multiple Streaming Node Deployments | `[]` |
 | `streamingNode.resources`                 | Resource requests/limits for the Milvus Streaming Node pods | `{}`      |
 | `streamingNode.nodeSelector`              | Node labels for Milvus Streaming Node pods assignment  | `{}`          |
 | `streamingNode.affinity`                  | Affinity settings for Milvus Streaming Node pods assignment | `{}`      |
@@ -695,6 +700,7 @@ The following table lists the configurable parameters of the Woodpecker componen
 - [Node Selector Configuration Guide](../../docs/node-selector-configuration-guide.md)
 - [Affinity Configuration Guide](../../docs/affinity-configuration-guide.md)
 - [Tolerations Configuration Guide](../../docs/tolerations-configuration-guide.md)
+- [Deployment Groups and Resource Group Guide](../../docs/deployment-groups-resource-group-guide.md)
 
 #### Important Configuration Considerations
 
