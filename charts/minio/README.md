@@ -25,7 +25,7 @@ Prerequisites
 -------------
 
 - Kubernetes 1.4+ with Beta APIs enabled for default standalone mode.
-- Kubernetes 1.5+ with Beta APIs enabled to run MinIO in [distributed mode](#distributed-minio).
+- Kubernetes 1.5+ with Beta APIs enabled to run MinIO in distributed mode.
 - PV provisioner support in the underlying infrastructure.
 
 Configure MinIO Helm repo
@@ -43,7 +43,7 @@ Install this chart using:
 $ helm install --namespace minio --generate-name minio/minio
 ```
 
-The command deploys MinIO on the Kubernetes cluster in the default configuration. The [configuration](#configuration) section lists the parameters that can be configured during installation.
+The command deploys MinIO on the Kubernetes cluster in the default configuration. See [values.yaml](values.yaml) for the parameters that can be configured during installation.
 
 ### Release name
 

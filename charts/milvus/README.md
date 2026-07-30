@@ -2,8 +2,6 @@
 
 For more information about installing and using Helm, see the [Helm Docs](https://helm.sh/docs/). For a quick introduction to Charts, see the [Chart Guide](https://helm.sh/docs/topics/charts/).
 
-To install Milvus, refer to [Milvus installation](https://milvus.io/docs/install_cluster-helm.md).
-
 ## Introduction
 This chart bootstraps Milvus deployment on a Kubernetes cluster using the Helm package manager.
 
@@ -335,7 +333,7 @@ The following table lists the configurable parameters of the Milvus Service and 
 | `route.annotations`                       | Route annotations                            | `{}`                                                   |
 | `route.labels`                           | Route labels                                 | `{}`                                                   |
 | `image.all.repository`                    | Image repository                              | `milvusdb/milvus`                                       |
-| `image.all.tag`                           | Image tag                                     | `v2.6.21`                           |
+| `image.all.tag`                           | Image tag                                     | `v3.0.0`                           |
 | `image.all.pullPolicy`                    | Image pull policy                             | `IfNotPresent`                                          |
 | `image.all.pullSecrets`                   | Image pull secrets                            | `{}`                                                    |
 | `image.tools.repository`                  | Config image repository                       | `milvusdb/milvus-config-tool`                                       |

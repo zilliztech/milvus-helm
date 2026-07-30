@@ -5,7 +5,6 @@
 - [Priority Hierarchy](#priority-hierarchy)
 - [Global SecurityContext](#global-securitycontext)
 - [Component-Specific SecurityContext](#component-specific-securitycontext)
-- [Dependencies SecurityContext](#dependencies-securitycontext)
 - [Important Notes](#important-notes)
 
 ## Priority Hierarchy
