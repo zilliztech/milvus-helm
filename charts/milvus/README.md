@@ -2,8 +2,6 @@
 
 For more information about installing and using Helm, see the [Helm Docs](https://helm.sh/docs/). For a quick introduction to Charts, see the [Chart Guide](https://helm.sh/docs/topics/charts/).
 
-To install Milvus, refer to [Milvus installation](https://milvus.io/docs/install_cluster-helm.md).
-
 ## Introduction
 This chart bootstraps Milvus deployment on a Kubernetes cluster using the Helm package manager.
 
