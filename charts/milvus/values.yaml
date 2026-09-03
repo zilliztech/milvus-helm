@@ -1429,6 +1429,18 @@ externalPulsar:
   authParams: ""
 
 ###################################
+# External Woodpecker
+# - these configs are only used when `externalWoodpecker.enabled` is true
+###################################
+externalWoodpecker:
+  enabled: false
+  poolName: default
+  seeds:
+    - woodpecker-0.woodpecker-headless.default.svc.cluster.local:18080
+    - woodpecker-1.woodpecker-headless.default.svc.cluster.local:18080
+    - woodpecker-2.woodpecker-headless.default.svc.cluster.local:18080
+
+###################################
 # External kafka
 # - these configs are only used when `externalKafka.enabled` is true
 # - note that the following are just examples, you should confirm the
