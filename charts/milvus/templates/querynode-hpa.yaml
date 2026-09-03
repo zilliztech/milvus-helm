@@ -1,16 +1,30 @@
-{{- if and .Values.queryNode.enabled .Values.queryNode.hpa.enabled }}
+{{- define "milvus.querynode.hpa" -}}
+{{- $groupName := "" -}}
+{{- if .group }}
+{{- $groupName = required "queryNode.groups[].name is required" .group.name -}}
+{{- end }}
+{{- $nameSuffix := $groupName -}}
+{{- if and (not $nameSuffix) .rg -}}
+{{- $nameSuffix = .rg -}}
+{{- end }}
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ template "milvus.querynode.fullname" . }}-hpa
+  name: {{ template "milvus.querynode.fullname" . }}{{- if $nameSuffix }}-{{ $nameSuffix }}{{- end }}-hpa
   namespace: {{ .Release.Namespace }}
   labels:
     component: "querynode"
+{{- if $groupName }}
+    milvus.io/deployment-group: {{ $groupName | quote }}
+{{- end }}
+{{- if .rg }}
+    milvus.io/resource-group: {{ .rg | quote }}
+{{- end }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ template "milvus.querynode.fullname" . }}
+    name: {{ template "milvus.querynode.fullname" . }}{{- if $nameSuffix }}-{{ $nameSuffix }}{{- end }}
   minReplicas: {{ .Values.queryNode.hpa.minReplicas | default 1 }}
   maxReplicas: {{ .Values.queryNode.hpa.maxReplicas | default 10 }}
   metrics:
@@ -26,4 +40,20 @@ spec:
       target:
         type: Utilization
         averageUtilization: {{ .Values.queryNode.hpa.memoryUtilization | default 40 }}
+{{- end -}}
+
+{{- if and .Values.queryNode.enabled .Values.queryNode.hpa.enabled }}
+{{- if .Values.queryNode.groups }}
+{{- range $group := .Values.queryNode.groups }}
+---
+{{ include "milvus.querynode.hpa" (merge (dict "group" $group "rg" "") $) }}
+{{- end }}
+{{- else if .Values.replicaResourceGroups }}
+{{- range $rg := .Values.replicaResourceGroups }}
+---
+{{ include "milvus.querynode.hpa" (merge (dict "group" (dict) "rg" $rg) $) }}
+{{- end }}
+{{- else }}
+{{ include "milvus.querynode.hpa" (merge (dict "group" (dict) "rg" "") .) }}
+{{- end }}
 {{- end }}
