@@ -1454,6 +1454,17 @@ externalKafka:
     password: ""
 
 ###################################
+# External Woodpecker
+# - these configs are only used when `externalWoodpecker.enabled` is true
+###################################
+externalWoodpecker:
+  enabled: false
+  seeds:
+    - woodpecker-0.woodpecker-headless.default.svc.cluster.local:18080
+    - woodpecker-1.woodpecker-headless.default.svc.cluster.local:18080
+    - woodpecker-2.woodpecker-headless.default.svc.cluster.local:18080
+
+###################################
 # Text Embeddings Inference (TEI)
 # - these configs are used to deploy TEI service
 ###################################
