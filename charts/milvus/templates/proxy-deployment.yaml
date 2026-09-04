@@ -196,6 +196,12 @@ spec:
       securityContext:
 {{ toYaml .Values.proxy.securityContext | indent 8 }}
     {{- end }}
+    {{- if and (.Values.terminationGracePeriodSeconds) (not .Values.proxy.terminationGracePeriodSeconds) }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+    {{- end }}
+    {{- if .Values.proxy.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ .Values.proxy.terminationGracePeriodSeconds }}
+    {{- end }}
 
       volumes:
       - name: milvus-config
