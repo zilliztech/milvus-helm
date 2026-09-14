@@ -7,6 +7,9 @@ metadata:
   labels:
 {{ include "milvus.labels" . | indent 4 }}
     component: "mixcoord"
+{{- with .Values.mixCoordinator.labels }}
+{{ toYaml . | indent 4 }}
+{{- end }}
 {{ include "milvus.ud.labels" . | indent 4 }}
   annotations:
 {{ include "milvus.ud.annotations" . | indent 4 }}
@@ -34,6 +37,9 @@ spec:
 {{ include "milvus.matchLabels" . | indent 8 }}
 {{ include "milvus.ud.labels" . | indent 8 }}
         component: "mixcoord"
+{{- with .Values.mixCoordinator.labels }}
+{{ toYaml . | indent 8 }}
+{{- end }}
       annotations:
       {{- if .Values.mixCoordinator.profiling.enabled }}
         pyroscope.io/scrape: "true"

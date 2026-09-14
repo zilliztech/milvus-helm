@@ -1,20 +1,38 @@
-{{- if and .Values.proxy.enabled .Values.cluster.enabled }}
+{{/* Proxy deployment template. Accepts merged context with optional .group. */}}
+{{- define "milvus.proxy.deployment" -}}
+{{- $groupName := "" -}}
+{{- if .group }}
+{{- $groupName = required "proxy.groups[].name is required" .group.name -}}
+{{- end }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "milvus.proxy.fullname" . }}
+  name: {{ template "milvus.proxy.fullname" . }}{{- if $groupName }}-{{ $groupName }}{{- end }}
   namespace: {{ .Release.Namespace }}
   labels:
 {{ include "milvus.labels" . | indent 4 }}
     component: "proxy"
+{{- with .group.labels }}
+{{ toYaml . | indent 4 }}
+{{- end }}
+{{- if $groupName }}
+    milvus.io/deployment-group: {{ $groupName | quote }}
+{{- end }}
 
 {{ include "milvus.ud.labels" . | indent 4 }}
   annotations:
 {{ include "milvus.ud.annotations" . | indent 4 }}
+{{- with .group.annotations }}
+{{ toYaml . | indent 4 }}
+{{- end }}
 
 spec:
-  {{- if ge (int .Values.proxy.replicas) 0 }}
-  replicas: {{ .Values.proxy.replicas }}
+  {{- $replicas := .Values.proxy.replicas -}}
+  {{- if and .group (hasKey .group "replicas") -}}
+  {{- $replicas = .group.replicas -}}
+  {{- end }}
+  {{- if ge (int $replicas) 0 }}
+  replicas: {{ $replicas }}
   {{- end }}
   {{- with .Values.proxy.strategy }}
   strategy:
@@ -24,11 +42,20 @@ spec:
     matchLabels:
 {{ include "milvus.matchLabels" . | indent 6 }}
       component: "proxy"
+{{- if $groupName }}
+      milvus.io/deployment-group: {{ $groupName | quote }}
+{{- end }}
   template:
     metadata:
       labels:
 {{ include "milvus.matchLabels" . | indent 8 }}
         component: "proxy"
+{{- with .group.labels }}
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- if $groupName }}
+        milvus.io/deployment-group: {{ $groupName | quote }}
+{{- end }}
 {{ include "milvus.ud.labels" . | indent 8 }}
       annotations:
       {{- if .Values.proxy.profiling.enabled }}
@@ -38,6 +65,9 @@ spec:
       {{- end }}
       {{- if .Values.proxy.annotations }}
         {{- toYaml .Values.proxy.annotations | nindent 8 }}
+      {{- end }}
+      {{- with .group.annotations }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
 {{ include "milvus.ud.annotations" . | indent 8 }}
@@ -94,6 +124,9 @@ spec:
         {{- end }}
         {{- if .Values.proxy.extraEnv }}
           {{- toYaml .Values.proxy.extraEnv | nindent 8 }}
+        {{- end }}
+        {{- if .group.extraEnv }}
+          {{- toYaml .group.extraEnv | nindent 8 }}
         {{- end }}
         ports:
           - name: milvus
@@ -155,38 +188,54 @@ spec:
           {{- toYaml .Values.volumeMounts | nindent 8 }}
         {{- end}}
 
-    {{- if and (.Values.nodeSelector) (not .Values.proxy.nodeSelector) }}
+    {{- $nodeSelector := .Values.proxy.nodeSelector -}}
+    {{- if and .group .group.nodeSelector -}}
+    {{- $nodeSelector = .group.nodeSelector -}}
+    {{- end }}
+    {{- if and (.Values.nodeSelector) (not $nodeSelector) }}
       nodeSelector:
 {{ toYaml .Values.nodeSelector | indent 8 }}
     {{- end }}
-    {{- if .Values.proxy.nodeSelector }}
+    {{- if $nodeSelector }}
       nodeSelector:
-{{ toYaml .Values.proxy.nodeSelector | indent 8 }}
+{{ toYaml $nodeSelector | indent 8 }}
     {{- end }}
-    {{- if and (.Values.affinity) (not .Values.proxy.affinity) }}
+    {{- $affinity := .Values.proxy.affinity -}}
+    {{- if and .group .group.affinity -}}
+    {{- $affinity = .group.affinity -}}
+    {{- end }}
+    {{- if and (.Values.affinity) (not $affinity) }}
       affinity:
 {{ toYaml .Values.affinity | indent 8 }}
     {{- end }}
-    {{- if .Values.proxy.affinity }}
+    {{- if $affinity }}
       affinity:
-{{ toYaml .Values.proxy.affinity | indent 8 }}
+{{ toYaml $affinity | indent 8 }}
     {{- end }}
-    {{- if and (.Values.tolerations) (not .Values.proxy.tolerations) }}
+    {{- $tolerations := .Values.proxy.tolerations -}}
+    {{- if and .group .group.tolerations -}}
+    {{- $tolerations = .group.tolerations -}}
+    {{- end }}
+    {{- if and (.Values.tolerations) (not $tolerations) }}
       tolerations:
 {{ toYaml .Values.tolerations | indent 8 }}
     {{- end }}
-    {{- if .Values.proxy.tolerations }}
+    {{- if $tolerations }}
       tolerations:
-{{ toYaml .Values.proxy.tolerations | indent 8 }}
+{{ toYaml $tolerations | indent 8 }}
     {{- end }}
 
-    {{- if and (.Values.topologySpreadConstraints) (not .Values.proxy.topologySpreadConstraints) }}
+    {{- $topologySpreadConstraints := .Values.proxy.topologySpreadConstraints -}}
+    {{- if and .group .group.topologySpreadConstraints -}}
+    {{- $topologySpreadConstraints = .group.topologySpreadConstraints -}}
+    {{- end }}
+    {{- if and (.Values.topologySpreadConstraints) (not $topologySpreadConstraints) }}
       topologySpreadConstraints:
 {{ toYaml .Values.topologySpreadConstraints | indent 8 }}
     {{- end }}
-    {{- if .Values.proxy.topologySpreadConstraints }}
+    {{- if $topologySpreadConstraints }}
       topologySpreadConstraints:
-{{ toYaml .Values.proxy.topologySpreadConstraints | indent 8 }}
+{{ toYaml $topologySpreadConstraints | indent 8 }}
     {{- end }}
     {{- if and (.Values.securityContext) (not .Values.proxy.securityContext) }}
       securityContext:
@@ -218,4 +267,15 @@ spec:
       {{- if .Values.volumes }}
         {{- toYaml .Values.volumes | nindent 6 }}
       {{- end}}
+{{- end -}}
+
+{{- if and .Values.proxy.enabled .Values.cluster.enabled }}
+{{- if .Values.proxy.groups }}
+{{- range $group := .Values.proxy.groups }}
+---
+{{ include "milvus.proxy.deployment" (merge (dict "group" $group) $) }}
+{{- end }}
+{{- else }}
+{{ include "milvus.proxy.deployment" (merge (dict "group" (dict)) .) }}
+{{- end }}
 {{- end }}

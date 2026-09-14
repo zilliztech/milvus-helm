@@ -1,13 +1,27 @@
 {{/* Streamingnode deployment template. Accepts merged context with optional .rg for resource group. */}}
 {{- define "milvus.streamingnode.deployment" -}}
+{{- $groupName := "" -}}
+{{- if .group }}
+{{- $groupName = required "streamingNode.groups[].name is required" .group.name -}}
+{{- end }}
+{{- $nameSuffix := $groupName -}}
+{{- if and (not $nameSuffix) .rg -}}
+{{- $nameSuffix = .rg -}}
+{{- end }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "milvus.streamingnode.fullname" . }}{{- if .rg }}-{{ .rg }}{{- end }}
+  name: {{ template "milvus.streamingnode.fullname" . }}{{- if $nameSuffix }}-{{ $nameSuffix }}{{- end }}
   namespace: {{ .Release.Namespace }}
   labels:
 {{ include "milvus.labels" . | indent 4 }}
     component: "streamingnode"
+{{- with .group.labels }}
+{{ toYaml . | indent 4 }}
+{{- end }}
+{{- if $groupName }}
+    milvus.io/deployment-group: {{ $groupName | quote }}
+{{- end }}
 {{- if .rg }}
     milvus.io/resource-group: {{ .rg | quote }}
 {{- end }}
@@ -15,10 +29,17 @@ metadata:
 {{ include "milvus.ud.labels" . | indent 4 }}
   annotations:
 {{ include "milvus.ud.annotations" . | indent 4 }}
+{{- with .group.annotations }}
+{{ toYaml . | indent 4 }}
+{{- end }}
 
 spec:
-  {{- if ge (int .Values.streamingNode.replicas) 0 }}
-  replicas: {{ .Values.streamingNode.replicas }}
+  {{- $replicas := .Values.streamingNode.replicas -}}
+  {{- if and .group (hasKey .group "replicas") -}}
+  {{- $replicas = .group.replicas -}}
+  {{- end }}
+  {{- if ge (int $replicas) 0 }}
+  replicas: {{ $replicas }}
   {{- end }}
   {{- with .Values.streamingNode.strategy }}
   strategy:
@@ -28,6 +49,9 @@ spec:
     matchLabels:
 {{ include "milvus.matchLabels" . | indent 6 }}
       component: "streamingnode"
+{{- if $groupName }}
+      milvus.io/deployment-group: {{ $groupName | quote }}
+{{- end }}
 {{- if .rg }}
       milvus.io/resource-group: {{ .rg | quote }}
 {{- end }}
@@ -36,6 +60,12 @@ spec:
       labels:
 {{ include "milvus.matchLabels" . | indent 8 }}
         component: "streamingnode"
+{{- with .group.labels }}
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- if $groupName }}
+        milvus.io/deployment-group: {{ $groupName | quote }}
+{{- end }}
 {{- if .rg }}
         milvus.io/resource-group: {{ .rg | quote }}
 {{- end }}
@@ -43,8 +73,11 @@ spec:
       annotations:
       {{- if .Values.streamingNode.profiling.enabled }}
         pyroscope.io/scrape: "true"
-        pyroscope.io/application-name: {{ template "milvus.streamingnode.fullname" . }}{{- if .rg }}-{{ .rg }}{{- end }}
+        pyroscope.io/application-name: {{ template "milvus.streamingnode.fullname" . }}{{- if $nameSuffix }}-{{ $nameSuffix }}{{- end }}
         pyroscope.io/port: "9091"
+      {{- end }}
+      {{- with .group.annotations }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
 {{ include "milvus.ud.annotations" . | indent 8 }}
@@ -105,6 +138,9 @@ spec:
         {{- end }}
         {{- if .Values.streamingNode.extraEnv }}
           {{- toYaml .Values.streamingNode.extraEnv | nindent 8 }}
+        {{- end }}
+        {{- if .group.extraEnv }}
+          {{- toYaml .group.extraEnv | nindent 8 }}
         {{- end }}
         ports:
           - name: streamingnode
@@ -167,37 +203,53 @@ spec:
           {{- toYaml .Values.volumeMounts | nindent 8 }}
         {{- end}}
 
-    {{- if and (.Values.nodeSelector) (not .Values.streamingNode.nodeSelector) }}
+    {{- $nodeSelector := .Values.streamingNode.nodeSelector -}}
+    {{- if and .group .group.nodeSelector -}}
+    {{- $nodeSelector = .group.nodeSelector -}}
+    {{- end }}
+    {{- if and (.Values.nodeSelector) (not $nodeSelector) }}
       nodeSelector:
 {{ toYaml .Values.nodeSelector | indent 8 }}
     {{- end }}
-    {{- if .Values.streamingNode.nodeSelector }}
+    {{- if $nodeSelector }}
       nodeSelector:
-{{ toYaml .Values.streamingNode.nodeSelector | indent 8 }}
+{{ toYaml $nodeSelector | indent 8 }}
     {{- end }}
-    {{- if and (.Values.affinity) (not .Values.streamingNode.affinity) }}
+    {{- $affinity := .Values.streamingNode.affinity -}}
+    {{- if and .group .group.affinity -}}
+    {{- $affinity = .group.affinity -}}
+    {{- end }}
+    {{- if and (.Values.affinity) (not $affinity) }}
       affinity:
 {{ toYaml .Values.affinity | indent 8 }}
     {{- end }}
-    {{- if .Values.streamingNode.affinity }}
+    {{- if $affinity }}
       affinity:
-{{ toYaml .Values.streamingNode.affinity | indent 8 }}
+{{ toYaml $affinity | indent 8 }}
     {{- end }}
-    {{- if and (.Values.tolerations) (not .Values.streamingNode.tolerations) }}
+    {{- $tolerations := .Values.streamingNode.tolerations -}}
+    {{- if and .group .group.tolerations -}}
+    {{- $tolerations = .group.tolerations -}}
+    {{- end }}
+    {{- if and (.Values.tolerations) (not $tolerations) }}
       tolerations:
 {{ toYaml .Values.tolerations | indent 8 }}
     {{- end }}
-    {{- if .Values.streamingNode.tolerations }}
+    {{- if $tolerations }}
       tolerations:
-{{ toYaml .Values.streamingNode.tolerations | indent 8 }}
+{{ toYaml $tolerations | indent 8 }}
     {{- end }}
-    {{- if and (.Values.topologySpreadConstraints) (not .Values.streamingNode.topologySpreadConstraints) }}
+    {{- $topologySpreadConstraints := .Values.streamingNode.topologySpreadConstraints -}}
+    {{- if and .group .group.topologySpreadConstraints -}}
+    {{- $topologySpreadConstraints = .group.topologySpreadConstraints -}}
+    {{- end }}
+    {{- if and (.Values.topologySpreadConstraints) (not $topologySpreadConstraints) }}
       topologySpreadConstraints:
 {{ toYaml .Values.topologySpreadConstraints | indent 8 }}
     {{- end }}
-    {{- if .Values.streamingNode.topologySpreadConstraints }}
+    {{- if $topologySpreadConstraints }}
       topologySpreadConstraints:
-{{ toYaml .Values.streamingNode.topologySpreadConstraints | indent 8 }}
+{{ toYaml $topologySpreadConstraints | indent 8 }}
     {{- end }}
     {{- if and (.Values.securityContext) (not .Values.streamingNode.securityContext) }}
       securityContext:
@@ -232,12 +284,17 @@ spec:
 {{- end -}}
 
 {{- if and .Values.streaming .Values.streaming.enabled .Values.cluster.enabled }}
-{{- if .Values.replicaResourceGroups }}
+{{- if .Values.streamingNode.groups }}
+{{- range $group := .Values.streamingNode.groups }}
+---
+{{ include "milvus.streamingnode.deployment" (merge (dict "group" $group "rg" "") $) }}
+{{- end }}
+{{- else if .Values.replicaResourceGroups }}
 {{- range $rg := .Values.replicaResourceGroups }}
 ---
-{{ include "milvus.streamingnode.deployment" (merge (dict "rg" $rg) $) }}
+{{ include "milvus.streamingnode.deployment" (merge (dict "group" (dict) "rg" $rg) $) }}
 {{- end }}
 {{- else }}
-{{ include "milvus.streamingnode.deployment" (merge (dict "rg" "") .) }}
+{{ include "milvus.streamingnode.deployment" (merge (dict "group" (dict) "rg" "") .) }}
 {{- end }}
 {{- end }}
