@@ -51,6 +51,12 @@ securityContext: {}
   # fsGroup: 1000
   # runAsNonRoot: true
 
+# Global terminationGracePeriodSeconds
+# If set, this will apply to all milvus components
+# Individual components can be set to a different terminationGracePeriodSeconds
+# ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-termination-flow
+terminationGracePeriodSeconds: ""
+
 # Global topologySpreadConstraints
 # If set, this will apply to all milvus components
 # Individual components can be set to different topologySpreadConstraints
@@ -245,6 +251,7 @@ standalone:
   securityContext: {}
   containerSecurityContext: {}
   topologySpreadConstraints: []  # Component specific topologySpreadConstraints
+  terminationGracePeriodSeconds: ""
   extraEnv: []
   heaptrack:
     enabled: false
@@ -318,6 +325,7 @@ proxy:
   # Deployment strategy, default is RollingUpdate
   # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
   strategy: {}
+  terminationGracePeriodSeconds: ""
   annotations: {}
   hpa:
     enabled: false
@@ -346,6 +354,7 @@ rootCoordinator:
   # Deployment strategy, default is RollingUpdate
   # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
   strategy: {}
+  terminationGracePeriodSeconds: ""
   annotations: {}
 
   service:
@@ -375,6 +384,7 @@ queryCoordinator:
   # Deployment strategy, default is RollingUpdate
   # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
   strategy: {}
+  terminationGracePeriodSeconds: ""
   annotations: {}
 
   service:
@@ -412,6 +422,7 @@ queryNode:
   # Deployment strategy, default is RollingUpdate
   # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
   strategy: {}
+  terminationGracePeriodSeconds: ""
   annotations: {}
   hpa:
     enabled: false
@@ -441,6 +452,7 @@ indexCoordinator:
   # Deployment strategy, default is RollingUpdate
   # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
   strategy: {}
+  terminationGracePeriodSeconds: ""
   annotations: {}
 
   service:
@@ -477,6 +489,7 @@ indexNode:
   # Deployment strategy, default is RollingUpdate
   # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
   strategy: {}
+  terminationGracePeriodSeconds: ""
   annotations: {}
   hpa:
     enabled: false
@@ -505,6 +518,7 @@ dataCoordinator:
   # Deployment strategy, default is RollingUpdate
   # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
   strategy: {}
+  terminationGracePeriodSeconds: ""
   annotations: {}
 
   service:
@@ -532,6 +546,7 @@ dataNode:
   # Deployment strategy, default is RollingUpdate
   # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
   strategy: {}
+  terminationGracePeriodSeconds: ""
   annotations: {}
   hpa:
     enabled: false
@@ -562,6 +577,7 @@ mixCoordinator:
   # Deployment strategy, default is RollingUpdate
   # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
   strategy: {}
+  terminationGracePeriodSeconds: ""
   annotations: {}
 
   service:
@@ -583,6 +599,7 @@ streamingNode:
   profiling:
     enabled: false  # Enable live profiling
   strategy: {}
+  terminationGracePeriodSeconds: ""
 
 cdc:
   enabled: false
@@ -618,6 +635,7 @@ attu:
   resources: {}
   securityContext: {}
   containerSecurityContext: {}
+  terminationGracePeriodSeconds: ""
   podLabels: {}
   annotations: {}
   ingress:
