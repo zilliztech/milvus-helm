@@ -657,15 +657,13 @@ minio:
   name: minio
   mode: distributed
   image:
-    repository: quay.io/minio/minio
-    tag: "RELEASE.2024-12-18T13-15-44Z"
-    pullPolicy: IfNotPresent
-  mcImage:
-    repository: quay.io/minio/mc
-    tag: "RELEASE.2024-05-24T09-08-49Z"
+    tag: "RELEASE.2026-09-03T13-18-01Z"
     pullPolicy: IfNotPresent
   accessKey: minioadmin
   secretKey: minioadmin
+  rootUser: minioadmin
+  rootPassword: minioadmin
+  replicas: 4
   existingSecret: ""
   bucketName: "milvus-bucket"
   rootPath: file

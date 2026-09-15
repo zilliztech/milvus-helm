@@ -1,0 +1,66 @@
+{{- if and (.Values.networkPolicy.enabled) (eq .Values.networkPolicy.flavor "kubernetes") }}
+kind: NetworkPolicy
+apiVersion: {{ template "silo.networkPolicy.apiVersion" . }}
+metadata:
+  name: {{ template "silo.fullname" . }}
+  labels:
+    app: {{ template "silo.name" . }}
+    chart: {{ template "silo.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ template "silo.name" . }}
+      release: {{ .Release.Name }}
+  ingress:
+    - ports:
+        - port: {{ .Values.minioAPIPort }}
+          protocol: TCP
+        - port: {{ .Values.minioConsolePort }}
+          protocol: TCP
+      {{- if not .Values.networkPolicy.allowExternal }}
+      from:
+        - podSelector:
+            matchLabels:
+              {{ template "silo.name" . }}-client: "true"
+      {{- end }}
+  {{- if .Values.networkPolicy.egress.enabled }}
+  egress:
+    - ports:
+        {{ .Values.networkPolicy.egress.ports | toJson }}
+      {{- with .Values.networkPolicy.egress.to }}
+      to:
+        {{- toYaml . | nindent 12 }}
+      {{- end }}
+  {{- end }}
+---
+kind: NetworkPolicy
+apiVersion: {{ template "silo.networkPolicy.apiVersion" . }}
+metadata:
+  name: {{ template "silo.fullname" . }}-post-job
+  labels:
+    app: {{ template "silo.name" . }}-post-job
+    chart: {{ template "silo.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ template "silo.name" . }}-job
+      release: {{ .Release.Name }}
+  egress:
+    - ports:
+        - port: {{ .Values.minioAPIPort }}
+          protocol: TCP
+        - port: {{ .Values.minioConsolePort }}
+          protocol: TCP
+    {{- if .Values.networkPolicy.egress.enabled }}
+    - ports:
+        {{ .Values.networkPolicy.egress.ports | toJson }}
+      {{- with .Values.networkPolicy.egress.to }}
+      to:
+        {{- toYaml . | nindent 12 }}
+      {{- end }}
+    {{- end }}
+{{- end }}
