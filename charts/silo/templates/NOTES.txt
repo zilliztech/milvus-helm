@@ -1,0 +1,43 @@
+{{- if eq .Values.service.type "ClusterIP" "NodePort" }}
+Silo can be accessed via port {{ .Values.service.port }} on the following DNS name from within your cluster:
+{{ template "silo.fullname" . }}.{{ .Release.Namespace }}.{{ .Values.clusterDomain }}
+
+To access Silo from localhost, run the below commands:
+
+  1. export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "release={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
+
+  2. kubectl port-forward $POD_NAME 9000 --namespace {{ .Release.Namespace }}
+
+Read more about port forwarding here: http://kubernetes.io/docs/user-guide/kubectl/kubectl_port-forward/
+
+You can now access Silo server on http://localhost:9000. Follow the below steps to connect to Silo server with mc client:
+
+  1. Download the Silo mc client - https://silo.pgsty.com/reference/minio-mc/#quickstart
+
+  2. export MC_HOST_{{ template "silo.fullname" . }}_local=http://$(kubectl get secret --namespace {{ .Release.Namespace }} {{ template "silo.secretName" . }} -o jsonpath="{.data.rootUser}" | base64 --decode):$(kubectl get secret --namespace {{ .Release.Namespace }} {{ template "silo.secretName" . }} -o jsonpath="{.data.rootPassword}" | base64 --decode)@localhost:{{ .Values.service.port }}
+
+  3. mc ls {{ template "silo.fullname" . }}_local
+
+{{- end }}
+{{- if eq .Values.service.type "LoadBalancer" }}
+Silo can be accessed via port {{ .Values.service.port }} on an external IP address. Get the service external IP address by:
+kubectl get svc --namespace {{ .Release.Namespace }} -l app={{ template "silo.fullname" . }}
+
+Note that the public IP may take a couple of minutes to be available.
+
+You can now access Silo server on http://<External-IP>:9000. Follow the below steps to connect to Silo server with mc client:
+
+  1. Download the Silo mc client - https://silo.pgsty.com/reference/minio-mc/#quickstart
+
+  2. export MC_HOST_{{ template "silo.fullname" . }}_local=http://$(kubectl get secret {{ template "silo.secretName" . }} --namespace {{ .Release.Namespace }} -o jsonpath="{.data.rootUser}" | base64 --decode):$(kubectl get secret {{ template "silo.secretName" . }} -o jsonpath="{.data.rootPassword}" | base64 --decode)@<External-IP>:{{ .Values.service.port }}
+
+  3. mc ls {{ template "silo.fullname" . }}
+
+Alternately, use a browser, an S3 SDK, or a MinIO-compatible SDK to access Silo - https://silo.pgsty.com/reference/minio-server/minio-server/
+{{- end }}
+
+{{ if and (.Values.networkPolicy.enabled) (not .Values.networkPolicy.allowExternal) }}
+Note: Since NetworkPolicy is enabled, only pods with label
+{{ template "silo.fullname" . }}-client=true"
+will be able to connect to this Silo cluster.
+{{- end }}

@@ -2,9 +2,9 @@ dependencies:
 - name: etcd
   repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
   version: 8.12.0
-- name: minio
-  repository: https://zilliztech.github.io/milvus-helm
-  version: 8.0.17
+- name: silo
+  repository: file://../silo
+  version: 7.0.2
 - name: pulsarv2
   repository: https://zilliztech.github.io/milvus-helm
   version: 2.7.8
@@ -17,5 +17,5 @@ dependencies:
 - name: tei
   repository: https://zilliztech.github.io/milvus-helm
   version: 1.6.0
-digest: sha256:64baf6c3e3f5c0b45c050681dd2b66f27e189fd5fdb6171450d18a523342d51c
-generated: "2025-10-10T16:34:30.094368+08:00"
+digest: sha256:40db6a8e3ae8f2f5cb858d44d01f287bd395eb768c0f3e0357b292eb10a296e6
+generated: "2026-09-15T09:44:44.6149894+02:00"
