@@ -13,16 +13,16 @@ clusterDomain: cluster.local
 ## Set default image, imageTag, and imagePullPolicy. mode is used to indicate the
 ##
 image:
-  repository: quay.io/minio/minio
-  tag: RELEASE.2024-05-28T17-19-04Z
+  repository: milvusdb/minio
+  tag: RELEASE.2024-12-18T13-15-44Z
   pullPolicy: IfNotPresent
 
 ## Set default image, imageTag, and imagePullPolicy for the `mc` (the minio
 ## client used to create a default bucket).
 ##
 mcImage:
-  repository: quay.io/minio/mc
-  tag: RELEASE.2024-05-24T09-08-49Z
+  repository: milvusdb/minio
+  tag: RELEASE.2024-12-18T13-15-44Z
   pullPolicy: IfNotPresent
 
 ## Set default image, imageTag, and imagePullPolicy for the `jq` (the JSON

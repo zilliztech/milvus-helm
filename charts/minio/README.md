@@ -142,12 +142,12 @@ The following table lists the configurable parameters of the MinIO chart and the
 |:-------------------------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------|:---------------------------------|
 | `nameOverride`                                   | Provide a name in place of `minio`                                                                                                      | `""`                             |
 | `fullnameOverride`                               | Provide a name to substitute for the full names of resources                                                                            | `""`                             |
-| `image.repository`                               | Image repository                                                                                                                        | `quay.io/minio/minio`            |
-| `image.tag`                                      | MinIO image tag. Possible values listed [here](https://quay.io/repository/minio/minio?tab=tags).                                        | `RELEASE.2024-05-28T17-19-04Z`   |
+| `image.repository`                               | Image repository                                                                                                                        | `milvusdb/minio`                  |
+| `image.tag`                                      | MinIO image tag. Possible values listed [here](https://hub.docker.com/r/milvusdb/minio/tags).                                           | `RELEASE.2024-12-18T13-15-44Z`   |
 | `image.pullPolicy`                               | Image pull policy                                                                                                                       | `IfNotPresent`                   |
 | `imagePullSecrets`                               | List of container registry secrets                                                                                                      | `[]`                             |
-| `mcImage.repository`                             | Client image repository                                                                                                                 | `quay.io/minio/mc`               |
-| `mcImage.tag`                                    | mc image tag. Possible values listed [here](https://quay.io/repository/minio/mc?tab=tags).                                              | `RELEASE.2024-05-24T09-08-49Z`   |
+| `mcImage.repository`                             | Client image repository                                                                                                                 | `milvusdb/minio`                  |
+| `mcImage.tag`                                    | mc image tag. Possible values listed [here](https://hub.docker.com/r/milvusdb/minio/tags).                                              | `RELEASE.2024-12-18T13-15-44Z`   |
 | `mcImage.pullPolicy`                             | mc Image pull policy                                                                                                                    | `IfNotPresent`                   |
 | `ingress.enabled`                                | Enables Ingress                                                                                                                         | `false`                          |
 | `ingress.labels     `                            | Ingress labels                                                                                                                          | `{}`                             |
@@ -239,7 +239,7 @@ The following table lists the configurable parameters of the MinIO chart and the
 | `etcd.clientCert`                                | Certificate used for SSL/TLS connections to etcd [(etcd Security)](https://etcd.io/docs/latest/op-guide/security/)                      | `""`                             |
 | `etcd.clientCertKey`                             | Key for the certificate [(etcd Security)](https://etcd.io/docs/latest/op-guide/security/)                                               | `""`                             |
 
-Some of the parameters above map to the environment variables defined in the [MinIO image on Quay.io](https://quay.io/repository/minio/minio).
+Some of the parameters above map to the environment variables defined in the [MinIO image on Docker Hub](https://hub.docker.com/r/milvusdb/minio).
 
 You can specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 
