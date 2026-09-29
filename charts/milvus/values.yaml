@@ -283,6 +283,10 @@ proxy:
   enabled: true
   # You can set the number of replicas to -1 to remove the replicas field in case you want to use HPA
   replicas: 1
+  # Optional deployment groups. When set, one Deployment is rendered per group.
+  # Group-level replicas, labels, annotations, extraEnv, nodeSelector, affinity,
+  # tolerations, and topologySpreadConstraints override or extend this component.
+  groups: []
   resources: {}
   nodeSelector: {}
   affinity: {}
@@ -387,6 +391,9 @@ queryNode:
   enabled: true
   # You can set the number of replicas to -1 to remove the replicas field in case you want to use HPA
   replicas: 1
+  # Optional deployment groups. When set, one Deployment is rendered per group.
+  # Use group.extraEnv to inject resource-group env vars when needed.
+  groups: []
   resources: {}
   # Set local storage size in resources
   # resources:
@@ -517,6 +524,8 @@ dataNode:
   enabled: true
   # You can set the number of replicas to -1 to remove the replicas field in case you want to use HPA
   replicas: 1
+  # Optional deployment groups. When set, one Deployment is rendered per group.
+  groups: []
   resources: {}
   nodeSelector: {}
   affinity: {}
@@ -545,6 +554,7 @@ mixCoordinator:
   enabled: true
   # You can set the number of replicas greater than 1, only if enable active standby
   replicas: 1           # Run Mixture Coordinator mode with replication disabled
+  labels: {}
   resources: {}
   nodeSelector: {}
   affinity: {}
@@ -571,6 +581,9 @@ mixCoordinator:
 
 streamingNode:
   replicas: 1
+  # Optional deployment groups. When set, one Deployment is rendered per group.
+  # Use group.extraEnv to inject resource-group env vars when needed.
+  groups: []
   resources: {}
   nodeSelector: {}
   affinity: {}

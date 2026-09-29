@@ -1,20 +1,38 @@
-{{- if and .Values.dataNode.enabled .Values.cluster.enabled }}
+{{/* Datanode deployment template. Accepts merged context with optional .group. */}}
+{{- define "milvus.datanode.deployment" -}}
+{{- $groupName := "" -}}
+{{- if .group }}
+{{- $groupName = required "dataNode.groups[].name is required" .group.name -}}
+{{- end }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "milvus.datanode.fullname" . }}
+  name: {{ template "milvus.datanode.fullname" . }}{{- if $groupName }}-{{ $groupName }}{{- end }}
   namespace: {{ .Release.Namespace }}
   labels:
 {{ include "milvus.labels" . | indent 4 }}
     component: "datanode"
+{{- with .group.labels }}
+{{ toYaml . | indent 4 }}
+{{- end }}
+{{- if $groupName }}
+    milvus.io/deployment-group: {{ $groupName | quote }}
+{{- end }}
 
 {{ include "milvus.ud.labels" . | indent 4 }}
   annotations:
 {{ include "milvus.ud.annotations" . | indent 4 }}
+{{- with .group.annotations }}
+{{ toYaml . | indent 4 }}
+{{- end }}
 
 spec:
-  {{- if ge (int .Values.dataNode.replicas) 0 }}
-  replicas: {{ .Values.dataNode.replicas }}
+  {{- $replicas := .Values.dataNode.replicas -}}
+  {{- if and .group (hasKey .group "replicas") -}}
+  {{- $replicas = .group.replicas -}}
+  {{- end }}
+  {{- if ge (int $replicas) 0 }}
+  replicas: {{ $replicas }}
   {{- end }}
   {{- with .Values.dataNode.strategy }}
   strategy:
@@ -24,11 +42,20 @@ spec:
     matchLabels:
 {{ include "milvus.matchLabels" . | indent 6 }}
       component: "datanode"
+{{- if $groupName }}
+      milvus.io/deployment-group: {{ $groupName | quote }}
+{{- end }}
   template:
     metadata:
       labels:
 {{ include "milvus.matchLabels" . | indent 8 }}
         component: "datanode"
+{{- with .group.labels }}
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- if $groupName }}
+        milvus.io/deployment-group: {{ $groupName | quote }}
+{{- end }}
 {{ include "milvus.ud.labels" . | indent 8 }}
       annotations:
       {{- if .Values.dataNode.profiling.enabled }}
@@ -38,6 +65,9 @@ spec:
       {{- end }}
       {{- if .Values.dataNode.annotations }}
         {{- toYaml .Values.dataNode.annotations | nindent 8 }}
+      {{- end }}
+      {{- with .group.annotations }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
 {{ include "milvus.ud.annotations" . | indent 8 }}
@@ -94,6 +124,9 @@ spec:
         {{- end }}
         {{- if .Values.dataNode.extraEnv }}
           {{- toYaml .Values.dataNode.extraEnv | nindent 8 }}
+        {{- end }}
+        {{- if .group.extraEnv }}
+          {{- toYaml .group.extraEnv | nindent 8 }}
         {{- end }}
         ports:
           - name: datanode
@@ -152,37 +185,53 @@ spec:
           {{- toYaml .Values.volumeMounts | nindent 8 }}
         {{- end}}
 
-    {{- if and (.Values.nodeSelector) (not .Values.dataNode.nodeSelector) }}
+    {{- $nodeSelector := .Values.dataNode.nodeSelector -}}
+    {{- if and .group .group.nodeSelector -}}
+    {{- $nodeSelector = .group.nodeSelector -}}
+    {{- end }}
+    {{- if and (.Values.nodeSelector) (not $nodeSelector) }}
       nodeSelector:
 {{ toYaml .Values.nodeSelector | indent 8 }}
     {{- end }}
-    {{- if .Values.dataNode.nodeSelector }}
+    {{- if $nodeSelector }}
       nodeSelector:
-{{ toYaml .Values.dataNode.nodeSelector | indent 8 }}
+{{ toYaml $nodeSelector | indent 8 }}
     {{- end }}
-    {{- if and (.Values.affinity) (not .Values.dataNode.affinity) }}
+    {{- $affinity := .Values.dataNode.affinity -}}
+    {{- if and .group .group.affinity -}}
+    {{- $affinity = .group.affinity -}}
+    {{- end }}
+    {{- if and (.Values.affinity) (not $affinity) }}
       affinity:
 {{ toYaml .Values.affinity | indent 8 }}
     {{- end }}
-    {{- if .Values.dataNode.affinity }}
+    {{- if $affinity }}
       affinity:
-{{ toYaml .Values.dataNode.affinity | indent 8 }}
+{{ toYaml $affinity | indent 8 }}
     {{- end }}
-    {{- if and (.Values.tolerations) (not .Values.dataNode.tolerations) }}
+    {{- $tolerations := .Values.dataNode.tolerations -}}
+    {{- if and .group .group.tolerations -}}
+    {{- $tolerations = .group.tolerations -}}
+    {{- end }}
+    {{- if and (.Values.tolerations) (not $tolerations) }}
       tolerations:
 {{ toYaml .Values.tolerations | indent 8 }}
     {{- end }}
-    {{- if .Values.dataNode.tolerations }}
+    {{- if $tolerations }}
       tolerations:
-{{ toYaml .Values.dataNode.tolerations | indent 8 }}
+{{ toYaml $tolerations | indent 8 }}
     {{- end }}
-    {{- if and (.Values.topologySpreadConstraints) (not .Values.dataNode.topologySpreadConstraints) }}
+    {{- $topologySpreadConstraints := .Values.dataNode.topologySpreadConstraints -}}
+    {{- if and .group .group.topologySpreadConstraints -}}
+    {{- $topologySpreadConstraints = .group.topologySpreadConstraints -}}
+    {{- end }}
+    {{- if and (.Values.topologySpreadConstraints) (not $topologySpreadConstraints) }}
       topologySpreadConstraints:
 {{ toYaml .Values.topologySpreadConstraints | indent 8 }}
     {{- end }}
-    {{- if .Values.dataNode.topologySpreadConstraints }}
+    {{- if $topologySpreadConstraints }}
       topologySpreadConstraints:
-{{ toYaml .Values.dataNode.topologySpreadConstraints | indent 8 }}
+{{ toYaml $topologySpreadConstraints | indent 8 }}
     {{- end }}
     {{- if and (.Values.securityContext) (not .Values.dataNode.securityContext) }}
       securityContext:
@@ -210,4 +259,15 @@ spec:
       {{- if .Values.volumes }}
         {{- toYaml .Values.volumes | nindent 6 }}
       {{- end}}
+{{- end -}}
+
+{{- if and .Values.dataNode.enabled .Values.cluster.enabled }}
+{{- if .Values.dataNode.groups }}
+{{- range $group := .Values.dataNode.groups }}
+---
+{{ include "milvus.datanode.deployment" (merge (dict "group" $group) $) }}
+{{- end }}
+{{- else }}
+{{ include "milvus.datanode.deployment" (merge (dict "group" (dict)) .) }}
+{{- end }}
 {{- end }}

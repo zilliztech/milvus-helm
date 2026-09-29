@@ -1,16 +1,23 @@
-{{- if and .Values.proxy.enabled .Values.proxy.hpa.enabled }}
+{{- define "milvus.proxy.hpa" -}}
+{{- $groupName := "" -}}
+{{- if .group }}
+{{- $groupName = required "proxy.groups[].name is required" .group.name -}}
+{{- end }}
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ template "milvus.proxy.fullname" . }}-hpa
+  name: {{ template "milvus.proxy.fullname" . }}{{- if $groupName }}-{{ $groupName }}{{- end }}-hpa
   namespace: {{ .Release.Namespace }}
   labels:
     component: "proxy"
+{{- if $groupName }}
+    milvus.io/deployment-group: {{ $groupName | quote }}
+{{- end }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ template "milvus.proxy.fullname" . }}
+    name: {{ template "milvus.proxy.fullname" . }}{{- if $groupName }}-{{ $groupName }}{{- end }}
   minReplicas: {{ .Values.proxy.hpa.minReplicas | default 1 }}
   maxReplicas: {{ .Values.proxy.hpa.maxReplicas | default 10 }}
   metrics:
@@ -20,4 +27,15 @@ spec:
       target:
         type: Utilization
         averageUtilization: {{ .Values.proxy.hpa.cpuUtilization | default 40 }}
+{{- end -}}
+
+{{- if and .Values.proxy.enabled .Values.proxy.hpa.enabled }}
+{{- if .Values.proxy.groups }}
+{{- range $group := .Values.proxy.groups }}
+---
+{{ include "milvus.proxy.hpa" (merge (dict "group" $group) $) }}
+{{- end }}
+{{- else }}
+{{ include "milvus.proxy.hpa" (merge (dict "group" (dict)) .) }}
+{{- end }}
 {{- end }}
