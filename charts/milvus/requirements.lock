@@ -4,7 +4,7 @@ dependencies:
   version: 8.12.0
 - name: minio
   repository: https://zilliztech.github.io/milvus-helm
-  version: 8.0.17
+  version: 8.0.21
 - name: pulsarv2
   repository: https://zilliztech.github.io/milvus-helm
   version: 2.7.8
@@ -17,5 +17,5 @@ dependencies:
 - name: tei
   repository: https://zilliztech.github.io/milvus-helm
   version: 1.6.0
-digest: sha256:64baf6c3e3f5c0b45c050681dd2b66f27e189fd5fdb6171450d18a523342d51c
-generated: "2025-10-10T16:34:30.094368+08:00"
+digest: sha256:1196696c066e6532df0fb2d1fe9ecf937c6716e2bb2eadebd8995a76d61ae664
+generated: "2026-09-29T06:39:47Z"
