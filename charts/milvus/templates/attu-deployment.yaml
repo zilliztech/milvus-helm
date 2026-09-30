@@ -89,4 +89,10 @@ spec:
       securityContext:
 {{ toYaml .Values.attu.securityContext | indent 8 }}
     {{- end }}
+    {{- if and (.Values.terminationGracePeriodSeconds) (not .Values.attu.terminationGracePeriodSeconds) }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+    {{- end }}
+    {{- if .Values.attu.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ .Values.attu.terminationGracePeriodSeconds }}
+    {{- end }}
 {{- end }}
