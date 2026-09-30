@@ -47,8 +47,13 @@ minio:
 {{- if .Values.externalS3.enabled }}
   address: {{ .Values.externalS3.host }}
   port: {{ .Values.externalS3.port }}
+  {{- if not .Values.keysFromSecret.enabled}}
   accessKeyID: {{ .Values.externalS3.accessKey }}
   secretAccessKey: {{ .Values.externalS3.secretKey }}
+  {{- end}}
+  {{- if .Values.externalS3.tlsCACert}}
+  ssl.tlsCACert: {{ .Values.externalS3.tlsCACert }} ## custom path to certs file
+  {{- end}}
   useSSL: {{ .Values.externalS3.useSSL }}
   bucketName: {{ .Values.externalS3.bucketName }}
   rootPath: {{ .Values.externalS3.rootPath }}
