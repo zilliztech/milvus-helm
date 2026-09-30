@@ -79,7 +79,14 @@ minio:
   useVirtualHost: {{ .Values.minio.useVirtualHost }}
 {{- end }}
 
-{{- if .Values.externalPulsar.enabled }}
+{{- if .Values.externalWoodpecker.enabled }}
+
+mq:
+  type: woodpecker
+
+messageQueue: woodpecker
+
+{{- else if .Values.externalPulsar.enabled }}
 
 mq:
   type: pulsar
@@ -168,7 +175,7 @@ kafka:
 {{- end }}
 {{- end }}
 
-{{- if not .Values.cluster.enabled }}
+{{- if and (not .Values.cluster.enabled) (not .Values.externalWoodpecker.enabled) }}
 {{- if or (eq .Values.standalone.messageQueue "rocksmq") (eq .Values.standalone.messageQueue "natsmq") (eq .Values.standalone.messageQueue "woodpecker") }}
 
 mq:
@@ -257,16 +264,21 @@ log:
   format: {{ .Values.log.format }}
 
 woodpecker:
-{{- $useExternalWoodpecker := eq (include "milvus.woodpecker.external.enabled" .) "true" -}}
-{{- if $useExternalWoodpecker }}
+{{- $useExternalWoodpecker := .Values.externalWoodpecker.enabled -}}
+{{- $useChartWoodpeckerService := eq (include "milvus.woodpecker.external.enabled" .) "true" -}}
+{{- if or $useExternalWoodpecker $useChartWoodpeckerService }}
   client:
     quorum:
       quorumBufferPools:
-        - name: default
+        - name: {{ ternary .Values.externalWoodpecker.poolName "default" $useExternalWoodpecker | quote }}
+{{- if $useExternalWoodpecker }}
+          seeds: [{{ join "," .Values.externalWoodpecker.seeds }}]
+{{- else }}
           seeds: [{{ include "milvus.woodpecker.seedList"  (merge (dict "port" .Values.woodpecker.ports.service) .)  }}]
 {{- end }}
+{{- end }}
   storage:
-{{- if $useExternalWoodpecker }}
+{{- if or $useExternalWoodpecker $useChartWoodpeckerService }}
     type: service
 {{- else }}
     type: {{ .Values.streaming.woodpecker.storage.type }}
