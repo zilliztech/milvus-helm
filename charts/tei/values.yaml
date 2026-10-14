@@ -68,6 +68,9 @@ nodeSelector: {}
 affinity: {}
 tolerations: []
 topologySpreadConstraints: []
+# RuntimeClass to use for the pod, e.g. "nvidia" when running the GPU image on nodes
+# with the NVIDIA device plugin. Leave empty to use the default runtime.
+runtimeClassName: ""
 extraEnv: []
 
 
