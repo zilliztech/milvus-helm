@@ -92,6 +92,18 @@ spec:
         - name: LD_LIBRARY_PATH
           value: /milvus/tools/heaptrack/lib:/milvus/lib:/usr/lib
         {{- end }}
+        {{- if .Values.externalS3.keysFromSecret.enabled }}
+        - name: MINIO_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.externalS3.loadKeysFromSecret.secretName }}
+              key: s3_accessKey
+        - name: MINIO_SECRET_ACCESS_KEY
+          valueFrom: 
+            secretKeyRef:
+              name: {{ .Values.externalS3.loadKeysFromSecret.secretName }}
+              key: s3_secretKey
+        {{- end }}
         {{- if .Values.dataNode.extraEnv }}
           {{- toYaml .Values.dataNode.extraEnv | nindent 8 }}
         {{- end }}
