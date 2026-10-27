@@ -1,23 +1,44 @@
 {{/* Querynode deployment template. Accepts merged context with optional .rg for resource group. */}}
 {{- define "milvus.querynode.deployment" -}}
+{{- $groupName := "" -}}
+{{- if .group }}
+{{- $groupName = required "queryNode.groups[].name is required" .group.name -}}
+{{- end }}
+{{- $nameSuffix := $groupName -}}
+{{- if and (not $nameSuffix) .rg -}}
+{{- $nameSuffix = .rg -}}
+{{- end }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "milvus.querynode.fullname" . }}{{- if .rg }}-{{ .rg }}{{- end }}
+  name: {{ template "milvus.querynode.fullname" . }}{{- if $nameSuffix }}-{{ $nameSuffix }}{{- end }}
   namespace: {{ .Release.Namespace }}
   labels:
 {{ include "milvus.labels" . | indent 4 }}
     component: "querynode"
+{{- with .group.labels }}
+{{ toYaml . | indent 4 }}
+{{- end }}
+{{- if $groupName }}
+    milvus.io/deployment-group: {{ $groupName | quote }}
+{{- end }}
 {{- if .rg }}
     milvus.io/resource-group: {{ .rg | quote }}
 {{- end }}
 {{ include "milvus.ud.labels" . | indent 4 }}
   annotations:
 {{ include "milvus.ud.annotations" . | indent 4 }}
+{{- with .group.annotations }}
+{{ toYaml . | indent 4 }}
+{{- end }}
 
 spec:
-  {{- if ge (int .Values.queryNode.replicas) 0 }}
-  replicas: {{ .Values.queryNode.replicas }}
+  {{- $replicas := .Values.queryNode.replicas -}}
+  {{- if and .group (hasKey .group "replicas") -}}
+  {{- $replicas = .group.replicas -}}
+  {{- end }}
+  {{- if ge (int $replicas) 0 }}
+  replicas: {{ $replicas }}
   {{- end }}
   {{- with .Values.queryNode.strategy }}
   strategy:
@@ -27,6 +48,9 @@ spec:
     matchLabels:
 {{ include "milvus.matchLabels" . | indent 6 }}
       component: "querynode"
+{{- if $groupName }}
+      milvus.io/deployment-group: {{ $groupName | quote }}
+{{- end }}
 {{- if .rg }}
       milvus.io/resource-group: {{ .rg | quote }}
 {{- end }}
@@ -35,6 +59,12 @@ spec:
       labels:
 {{ include "milvus.matchLabels" . | indent 8 }}
         component: "querynode"
+{{- with .group.labels }}
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- if $groupName }}
+        milvus.io/deployment-group: {{ $groupName | quote }}
+{{- end }}
 {{- if .rg }}
         milvus.io/resource-group: {{ .rg | quote }}
 {{- end }}
@@ -42,11 +72,14 @@ spec:
       annotations:
       {{- if .Values.queryNode.profiling.enabled }}
         pyroscope.io/scrape: "true"
-        pyroscope.io/application-name: {{ template "milvus.querynode.fullname" . }}{{- if .rg }}-{{ .rg }}{{- end }}
+        pyroscope.io/application-name: {{ template "milvus.querynode.fullname" . }}{{- if $nameSuffix }}-{{ $nameSuffix }}{{- end }}
         pyroscope.io/port: "9091"
       {{- end }}
       {{- if .Values.queryNode.annotations }}
         {{- toYaml .Values.queryNode.annotations | nindent 8 }}
+      {{- end }}
+      {{- with .group.annotations }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
 {{ include "milvus.ud.annotations" . | indent 8 }}
@@ -118,6 +151,9 @@ spec:
         {{- if .Values.queryNode.extraEnv }}
           {{- toYaml .Values.queryNode.extraEnv | nindent 8 }}
         {{- end }}
+        {{- if .group.extraEnv }}
+          {{- toYaml .group.extraEnv | nindent 8 }}
+        {{- end }}
         ports:
           - name: querynode
             containerPort: 21123
@@ -179,38 +215,54 @@ spec:
           {{- toYaml .Values.volumeMounts | nindent 8 }}
         {{- end}}
 
-    {{- if and (.Values.nodeSelector) (not .Values.queryNode.nodeSelector) }}
+    {{- $nodeSelector := .Values.queryNode.nodeSelector -}}
+    {{- if and .group .group.nodeSelector -}}
+    {{- $nodeSelector = .group.nodeSelector -}}
+    {{- end }}
+    {{- if and (.Values.nodeSelector) (not $nodeSelector) }}
       nodeSelector:
 {{ toYaml .Values.nodeSelector | indent 8 }}
     {{- end }}
-    {{- if .Values.queryNode.nodeSelector }}
+    {{- if $nodeSelector }}
       nodeSelector:
-{{ toYaml .Values.queryNode.nodeSelector | indent 8 }}
+{{ toYaml $nodeSelector | indent 8 }}
     {{- end }}
-    {{- if and (.Values.affinity) (not .Values.queryNode.affinity) }}
+    {{- $affinity := .Values.queryNode.affinity -}}
+    {{- if and .group .group.affinity -}}
+    {{- $affinity = .group.affinity -}}
+    {{- end }}
+    {{- if and (.Values.affinity) (not $affinity) }}
       affinity:
 {{ toYaml .Values.affinity | indent 8 }}
     {{- end }}
-    {{- if .Values.queryNode.affinity }}
+    {{- if $affinity }}
       affinity:
-{{ toYaml .Values.queryNode.affinity | indent 8 }}
+{{ toYaml $affinity | indent 8 }}
     {{- end }}
-    {{- if and (.Values.tolerations) (not .Values.queryNode.tolerations) }}
+    {{- $tolerations := .Values.queryNode.tolerations -}}
+    {{- if and .group .group.tolerations -}}
+    {{- $tolerations = .group.tolerations -}}
+    {{- end }}
+    {{- if and (.Values.tolerations) (not $tolerations) }}
       tolerations:
 {{ toYaml .Values.tolerations | indent 8 }}
     {{- end }}
-    {{- if .Values.queryNode.tolerations }}
+    {{- if $tolerations }}
       tolerations:
-{{ toYaml .Values.queryNode.tolerations | indent 8 }}
+{{ toYaml $tolerations | indent 8 }}
     {{- end }}
 
-    {{- if and (.Values.topologySpreadConstraints) (not .Values.queryNode.topologySpreadConstraints) }}
+    {{- $topologySpreadConstraints := .Values.queryNode.topologySpreadConstraints -}}
+    {{- if and .group .group.topologySpreadConstraints -}}
+    {{- $topologySpreadConstraints = .group.topologySpreadConstraints -}}
+    {{- end }}
+    {{- if and (.Values.topologySpreadConstraints) (not $topologySpreadConstraints) }}
       topologySpreadConstraints:
 {{ toYaml .Values.topologySpreadConstraints | indent 8 }}
     {{- end }}
-    {{- if .Values.queryNode.topologySpreadConstraints }}
+    {{- if $topologySpreadConstraints }}
       topologySpreadConstraints:
-{{ toYaml .Values.queryNode.topologySpreadConstraints | indent 8 }}
+{{ toYaml $topologySpreadConstraints | indent 8 }}
     {{- end }}
     {{- if and (.Values.securityContext) (not .Values.queryNode.securityContext) }}
       securityContext:
@@ -246,12 +298,17 @@ spec:
 {{- end -}}
 
 {{- if and .Values.queryNode.enabled .Values.cluster.enabled }}
-{{- if .Values.replicaResourceGroups }}
+{{- if .Values.queryNode.groups }}
+{{- range $group := .Values.queryNode.groups }}
+---
+{{ include "milvus.querynode.deployment" (merge (dict "group" $group "rg" "") $) }}
+{{- end }}
+{{- else if .Values.replicaResourceGroups }}
 {{- range $rg := .Values.replicaResourceGroups }}
 ---
-{{ include "milvus.querynode.deployment" (merge (dict "rg" $rg) $) }}
+{{ include "milvus.querynode.deployment" (merge (dict "group" (dict) "rg" $rg) $) }}
 {{- end }}
 {{- else }}
-{{ include "milvus.querynode.deployment" (merge (dict "rg" "") .) }}
+{{ include "milvus.querynode.deployment" (merge (dict "group" (dict) "rg" "") .) }}
 {{- end }}
 {{- end }}
