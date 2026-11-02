@@ -474,6 +474,8 @@ The following table lists the configurable parameters of the Milvus Query Node c
 | `queryNode.disk.enabled`                  | Whether to enable disk for query                             | `true`                                          |
 | `queryNode.profiling.enabled`             | Whether to enable live profiling                   | `false`                                          |
 | `queryNode.extraEnv`                      | Additional Milvus Query Node container environment variables | `[]`                                     |
+| `queryNode.volumes`                       | Additional volumes for the Milvus Query Node pod only        | `[]`                                             |
+| `queryNode.volumeMounts`                  | Additional volumeMounts for the Milvus Query Node container only | `[]`                                         |
 | `queryNode.strategy`                      | Deployment strategy configuration |  RollingUpdate                                         |
 | `queryNode.annotations`                    | Additional pod annotations | `{}` |
 | `queryNode.hpa` | Enable hpa for query node | false |
