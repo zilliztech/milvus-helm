@@ -201,6 +201,12 @@ spec:
       securityContext:
 {{ toYaml .Values.rootCoordinator.securityContext | indent 8 }}
     {{- end }}
+    {{- if and (.Values.terminationGracePeriodSeconds) (not .Values.rootCoordinator.terminationGracePeriodSeconds) }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+    {{- end }}
+    {{- if .Values.rootCoordinator.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ .Values.rootCoordinator.terminationGracePeriodSeconds }}
+    {{- end }}
 
       volumes:
       - name: milvus-config
