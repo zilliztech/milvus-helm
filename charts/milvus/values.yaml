@@ -407,7 +407,7 @@ queryNode:
     enabled: true  # Enable querynode load disk index, and search on disk index
     size:
       enabled: false  # Enable local storage size limit
-  # queryNode-only volumes and volumeMounts (rendered after the global `volumes` / `volumeMounts`),
+  # queryNode-only volumes and volumeMounts (rendered before the global `volumes` / `volumeMounts`),
   # same as `proxy.volumes` / `proxy.volumeMounts`. Use them to give the query node local disk
   # (/var/lib/milvus/data: mmap files, disk index, chunk cache) a dedicated node-local volume
   # instead of the plain emptyDir created by `queryNode.disk.enabled`. The data stays a cache;
