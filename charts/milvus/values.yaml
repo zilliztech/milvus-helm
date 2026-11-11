@@ -407,6 +407,33 @@ queryNode:
     enabled: true  # Enable querynode load disk index, and search on disk index
     size:
       enabled: false  # Enable local storage size limit
+  # queryNode-only volumes and volumeMounts (rendered before the global `volumes` / `volumeMounts`),
+  # same as `proxy.volumes` / `proxy.volumeMounts`. Use them to give the query node local disk
+  # (/var/lib/milvus/data: mmap files, disk index, chunk cache) a dedicated node-local volume
+  # instead of the plain emptyDir created by `queryNode.disk.enabled`. The data stays a cache;
+  # durability is still provided by object storage.
+  # Example 1 - emptyDir with a size limit (node-local NVMe / local SSD, as recommended by the docs):
+  # disk:
+  #   enabled: false
+  # volumes:
+  # - name: disk
+  #   emptyDir:
+  #     sizeLimit: 100Gi
+  # volumeMounts:
+  # - name: disk
+  #   mountPath: /var/lib/milvus/data
+  # Example 2 - generic ephemeral volume (per-pod disk, created and deleted with the pod):
+  # volumes:
+  # - name: disk
+  #   ephemeral:
+  #     volumeClaimTemplate:
+  #       spec:
+  #         accessModes: ["ReadWriteOnce"]
+  #         resources:
+  #           requests:
+  #             storage: 30Gi
+  volumes: []
+  volumeMounts: []
   profiling:
     enabled: false  # Enable live profiling
   # Deployment strategy, default is RollingUpdate
