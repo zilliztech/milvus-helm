@@ -58,6 +58,7 @@ nodeSelector: {}                     # Node selector
 affinity: {}                         # Affinity configuration
 tolerations: []                      # Tolerations
 topologySpreadConstraints: []        # Topology spread constraints
+runtimeClassName: ""                 # Pod runtime class, e.g. "nvidia" for GPU nodes
 extraEnv: []                         # Additional environment variables
 ```
 
@@ -71,6 +72,7 @@ modelId: "BAAI/bge-large-en-v1.5"
 image:
   repository: ghcr.io/huggingface/text-embeddings-inference
   tag: 1.6  # GPU version
+runtimeClassName: nvidia  # Required when the cluster schedules GPUs via a non-default runtime
 resources:
   limits:
     nvidia.com/gpu: 1  # Allocate 1 GPU
