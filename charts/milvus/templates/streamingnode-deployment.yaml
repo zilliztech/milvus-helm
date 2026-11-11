@@ -103,6 +103,18 @@ spec:
         - name: MILVUS_SERVER_LABEL_RESOURCE_GROUP
           value: {{ .rg | quote }}
         {{- end }}
+        {{- if .Values.externalS3.keysFromSecret.enabled }}
+        - name: MINIO_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.externalS3.loadKeysFromSecret.secretName }}
+              key: s3_accessKey
+        - name: MINIO_SECRET_ACCESS_KEY
+          valueFrom: 
+            secretKeyRef:
+              name: {{ .Values.externalS3.loadKeysFromSecret.secretName }}
+              key: s3_secretKey
+        {{- end }}
         {{- if .Values.streamingNode.extraEnv }}
           {{- toYaml .Values.streamingNode.extraEnv | nindent 8 }}
         {{- end }}
