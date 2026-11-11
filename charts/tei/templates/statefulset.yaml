@@ -4,12 +4,12 @@ metadata:
   name: {{ include "tei.fullname" . }}
   labels:
     {{- include "tei.labels" . | nindent 4 }}
-    {{- if .Values.labels }}
-      {{ toYaml .Values.labels | indent 4 }}
+    {{- with .Values.labels }}
+    {{- toYaml . | nindent 4 }}
     {{- end }}
-  {{- if .Values.annotations }}
+  {{- with .Values.annotations }}
   annotations:
-    {{ toYaml .Values.annotations | indent 4 }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
   serviceName: {{ template "tei.fullname" . }}-headless
@@ -70,7 +70,7 @@ spec:
         emptyDir: {}
       {{- end }}
       {{- with .Values.volumes }}
-        {{- toYaml . | nindent 8 }}
+      {{- toYaml . | nindent 6 }}
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
@@ -82,6 +82,10 @@ spec:
       {{- end }}
       {{- with .Values.tolerations }}
       tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.topologySpreadConstraints }}
+      topologySpreadConstraints:
         {{- toYaml . | nindent 8 }}
       {{- end }}
   {{- if .Values.persistence.enabled }}
